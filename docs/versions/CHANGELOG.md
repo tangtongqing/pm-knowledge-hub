@@ -4,18 +4,21 @@
 
 ---
 
-## [Unreleased] — Phase A 进行中
+## [0.1.0-alpha] — 2026-06-29 — Phase A 产品文档发布
 
 ### Added
 - 建立项目工程目录结构（backend/frontend/docs/scripts）
 - 初始化Git仓库，配置.gitignore
-- 创建完整项目管理文档框架：
-  - `docs/PROGRESS.md` — 实时进度看板
-  - `docs/TASKS.md` — Sprint任务清单
-  - `docs/versions/CHANGELOG.md` — 本文件
-  - `docs/acceptance/` — 验收报告目录
-  - `docs/pm/` — 产品文档目录
-  - `docs/plans/` — 执行计划目录
+- 创建完整项目管理文档框架（PROGRESS.md, TASKS.md, CHANGELOG.md, AGENT_WORKFLOW.md, acceptance/）
+- 撰写完整的 AI 产品管理文档体系：
+  - **BRD v1.1** (商业背景、用户定义、量化求职与提效数据)
+  - **MRD v1.0** (4类竞品分析矩阵、MoSCoW功能裁剪、差异化定位)
+  - **PRD v1.1** (RAG混合检索、切片规范、STAR面试评估逻辑、5个核心Job Stories、边缘异常容错矩阵)
+  - **ARCHITECTURE v1.0** (系统三层拓扑图、RAG 核心数据流 Sequence 时序图)
+  - **USER_JOURNEY v1.1** (检索复习、学习规划与打卡、面试模拟 3 大场景旅程)
+  - **METRICS v1.0** (北极星指标 SRR, 4项系统性能/行为指标, 3项面试质量指标)
+  - **ROADMAP v1.0** (MVP 规划、里程碑和 Scope Cut 决策机制)
+- 完成两轮独立验收智能体的质量门禁审计，报告均已记录。
 
 ---
 
