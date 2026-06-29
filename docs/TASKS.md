@@ -8,11 +8,6 @@
 
 ## 🔄 进行中
 
-- [/] **[TASK-011]** Python环境配置（pyproject.toml + requirements.txt）
-  - 负责：工作智能体
-  - 依赖：TASK-010 完成
-  - 验收标准：`pip install -r requirements.txt` 无报错
-
 - [/] **[TASK-012]** GitHub仓库创建与初始推送
   - 负责：主智能体（需用户提供GitHub账号名）
   - 依赖：TASK-001 完成
@@ -36,6 +31,7 @@
 - [x] **[TASK-008]** 绘制系统架构图 *(2026-06-29)*
 - [x] **[TASK-009]** 制定迭代Roadmap *(2026-06-29)*
 - [x] **[TASK-010]** Phase A 验收 *(2026-06-29)*
+- [x] **[TASK-011]** Python环境配置（requirements.txt + venv setup） *(2026-06-29)*
 
 ---
 
