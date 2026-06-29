@@ -8,10 +8,10 @@
 
 ## 🔄 进行中
 
-- [/] **[TASK-013]** Obsidian Markdown解析器开发
+- [/] **[TASK-014]** 混合切片策略开发与验证
   - 负责：工作智能体
-  - 依赖：TASK-011, TASK-012 完成
-  - 验收标准：编写脚本成功提取 Obsidian 格式笔记（含 [[双链]] 和 ![[图片]] 嵌入），输出干净的 Markdown 格式元数据与切片草案
+  - 依赖：TASK-013 完成
+  - 验收标准：实现标题级切片+超长段落滑动窗口双层切片，每个切片绑定源路径、chapter、tags、Obsidian URI 等元数据，输出符合 PRD 要求的切片列表
 
 ## ⏳ 待开始（Sprint 1 范围）
 
@@ -33,12 +33,12 @@
 - [x] **[TASK-010]** Phase A 验收 *(2026-06-29)*
 - [x] **[TASK-011]** Python环境配置（requirements.txt + venv setup） *(2026-06-29)*
 - [x] **[TASK-012]** GitHub仓库创建与初始推送（使用 gh CLI） *(2026-06-29)*
+- [x] **[TASK-013]** Obsidian Markdown解析器开发与单元测试 *(2026-06-29)*
 
 ---
 
 ## 📌 Backlog（未来Sprint）
 
-- [ ] 混合切片策略
 - [ ] ChromaDB向量化
 - [ ] RAG问答Agent
 - [ ] 面试模拟Agent
