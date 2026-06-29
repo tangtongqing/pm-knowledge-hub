@@ -8,10 +8,10 @@
 
 ## 🔄 进行中
 
-- [/] **[TASK-012]** GitHub仓库创建与初始推送
-  - 负责：主智能体（需用户提供GitHub账号名）
-  - 依赖：TASK-001 完成
-  - 验收标准：远程仓库可访问，首次commit历史可见
+- [/] **[TASK-013]** Obsidian Markdown解析器开发
+  - 负责：工作智能体
+  - 依赖：TASK-011, TASK-012 完成
+  - 验收标准：编写脚本成功提取 Obsidian 格式笔记（含 [[双链]] 和 ![[图片]] 嵌入），输出干净的 Markdown 格式元数据与切片草案
 
 ## ⏳ 待开始（Sprint 1 范围）
 
@@ -32,12 +32,12 @@
 - [x] **[TASK-009]** 制定迭代Roadmap *(2026-06-29)*
 - [x] **[TASK-010]** Phase A 验收 *(2026-06-29)*
 - [x] **[TASK-011]** Python环境配置（requirements.txt + venv setup） *(2026-06-29)*
+- [x] **[TASK-012]** GitHub仓库创建与初始推送（使用 gh CLI） *(2026-06-29)*
 
 ---
 
 ## 📌 Backlog（未来Sprint）
 
-- [ ] Obsidian Markdown解析器
 - [ ] 混合切片策略
 - [ ] ChromaDB向量化
 - [ ] RAG问答Agent
