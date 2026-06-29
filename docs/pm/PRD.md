@@ -55,6 +55,26 @@
 - **倒数重排融合 (RRF)**：
   $$RRF\_Score(d) = \frac{1}{60 + Rank_{vector}(d)} + \frac{1}{60 + Rank_{bm25}(d)}$$
   提取最终 RRF Score 前 4 名的切片传入大语言模型，混合权重倾向于语义检索（比例控制在 7:3）。
+- **RAG 数据流向设计**：详细时序图见 [ARCHITECTURE.md](ARCHITECTURE.md#3-rag-核心数据流)。以下是该流程的简要时序展示：
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 用户
+    participant UI as 前端 WebUI
+    participant Backend as 后端 API
+    participant VectorDB as ChromaDB 向量库
+    participant LLM as Gemini API
+
+    User->>UI: 输入问题
+    UI->>Backend: 发送问答请求 (POST /api/chat)
+    Backend->>VectorDB: 检索最相关的 Top-4 切片
+    VectorDB-->>Backend: 返回切片原文及元数据
+    Backend->>LLM: 发送生成请求 (Stream 模式)
+    LLM-->>Backend: 陆续返回流式文本
+    Backend-->>UI: 陆续转发流式响应 (SSE)
+    UI-->>User: 最终回答呈现
+```
 
 #### 2.2.3 元数据 Schema 设计表
 
@@ -71,7 +91,21 @@
 ### 2.3 核心模块二：面试模拟智能体 (P1)
 
 #### 2.3.1 对抗流程与追问机制
-面试 Agent 具有专门的流程管理状态：
+面试 Agent 具有专门的流程管理状态，整体流程流转如下图所示：
+
+```mermaid
+graph TD
+    Start[开始模拟] --> Choose[选择面试主题]
+    Choose --> GenQ[Agent 从知识库第06章提取/生成问题]
+    GenQ --> UserInput[用户输入回答]
+    UserInput --> Assess{是否满3轮交互?}
+    Assess -- 否 --> GenNext[Agent 追问/生成下个问题]
+    GenNext --> UserInput
+    Assess -- 是 --> Eval[Agent 依据 STAR 原则生成评估报告]
+    Eval --> End[生成 Markdown 面试报告与笔记推荐]
+```
+
+详细流程说明：
 1. **初始化**：用户选择面试方向（如：传统 PM / AI PM）。
 2. **抽取真题**：Agent 从本地 `06-面试` 文件夹匹配的相关真题切片中，随机抽取或生成首问（如“请讲一个你从 0 到 1 设计的 AI 功能案例”）。
 3. **输入与判断**：当用户提交作答后，智能体将使用追问 Prompt 启发用户深入表达（如“在此过程中，你面临的最大工程限制是什么？你是如何进行功能剪裁的？”）。一轮面试会话包含 **3 轮** 交互。
