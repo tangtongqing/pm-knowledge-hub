@@ -17,7 +17,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from api.routes import search, health
+from api.routes import search, health, qa, interview
 
 # ── 环境变量 ────────────────────────────────────────────────────────────
 # 加载 backend/.env（使用绝对路径，兼容从任意目录启动）
@@ -29,9 +29,11 @@ load_dotenv(dotenv_path=_ENV_PATH)
 async def lifespan(app: FastAPI):
     """
     在 FastAPI 应用启动时初始化 ChromaDB 连接，
-    并将 collection 对象存储到 app.state 供所有路由共享。
+    并将 collection 对象和各智能体实例存储到 app.state 供所有路由共享。
     """
     from ingest.vectorizer import get_client, get_collection
+    from agents.qa_agent import QAAgent
+    from agents.interview_agent import InterviewAgent
     
     db_path = os.getenv("CHROMA_DB_PATH", "./data/chroma_db")
     model_name = os.getenv("EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
@@ -43,6 +45,11 @@ async def lifespan(app: FastAPI):
     # 将 collection 挂载到 app.state，路由通过 request.app.state.collection 访问
     app.state.collection = collection
     app.state.chroma_client = client
+    
+    # 初始化 智能体 并挂载到 app.state
+    print("[startup] Initializing QAAgent and InterviewAgent...")
+    app.state.qa_agent = QAAgent(collection)
+    app.state.interview_agent = InterviewAgent(collection)
     
     count = collection.count()
     print(f"[startup] ChromaDB ready. Collection 'pm_notes' has {count} chunks.")
@@ -78,6 +85,8 @@ app.add_middleware(
 # ── 路由注册 ──────────────────────────────────────────────────────────────
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(search.router, prefix="/api/v1", tags=["Search"])
+app.include_router(qa.router, prefix="/api/v1", tags=["QA"])
+app.include_router(interview.router, prefix="/api/v1", tags=["Interview"])
 
 
 @app.get("/", include_in_schema=False)
