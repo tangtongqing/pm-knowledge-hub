@@ -31,6 +31,12 @@ async def lifespan(app: FastAPI):
     在 FastAPI 应用启动时初始化 ChromaDB 连接，
     并将 collection 对象和各智能体实例存储到 app.state 供所有路由共享。
     """
+    # 如果已经挂载了 collection (例如在单元/集成测试中)，跳过初始化避免覆盖
+    if getattr(app.state, "collection", None) is not None:
+        print("[startup] Collection already initialized in app.state. Bypassing lifespan DB init.")
+        yield
+        return
+
     from ingest.vectorizer import get_client, get_collection
     from agents.qa_agent import QAAgent
     from agents.interview_agent import InterviewAgent
