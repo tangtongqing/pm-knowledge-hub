@@ -1,16 +1,32 @@
+# Web framework
 fastapi
 uvicorn[standard]
 pydantic
 pydantic-settings
+
+# LLM & RAG
 langchain
 langchain-community
 langchain-core
 langchain-google-genai
+
+# Vector store
 chromadb
+
+# Embedding (multilingual, Chinese-friendly, fully offline)
+# torch CPU-only: install via: pip install torch --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers
+transformers
+tokenizers
+
+# Utilities
 python-dotenv
 rank-bm25
 jinja2
 python-multipart
+pyyaml
+
+# Testing
 pytest
 pytest-cov
 httpx
