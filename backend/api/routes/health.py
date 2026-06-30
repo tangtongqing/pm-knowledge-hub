@@ -24,7 +24,8 @@ async def health_check(request: Request) -> HealthResponse:
     """
     collection = request.app.state.collection
     count = collection.count()
-    model = collection.metadata.get("embedding_model", "unknown")
+    metadata = collection.metadata or {}
+    model = metadata.get("embedding_model", "unknown")
 
     return HealthResponse(
         status="ok",

@@ -23,6 +23,7 @@ def test_client():
     collection = client.get_or_create_collection(
         name="test_api_collection",
         embedding_function=ef,
+        metadata={"embedding_model": _TEST_MODEL}
     )
     
     # 写入一条 mock 记录以支持检索
