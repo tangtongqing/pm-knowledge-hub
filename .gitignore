@@ -16,7 +16,7 @@ dist/
 build/
 
 # ChromaDB本地数据库
-backend/data/chroma/
+backend/data/
 
 # API Keys（绝对不能提交）
 .env

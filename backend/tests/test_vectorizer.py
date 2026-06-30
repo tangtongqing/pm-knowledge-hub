@@ -5,6 +5,7 @@ Unit tests for vectorizer.py
 Embedding 使用 SentenceTransformerEmbeddingFunction（与 vectorizer.py 保持一致）。
 """
 
+import uuid
 import pytest
 from typing import List, Dict, Any
 import chromadb
@@ -44,16 +45,17 @@ def make_chunk(chunk_id: str,
     }
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def ephemeral_collection():
     """
-    返回一个内存模式的 ChromaDB collection，供所有测试共享。
-    scope=module 表示整个测试文件只初始化一次模型，节省时间。
+    每个测试函数都获得一个全新的内存 collection，并拥有唯一的名称，保证完全隔离。
+    sentence-transformers 会缓存模型权重，所以不会每次重新下载。
     """
     client = chromadb.EphemeralClient()
     ef = SentenceTransformerEmbeddingFunction(model_name=_TEST_MODEL)
-    collection = client.get_or_create_collection(
-        name=COLLECTION_NAME,
+    unique_name = f"pm_notes_{uuid.uuid4().hex}"
+    collection = client.create_collection(
+        name=unique_name,
         embedding_function=ef,
     )
     return collection
