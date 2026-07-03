@@ -128,3 +128,12 @@ def test_api_interview_evaluate_endpoint(test_client):
     assert "evaluation" in res_data
     assert "star_feedback" in res_data
     assert res_data["is_mock"] is True
+
+
+def test_api_search_documents_endpoint(test_client):
+    """测试目录浏览接口响应"""
+    response = test_client.get("/api/v1/search/documents?chapter=01-入门")
+    assert response.status_code == 200
+    res_data = response.json()
+    assert len(res_data["results"]) == 1
+    assert res_data["results"][0]["metadata"]["title"] == "什么是需求分析"

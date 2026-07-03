@@ -1,0 +1,197 @@
+/* ================================================================
+   PM Knowledge Hub — Design System
+   Dual-theme (light + dark) Zinc-based OKLCH color tokens
+   ================================================================ */
+
+/* ── Light Theme (default) ────────────────────────────────────── */
+:root {
+  color-scheme: light;
+
+  /* Surface hierarchy */
+  --canvas:       #FAFAFA;
+  --surface-1:    #FFFFFF;
+  --surface-2:    #F4F4F5;
+  --surface-3:    #EFEFF1;
+
+  /* Borders */
+  --border-subtle:    #E4E4E7;
+  --border-component: #D4D4D8;
+
+  /* Text */
+  --text-1: #18181B;
+  --text-2: #52525B;
+  --text-3: #A1A1AA;
+
+  /* Brand */
+  --brand:       #4F6CF7;
+  --brand-hover: #3D5BE5;
+  --brand-subtle: rgba(79, 108, 247, 0.08);
+  --brand-text:  #4F6CF7;
+
+  /* Semantic */
+  --success:      #16A34A;
+  --success-subtle: rgba(22, 163, 74, 0.08);
+  --warning:      #CA8A04;
+  --warning-subtle: rgba(202, 138, 4, 0.08);
+  --danger:       #DC2626;
+  --danger-subtle: rgba(220, 38, 38, 0.08);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+  /* Interaction */
+  --focus-ring: 0 0 0 2px var(--canvas), 0 0 0 4px var(--brand);
+  --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Layout */
+  --nav-width-collapsed: 56px;
+  --nav-width-expanded:  220px;
+
+  /* Scrollbar */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #D4D4D8;
+  --scrollbar-thumb-hover: #A1A1AA;
+}
+
+/* ── Dark Theme ───────────────────────────────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas:       #111113;
+  --surface-1:    #1A1A1D;
+  --surface-2:    #232328;
+  --surface-3:    #161618;
+
+  --border-subtle:    #2C2C31;
+  --border-component: #3A3A40;
+
+  --text-1: #EDEDEE;
+  --text-2: #9898A0;
+  --text-3: #6C6C75;
+
+  --brand:       #6B8AFF;
+  --brand-hover: #5A79EE;
+  --brand-subtle: rgba(107, 138, 255, 0.10);
+  --brand-text:  #8BA3FF;
+
+  --success:      #34D399;
+  --success-subtle: rgba(52, 211, 153, 0.10);
+  --warning:      #FBBF24;
+  --warning-subtle: rgba(251, 191, 36, 0.10);
+  --danger:       #F87171;
+  --danger-subtle: rgba(248, 113, 113, 0.10);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+
+  --focus-ring: 0 0 0 2px var(--canvas), 0 0 0 4px var(--brand);
+
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #3A3A40;
+  --scrollbar-thumb-hover: #52525B;
+}
+
+/* ── Reset ────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+html {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  height: 100%;
+  background-color: var(--canvas);
+  color: var(--text-1);
+  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: background-color var(--transition), color var(--transition);
+}
+
+/* ── Typography ───────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  color: var(--text-1);
+  line-height: 1.3;
+}
+
+a {
+  color: var(--brand-text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--brand-hover);
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 13px;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ── Selection ────────────────────────────────────────────────── */
+::selection {
+  background: var(--brand-subtle);
+  color: var(--text-1);
+}
+
+/* ── Focus visible ────────────────────────────────────────────── */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Reduced motion ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

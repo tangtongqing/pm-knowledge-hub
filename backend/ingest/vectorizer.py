@@ -197,6 +197,63 @@ def search(query: str,
     return hits
 
 
+def get_all_documents(collection, chapter_filter: Optional[str] = None) -> List[Dict[str, Any]]:
+    """
+    获取向量库中所有去重后的原始文档列表。
+    从本地磁盘读取完整的 Markdown 文本，并清除 YAML Frontmatter，保证展示完整性。
+    """
+    import re
+    where_clause = {}
+    if chapter_filter and chapter_filter != "all":
+        where_clause["chapter"] = {"$eq": chapter_filter}
+
+    results = collection.get(
+        where=where_clause if where_clause else None,
+        include=["metadatas"]
+    )
+
+    notes_meta = {}
+    if results and results["metadatas"]:
+        for meta in results["metadatas"]:
+            path = meta.get("source_path", "")
+            if path and path not in notes_meta:
+                notes_meta[path] = meta
+
+    notes = []
+    notes_dir = os.getenv("NOTES_DIR", "")
+    
+    # 前端用于匹配 YAML Frontmatter 的正则
+    frontmatter_regex = re.compile(r'^---\s*\n(.*?)\n---\s*\n', re.DOTALL)
+
+    for path, meta in notes_meta.items():
+        full_text = ""
+        if notes_dir:
+            file_path = Path(notes_dir) / path
+            if file_path.exists():
+                try:
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        full_text = f.read()
+                    
+                    # 去除 Frontmatter
+                    match = frontmatter_regex.match(full_text)
+                    if match:
+                        full_text = full_text[match.end():]
+                except Exception as e:
+                    print(f"⚠️ 读取本地文件失败 {file_path}: {e}")
+        
+        if not full_text:
+            # 如果本地读取失败，回退到空提示
+            full_text = f"# {meta.get('title', '无标题')}\n\n*(无法从磁盘读取该笔记完整内容)*"
+
+        notes.append({
+            "text": full_text,
+            "metadata": meta,
+            "distance": 0.0
+        })
+    
+    return notes
+
+
 def keyword_search(keyword: str,
                    collection,
                    top_k: int = 10) -> List[Dict[str, Any]]:

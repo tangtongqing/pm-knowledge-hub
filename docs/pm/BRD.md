@@ -116,7 +116,7 @@
 - **LLM接入**：Gemini Flash API（免费额度，用于演示）
 - **编排框架**：LangChain
 - **后端接口**：Python FastAPI
-- **前端展示**：Next.js + 精美深色设计系统
+- **前端展示**：Next.js + Committed 极客深色设计系统
 
 ---
 

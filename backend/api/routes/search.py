@@ -6,7 +6,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Request, Query, HTTPException
 from pydantic import BaseModel, Field
 
-from ingest.vectorizer import search, keyword_search
+from ingest.vectorizer import search, keyword_search, get_all_documents
 
 router = APIRouter()
 
@@ -125,3 +125,35 @@ async def keyword_search_route(
     ]
     
     return KeywordSearchResponse(keyword=q, results=hits, total=len(hits))
+
+
+@router.get("/search/documents", response_model=SearchResponse)
+async def list_documents(
+    request: Request,
+    chapter: Optional[str] = Query(default=None, description="按章节过滤，如 '01-入门'"),
+) -> SearchResponse:
+    """
+    目录浏览接口
+    
+    获取某章节（或全部）下所有去重后的笔记文档。
+    """
+    collection = request.app.state.collection
+    
+    try:
+        raw_hits = get_all_documents(
+            collection=collection,
+            chapter_filter=chapter,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取文档列表失败：{str(e)}")
+    
+    hits = [
+        SearchHit(
+            text=h["text"],
+            metadata=ChunkMeta(**h["metadata"]),
+            distance=h["distance"],
+        )
+        for h in raw_hits
+    ]
+    
+    return SearchResponse(query="", results=hits, total=len(hits))
