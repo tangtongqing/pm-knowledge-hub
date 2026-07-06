@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e110] [cursor=pointer]:
+    - img [ref=e111]
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - img [ref=e6]
+      - generic [ref=e10]:
+        - link "工作台" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - generic [ref=e16]: 工作台
+        - link "知识库" [ref=e17] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=e19]
+          - generic [ref=e21]: 知识库
+        - link "AI 问答" [ref=e22] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=e24]
+          - generic [ref=e26]: AI 问答
+        - link "模拟面试" [ref=e27] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=e29]
+          - generic [ref=e33]: 模拟面试
+        - link "知识图谱" [ref=e34] [cursor=pointer]:
+          - /url: /map
+          - img [ref=e36]
+          - generic [ref=e42]: 知识图谱
+        - link "关于" [ref=e43] [cursor=pointer]:
+          - /url: /about
+          - img [ref=e45]
+          - generic [ref=e47]: 关于
+      - button "切换深色模式" [ref=e49] [cursor=pointer]:
+        - img [ref=e50]
+    - main [ref=e52]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - heading "PM Knowledge Hub" [level=1] [ref=e56]
+            - paragraph [ref=e57]: 智能产品经理知识库与面试工作台
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic:
+                - img
+              - 'textbox "搜索你的知识库 (例如: AARRR 模型)" [ref=e60]'
+            - generic [ref=e61]:
+              - generic [ref=e62]: 热门检索：
+              - button "AARRR" [ref=e63] [cursor=pointer]
+              - button "北极星指标" [ref=e64] [cursor=pointer]
+              - button "需求定义" [ref=e65] [cursor=pointer]
+              - button "用户故事" [ref=e66] [cursor=pointer]
+          - generic [ref=e67]:
+            - link "知识库 浏览和检索 2579 篇经过处理的本地 Obsidian 笔记，带有精确引用分片。" [ref=e114] [cursor=pointer]:
+              - /url: /knowledge
+              - generic [ref=e69]:
+                - img [ref=e71]
+                - heading "知识库" [level=2] [ref=e73]
+              - paragraph [ref=e74]: 浏览和检索 2579 篇经过处理的本地 Obsidian 笔记，带有精确引用分片。
+            - link "AI 问答 基于 RAG 引擎的对话系统。获取带溯源标注的结构化回答，消除幻觉。" [ref=e75] [cursor=pointer]:
+              - /url: /assistant
+              - generic [ref=e76]:
+                - img [ref=e78]
+                - heading "AI 问答" [level=2] [ref=e80]
+              - paragraph [ref=e81]: 基于 RAG 引擎的对话系统。获取带溯源标注的结构化回答，消除幻觉。
+            - link "模拟面试 多轮真实的 PM 面试演练，并提供细粒度的 STAR 结构评估与弱点建议。" [ref=e82] [cursor=pointer]:
+              - /url: /interview
+              - generic [ref=e83]:
+                - img [ref=e85]
+                - heading "模拟面试" [level=2] [ref=e89]
+              - paragraph [ref=e90]: 多轮真实的 PM 面试演练，并提供细粒度的 STAR 结构评估与弱点建议。
+            - link "知识图谱 可视化你的 PM 知识结构，探索笔记与章节之间的双向链接网络。" [ref=e91] [cursor=pointer]:
+              - /url: /map
+              - generic [ref=e92]:
+                - img [ref=e94]
+                - heading "知识图谱" [level=2] [ref=e100]
+              - paragraph [ref=e101]: 可视化你的 PM 知识结构，探索笔记与章节之间的双向链接网络。
+        - generic [ref=e104]: "ChromaDB: 2579 chunks • Model: paraphrase-multilingual-MiniLM-L12-v2"

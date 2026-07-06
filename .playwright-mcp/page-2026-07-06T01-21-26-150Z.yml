@@ -1,0 +1,67 @@
+- generic [active] [ref=f4e1]:
+  - button "Open Next.js Dev Tools" [ref=f4e7] [cursor=pointer]:
+    - img [ref=f4e8]
+  - alert [ref=f4e11]
+  - generic [ref=f4e12]:
+    - navigation [ref=f4e13]:
+      - img [ref=f4e15]
+      - generic [ref=f4e19]:
+        - link "工作台" [ref=f4e20] [cursor=pointer]:
+          - /url: /
+          - img [ref=f4e22]
+          - generic [ref=f4e25]: 工作台
+        - link "知识库" [ref=f4e26] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=f4e28]
+          - generic [ref=f4e30]: 知识库
+        - link "AI 问答" [ref=f4e31] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=f4e33]
+          - generic [ref=f4e35]: AI 问答
+        - link "模拟面试" [ref=f4e36] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=f4e38]
+          - generic [ref=f4e42]: 模拟面试
+        - link "知识图谱" [ref=f4e43] [cursor=pointer]:
+          - /url: /map
+          - img [ref=f4e45]
+          - generic [ref=f4e51]: 知识图谱
+        - link "关于" [ref=f4e52] [cursor=pointer]:
+          - /url: /about
+          - img [ref=f4e54]
+          - generic [ref=f4e56]: 关于
+      - button "切换深色模式" [ref=f4e58] [cursor=pointer]:
+        - img [ref=f4e59]
+    - main [ref=f4e61]:
+      - generic [ref=f4e62]:
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]:
+            - heading "知识图谱地图" [level=1] [ref=f4e65]
+            - paragraph [ref=f4e66]: 基于 Obsidian 引用链路与学习通关路径的可视化脑图
+          - generic [ref=f4e67]:
+            - generic [ref=f4e68]:
+              - button "按目录聚合" [ref=f4e69] [cursor=pointer]
+              - button "按笔记展开" [ref=f4e70] [cursor=pointer]
+            - combobox [ref=f4e83] [cursor=pointer]:
+              - option "全部目录" [selected]
+              - option "01-入门"
+              - option "02-思维与软实力"
+              - option "03-全流程知识"
+              - option "04-前人经验"
+              - option "05-项目实践"
+              - option "06-面试"
+              - option "07-AI工作"
+              - option "08-深入学习数据"
+              - option "09-深入学习AI"
+              - option "10-AI政治"
+              - option "11-AI公司研究"
+              - option "12-AI或产品专家"
+              - option "13-AI金融"
+        - generic [ref=f4e71]:
+          - generic [ref=f4e72]:
+            - generic: 💡 笔记数量较多，可使用右上角下拉菜单过滤特定章节。
+          - complementary [ref=f4e76]:
+            - generic [ref=f4e77]:
+              - img [ref=f4e78]
+              - heading "节点详情" [level=3] [ref=f4e81]
+              - paragraph [ref=f4e82]: 点击图谱中的任何节点，可在此处查看对应章节的学习脉络或笔记详情。

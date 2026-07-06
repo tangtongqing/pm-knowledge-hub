@@ -1,0 +1,17 @@
+/* ── AppLayout ─────────────────────────────────────────────── */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main {
+  flex: 1;
+  /* Margin-left to offset the fixed collapsed navigation bar (56px) */
+  margin-left: var(--nav-width-collapsed);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}

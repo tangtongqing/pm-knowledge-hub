@@ -32,10 +32,10 @@ def test_client():
         documents=["产品经理必须做需求分析。"],
         metadatas=[{
             "title": "什么是需求分析",
-            "source_path": "01-入门/1.1.md",
+            "source_path": "01-入门/1.1-需求.md",
             "section": "定义",
             "tags": "需求,产品经理",
-            "obsidian_uri": "obsidian://open?vault=test&file=01-入门/1.1",
+            "obsidian_uri": "obsidian://open?vault=test&file=01-入门/1.1-需求",
             "chapter": "01-入门",
             "chunk_index": 0,
             "token_count": 10
@@ -128,3 +128,43 @@ def test_api_interview_evaluate_endpoint(test_client):
     assert "evaluation" in res_data
     assert "star_feedback" in res_data
     assert res_data["is_mock"] is True
+
+
+def test_api_search_documents_endpoint(test_client):
+    """测试目录浏览接口响应"""
+    response = test_client.get("/api/v1/search/documents?chapter=01-入门")
+    assert response.status_code == 200
+    res_data = response.json()
+    assert len(res_data["results"]) == 1
+    assert res_data["results"][0]["metadata"]["title"] == "什么是需求分析"
+
+
+def test_api_graph_chapter_level(test_client):
+    """测试章节级别的知识图谱 API"""
+    response = test_client.get("/api/v1/graph?level=chapter")
+    assert response.status_code == 200
+    res_data = response.json()
+    assert res_data["level"] == "chapter"
+    assert len(res_data["nodes"]) == 13
+    assert len(res_data["links"]) == 12  # 13个章节顺序相连有12条连线
+    
+    # 找到 01-入门 节点并检查 note_count
+    intro_node = [n for n in res_data["nodes"] if n["id"] == "01-入门"][0]
+    assert intro_node["note_count"] == 1
+    
+    # 其他节点 note_count 应该为 0（因为测试数据库只有1条记录）
+    other_node = [n for n in res_data["nodes"] if n["id"] == "02-思维与软实力"][0]
+    assert other_node["note_count"] == 0
+
+
+def test_api_graph_note_level_filter(test_client):
+    """测试笔记级别过滤章节的知识图谱 API"""
+    response = test_client.get("/api/v1/graph?level=note&chapter=01-入门")
+    assert response.status_code == 200
+    res_data = response.json()
+    assert res_data["level"] == "note"
+    # 由于测试 DB 里只有一条属于 01-入门 的记录，过滤 01-入门 应只返回这一个节点
+    assert len(res_data["nodes"]) == 1
+    assert res_data["nodes"][0]["id"] == "01-入门/1.1-需求.md"
+    assert len(res_data["links"]) == 0  # 单个节点无连线
+

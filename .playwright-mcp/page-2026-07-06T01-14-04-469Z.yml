@@ -1,0 +1,124 @@
+- generic [active] [ref=f2e1]:
+  - button "Open Next.js Dev Tools" [ref=f2e7] [cursor=pointer]:
+    - img [ref=f2e8]
+  - alert [ref=f2e11]
+  - generic [ref=f2e12]:
+    - navigation [ref=f2e13]:
+      - img [ref=f2e15]
+      - generic [ref=f2e19]:
+        - link "工作台" [ref=f2e20] [cursor=pointer]:
+          - /url: /
+          - img [ref=f2e22]
+          - generic [ref=f2e25]: 工作台
+        - link "知识库" [ref=f2e26] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=f2e28]
+          - generic [ref=f2e30]: 知识库
+        - link "AI 问答" [ref=f2e31] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=f2e33]
+          - generic [ref=f2e35]: AI 问答
+        - link "模拟面试" [ref=f2e36] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=f2e38]
+          - generic [ref=f2e42]: 模拟面试
+        - link "知识图谱" [ref=f2e43] [cursor=pointer]:
+          - /url: /map
+          - img [ref=f2e45]
+          - generic [ref=f2e51]: 知识图谱
+        - link "关于" [ref=f2e52] [cursor=pointer]:
+          - /url: /about
+          - img [ref=f2e54]
+          - generic [ref=f2e56]: 关于
+      - button "切换深色模式" [ref=f2e58] [cursor=pointer]:
+        - img [ref=f2e59]
+    - main [ref=f2e61]:
+      - generic [ref=f2e62]:
+        - generic [ref=f2e63]:
+          - heading "目录分类" [level=2] [ref=f2e65]
+          - generic [ref=f2e66]:
+            - button "全部知识库" [ref=f2e67] [cursor=pointer]:
+              - img [ref=f2e68]
+              - generic [ref=f2e70]: 全部知识库
+            - button "01-入门" [ref=f2e71] [cursor=pointer]:
+              - img [ref=f2e72]
+              - generic [ref=f2e74]: 01-入门
+            - button "02-思维与软实力" [ref=f2e75] [cursor=pointer]:
+              - img [ref=f2e76]
+              - generic [ref=f2e78]: 02-思维与软实力
+            - button "03-全流程知识" [ref=f2e79] [cursor=pointer]:
+              - img [ref=f2e80]
+              - generic [ref=f2e82]: 03-全流程知识
+            - button "04-前人经验" [ref=f2e83] [cursor=pointer]:
+              - img [ref=f2e84]
+              - generic [ref=f2e86]: 04-前人经验
+            - button "05-项目实践" [ref=f2e87] [cursor=pointer]:
+              - img [ref=f2e88]
+              - generic [ref=f2e90]: 05-项目实践
+            - button "06-面试" [ref=f2e91] [cursor=pointer]:
+              - img [ref=f2e92]
+              - generic [ref=f2e94]: 06-面试
+            - button "07-AI工作" [ref=f2e95] [cursor=pointer]:
+              - img [ref=f2e96]
+              - generic [ref=f2e98]: 07-AI工作
+            - button "08-深入学习数据" [ref=f2e99] [cursor=pointer]:
+              - img [ref=f2e100]
+              - generic [ref=f2e102]: 08-深入学习数据
+            - button "09-深入学习AI" [ref=f2e103] [cursor=pointer]:
+              - img [ref=f2e104]
+              - generic [ref=f2e106]: 09-深入学习AI
+            - button "10-AI政治" [ref=f2e107] [cursor=pointer]:
+              - img [ref=f2e108]
+              - generic [ref=f2e110]: 10-AI政治
+            - button "11-AI公司研究" [ref=f2e111] [cursor=pointer]:
+              - img [ref=f2e112]
+              - generic [ref=f2e114]: 11-AI公司研究
+            - button "12-AI或产品专家" [ref=f2e115] [cursor=pointer]:
+              - img [ref=f2e116]
+              - generic [ref=f2e118]: 12-AI或产品专家
+            - button "13-AI金融" [ref=f2e119] [cursor=pointer]:
+              - img [ref=f2e120]
+              - generic [ref=f2e122]: 13-AI金融
+        - generic [ref=f2e123]:
+          - generic [ref=f2e124]:
+            - generic [ref=f2e125]:
+              - img
+              - textbox "在列表中搜索..." [ref=f2e126]
+            - generic [ref=f2e128]: 找到 5 篇笔记
+          - generic [ref=f2e129]:
+            - generic [ref=f2e1156] [cursor=pointer]:
+              - generic [ref=f2e1157]: 7.1 学生身份
+              - generic [ref=f2e1159]: 07-AI工作
+            - generic [ref=f2e1160] [cursor=pointer]:
+              - generic [ref=f2e1161]: 7.2 移民
+              - generic [ref=f2e1163]: 07-AI工作
+            - generic [ref=f2e1164] [cursor=pointer]:
+              - generic [ref=f2e1165]: 7.3 大会
+              - generic [ref=f2e1167]: 07-AI工作
+            - generic [ref=f2e1168] [cursor=pointer]:
+              - generic [ref=f2e1169]: 7.4 金融实习
+              - generic [ref=f2e1171]: 07-AI工作
+            - generic [ref=f2e1172] [cursor=pointer]:
+              - generic [ref=f2e1173]: 7.5 challenge
+              - generic [ref=f2e1175]: 07-AI工作
+        - generic [ref=f2e132]:
+          - generic [ref=f2e133]:
+            - generic [ref=f2e954]:
+              - heading "7.3 大会" [level=1] [ref=f2e1219]
+              - generic [ref=f2e956]: 07-AI工作/7.3-大会.md
+            - link "在 Obsidian 打开" [ref=f2e957] [cursor=pointer]:
+              - /url: obsidian://open?vault=从零开始成为ai产品经理&file=07-AI工作/7.3-大会
+              - img [ref=f2e958]
+              - text: 在 Obsidian 打开
+          - generic [ref=f2e963]:
+            - heading "7.3 大会" [level=1] [ref=f2e1220]
+            - blockquote [ref=f2e965]:
+              - paragraph [ref=f2e966]:
+                - text: 来源：
+                - link "自学成AI产品经理" [ref=f2e967] [cursor=pointer]:
+                  - /url: https://stevenjokess.github.io/2bPM/chapter_AI_job/meeting.html
+            - separator [ref=f2e968]
+            - heading "📌 大会" [level=2] [ref=f2e1221]
+            - paragraph [ref=f2e970]:
+              - link "全球人工智能技术大会（GAITC）" [ref=f2e1222] [cursor=pointer]:
+                - /url: https://gaitc.caai.cn/

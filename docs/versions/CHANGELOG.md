@@ -4,6 +4,39 @@
 
 ---
 
+## [1.0.0] — 2026-07-06 — Phase D 完成 & 正式 v1.0.0 交付
+
+### Added
+- **Phase C-2 真实接口联调**：前端首页/知识库/AI问答/模拟面试四大模块全部接入 FastAPI 真实接口（health/search/qa/interview），替换静态演示数据。
+- **Phase C-3 力导向图谱**：后端新增 `GET /api/v1/graph`（chapter/note 两层聚合 + 章节过滤）；前端 `/map` 用 `react-force-graph-2d` 实现可交互知识图谱，支持 hover 高亮+流动粒子、click 聚焦 zoom、章节下拉过滤、Obsidian URI 跳转。
+- 后端新增 2 项图谱集成测试（`test_api_graph_chapter_level` / `test_api_graph_note_level_filter`）。
+- 新增系统级验收测试清单 `acceptance_test.md`，覆盖 5 个 Phase 共 15 个 Test Case。
+
+### Verification
+- 系统验收 **15/15 Test Case 全过**（含真实 Gemini is_mock=False、力导向图谱交互、离线降级文案逐字命中）。
+- `python -m pytest tests/test_api.py -v` → **9 passed**。
+- `npm run build` → 7 路由静态生成，0 错误。
+
+---
+
+## [0.5.0] — 2026-06-30 — Phase C-1 前端工作台雏形
+
+### Added
+- 清理 Next.js 默认模板，完成 PM Knowledge Hub 首页工作台首版。
+- 建立 Clarity Console 视觉方向与全局 Design Tokens：浅灰背景、白色卡片、蓝紫主色、轻量图表和状态色。
+- 新增核心指标卡、Retrieval Report 趋势图、Evidence Sources 来源摘要、Recent Knowledge Work 记录和 Matched Notes 列表。
+- 新增 Phase C 验收标准文档 `docs/acceptance/phase-c-criteria.md`。
+- 新增 `PRODUCT.md` 与 `DESIGN.md`，作为后续前端设计上下文。
+
+### Fixed
+- 显式配置 `turbopack.root`，修复 Windows 环境下 Next.js 16 构建误判 workspace root 的问题。
+
+### Verification
+- `npm.cmd run lint`
+- `npm.cmd run build`
+
+---
+
 ## [0.1.0-alpha] — 2026-06-29 — Phase A 产品文档发布
 
 ### Added

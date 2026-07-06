@@ -1,0 +1,946 @@
+- generic [active] [ref=f1e1]:
+  - button "Open Next.js Dev Tools" [ref=f1e7] [cursor=pointer]:
+    - img [ref=f1e8]
+  - alert [ref=f1e11]
+  - generic [ref=f1e12]:
+    - navigation [ref=f1e13]:
+      - img [ref=f1e15]
+      - generic [ref=f1e19]:
+        - link "工作台" [ref=f1e20] [cursor=pointer]:
+          - /url: /
+          - img [ref=f1e22]
+          - generic [ref=f1e25]: 工作台
+        - link "知识库" [ref=f1e26] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=f1e28]
+          - generic [ref=f1e30]: 知识库
+        - link "AI 问答" [ref=f1e31] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=f1e33]
+          - generic [ref=f1e35]: AI 问答
+        - link "模拟面试" [ref=f1e36] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=f1e38]
+          - generic [ref=f1e42]: 模拟面试
+        - link "知识图谱" [ref=f1e43] [cursor=pointer]:
+          - /url: /map
+          - img [ref=f1e45]
+          - generic [ref=f1e51]: 知识图谱
+        - link "关于" [ref=f1e52] [cursor=pointer]:
+          - /url: /about
+          - img [ref=f1e54]
+          - generic [ref=f1e56]: 关于
+      - button "切换深色模式" [ref=f1e58] [cursor=pointer]:
+        - img [ref=f1e59]
+    - main [ref=f1e61]:
+      - generic [ref=f1e62]:
+        - generic [ref=f1e63]:
+          - heading "目录分类" [level=2] [ref=f1e65]
+          - generic [ref=f1e66]:
+            - button "全部知识库" [ref=f1e67] [cursor=pointer]:
+              - img [ref=f1e68]
+              - generic [ref=f1e70]: 全部知识库
+            - button "01-入门" [ref=f1e71] [cursor=pointer]:
+              - img [ref=f1e72]
+              - generic [ref=f1e74]: 01-入门
+            - button "02-思维与软实力" [ref=f1e75] [cursor=pointer]:
+              - img [ref=f1e76]
+              - generic [ref=f1e78]: 02-思维与软实力
+            - button "03-全流程知识" [ref=f1e79] [cursor=pointer]:
+              - img [ref=f1e80]
+              - generic [ref=f1e82]: 03-全流程知识
+            - button "04-前人经验" [ref=f1e83] [cursor=pointer]:
+              - img [ref=f1e84]
+              - generic [ref=f1e86]: 04-前人经验
+            - button "05-项目实践" [ref=f1e87] [cursor=pointer]:
+              - img [ref=f1e88]
+              - generic [ref=f1e90]: 05-项目实践
+            - button "06-面试" [ref=f1e91] [cursor=pointer]:
+              - img [ref=f1e92]
+              - generic [ref=f1e94]: 06-面试
+            - button "07-AI工作" [ref=f1e95] [cursor=pointer]:
+              - img [ref=f1e96]
+              - generic [ref=f1e98]: 07-AI工作
+            - button "08-深入学习数据" [ref=f1e99] [cursor=pointer]:
+              - img [ref=f1e100]
+              - generic [ref=f1e102]: 08-深入学习数据
+            - button "09-深入学习AI" [ref=f1e103] [cursor=pointer]:
+              - img [ref=f1e104]
+              - generic [ref=f1e106]: 09-深入学习AI
+            - button "10-AI政治" [ref=f1e107] [cursor=pointer]:
+              - img [ref=f1e108]
+              - generic [ref=f1e110]: 10-AI政治
+            - button "11-AI公司研究" [ref=f1e111] [cursor=pointer]:
+              - img [ref=f1e112]
+              - generic [ref=f1e114]: 11-AI公司研究
+            - button "12-AI或产品专家" [ref=f1e115] [cursor=pointer]:
+              - img [ref=f1e116]
+              - generic [ref=f1e118]: 12-AI或产品专家
+            - button "13-AI金融" [ref=f1e119] [cursor=pointer]:
+              - img [ref=f1e120]
+              - generic [ref=f1e122]: 13-AI金融
+        - generic [ref=f1e123]:
+          - generic [ref=f1e124]:
+            - generic [ref=f1e125]:
+              - img
+              - textbox "在列表中搜索..." [ref=f1e126]
+            - generic [ref=f1e128]: 找到 204 篇笔记
+          - generic [ref=f1e129]:
+            - generic [ref=f1e138] [cursor=pointer]:
+              - generic [ref=f1e139]: 1.1 需求
+              - generic [ref=f1e141]: 01-入门
+            - generic [ref=f1e142] [cursor=pointer]:
+              - generic [ref=f1e143]: 1.10 产品机会
+              - generic [ref=f1e145]: 01-入门
+            - generic [ref=f1e146] [cursor=pointer]:
+              - generic [ref=f1e147]: 1.11 AI产品经理
+              - generic [ref=f1e149]: 01-入门
+            - generic [ref=f1e150] [cursor=pointer]:
+              - generic [ref=f1e151]: 1.12 AI产品经理的完整能力矩阵
+              - generic [ref=f1e153]: 01-入门
+            - generic [ref=f1e154] [cursor=pointer]:
+              - generic [ref=f1e155]: 1.13 产品经理的一天
+              - generic [ref=f1e157]: 01-入门
+            - generic [ref=f1e158] [cursor=pointer]:
+              - generic [ref=f1e159]: 1.14 职业发展路径
+              - generic [ref=f1e161]: 01-入门
+            - generic [ref=f1e162] [cursor=pointer]:
+              - generic [ref=f1e163]: 1.2 产品
+              - generic [ref=f1e165]: 01-入门
+            - generic [ref=f1e166] [cursor=pointer]:
+              - generic [ref=f1e167]: 1.3 To Business (B端产品)
+              - generic [ref=f1e169]: 01-入门
+            - generic [ref=f1e170] [cursor=pointer]:
+              - generic [ref=f1e171]: 1.4 To Customer (C端产品)
+              - generic [ref=f1e173]: 01-入门
+            - generic [ref=f1e174] [cursor=pointer]:
+              - generic [ref=f1e175]: 1.5 平台型
+              - generic [ref=f1e177]: 01-入门
+            - generic [ref=f1e178] [cursor=pointer]:
+              - generic [ref=f1e179]: 1.6 财务规划
+              - generic [ref=f1e181]: 01-入门
+            - generic [ref=f1e182] [cursor=pointer]:
+              - generic [ref=f1e183]: 1.7 Product Manager
+              - generic [ref=f1e185]: 01-入门
+            - generic [ref=f1e186] [cursor=pointer]:
+              - generic [ref=f1e187]: 1.8 AI
+              - generic [ref=f1e189]: 01-入门
+            - generic [ref=f1e190] [cursor=pointer]:
+              - generic [ref=f1e191]: 1.9 AI 产品
+              - generic [ref=f1e193]: 01-入门
+            - generic [ref=f1e194] [cursor=pointer]:
+              - generic [ref=f1e195]: 2.1 思维
+              - generic [ref=f1e197]: 02-思维与软实力
+            - generic [ref=f1e198] [cursor=pointer]:
+              - generic [ref=f1e199]: 2.10 商业思维
+              - generic [ref=f1e201]: 02-思维与软实力
+            - generic [ref=f1e202] [cursor=pointer]:
+              - generic [ref=f1e203]: 2.11 批判性思维
+              - generic [ref=f1e205]: 02-思维与软实力
+            - generic [ref=f1e206] [cursor=pointer]:
+              - generic [ref=f1e207]: 2.12 注意力
+              - generic [ref=f1e209]: 02-思维与软实力
+            - generic [ref=f1e210] [cursor=pointer]:
+              - generic [ref=f1e211]: 2.13 Goal
+              - generic [ref=f1e213]: 02-思维与软实力
+            - generic [ref=f1e214] [cursor=pointer]:
+              - generic [ref=f1e215]: 2.14 技术理解力
+              - generic [ref=f1e217]: 02-思维与软实力
+            - generic [ref=f1e218] [cursor=pointer]:
+              - generic [ref=f1e219]: 2.15 设计思维
+              - generic [ref=f1e221]: 02-思维与软实力
+            - generic [ref=f1e222] [cursor=pointer]:
+              - generic [ref=f1e223]: 2.16 GTM（go to marketing）
+              - generic [ref=f1e225]: 02-思维与软实力
+            - generic [ref=f1e226] [cursor=pointer]:
+              - generic [ref=f1e227]: 2.17 时间
+              - generic [ref=f1e229]: 02-思维与软实力
+            - generic [ref=f1e230] [cursor=pointer]:
+              - generic [ref=f1e231]: 2.18 风险
+              - generic [ref=f1e233]: 02-思维与软实力
+            - generic [ref=f1e234] [cursor=pointer]:
+              - generic [ref=f1e235]: 2.2 同理心
+              - generic [ref=f1e237]: 02-思维与软实力
+            - generic [ref=f1e238] [cursor=pointer]:
+              - generic [ref=f1e239]: 2.3 创意
+              - generic [ref=f1e241]: 02-思维与软实力
+            - generic [ref=f1e242] [cursor=pointer]:
+              - generic [ref=f1e243]: 2.4 数据
+              - generic [ref=f1e245]: 02-思维与软实力
+            - generic [ref=f1e246] [cursor=pointer]:
+              - generic [ref=f1e247]: 2.5 沟通
+              - generic [ref=f1e249]: 02-思维与软实力
+            - generic [ref=f1e250] [cursor=pointer]:
+              - generic [ref=f1e251]: 2.6 谈判
+              - generic [ref=f1e253]: 02-思维与软实力
+            - generic [ref=f1e254] [cursor=pointer]:
+              - generic [ref=f1e255]: 2.7 品牌
+              - generic [ref=f1e257]: 02-思维与软实力
+            - generic [ref=f1e258] [cursor=pointer]:
+              - generic [ref=f1e259]: 2.8 费米推理
+              - generic [ref=f1e261]: 02-思维与软实力
+            - generic [ref=f1e262] [cursor=pointer]:
+              - generic [ref=f1e263]: 2.9 转换成本
+              - generic [ref=f1e265]: 02-思维与软实力
+            - generic [ref=f1e266] [cursor=pointer]:
+              - generic [ref=f1e267]: 3.1. 商业化产品七步设计法
+              - generic [ref=f1e269]: 03-全流程知识
+            - generic [ref=f1e270] [cursor=pointer]:
+              - generic [ref=f1e271]: 3.10. MRD（市场需求文档）
+              - generic [ref=f1e273]: 03-全流程知识
+            - generic [ref=f1e274] [cursor=pointer]:
+              - generic [ref=f1e275]: 3.11. PRD（产品需求文档）
+              - generic [ref=f1e277]: 03-全流程知识
+            - generic [ref=f1e278] [cursor=pointer]:
+              - generic [ref=f1e279]: 3.12. 产品设计
+              - generic [ref=f1e281]: 03-全流程知识
+            - generic [ref=f1e282] [cursor=pointer]:
+              - generic [ref=f1e283]: 3.13. 原型设计
+              - generic [ref=f1e285]: 03-全流程知识
+            - generic [ref=f1e286] [cursor=pointer]:
+              - generic [ref=f1e287]: 3.14. 静态页面
+              - generic [ref=f1e289]: 03-全流程知识
+            - generic [ref=f1e290] [cursor=pointer]:
+              - generic [ref=f1e291]: 3.15. 交互设计
+              - generic [ref=f1e293]: 03-全流程知识
+            - generic [ref=f1e294] [cursor=pointer]:
+              - generic [ref=f1e295]: 3.16. MVP（最小可行产品）
+              - generic [ref=f1e297]: 03-全流程知识
+            - generic [ref=f1e298] [cursor=pointer]:
+              - generic [ref=f1e299]: 3.17. 业务说明（用例）
+              - generic [ref=f1e301]: 03-全流程知识
+            - generic [ref=f1e302] [cursor=pointer]:
+              - generic [ref=f1e303]: 3.18. 策略分析
+              - generic [ref=f1e305]: 03-全流程知识
+            - generic [ref=f1e306] [cursor=pointer]:
+              - generic [ref=f1e307]: 3.19. 项目管理
+              - generic [ref=f1e309]: 03-全流程知识
+            - generic [ref=f1e310] [cursor=pointer]:
+              - generic [ref=f1e311]: 3.2 BRD
+              - generic [ref=f1e313]: 03-全流程知识
+            - generic [ref=f1e314] [cursor=pointer]:
+              - generic [ref=f1e315]: 3.20. 沟通、协作、项目推动能力
+              - generic [ref=f1e317]: 03-全流程知识
+            - generic [ref=f1e318] [cursor=pointer]:
+              - generic [ref=f1e319]: 3.21. 数据分析
+              - generic [ref=f1e321]: 03-全流程知识
+            - generic [ref=f1e322] [cursor=pointer]:
+              - generic [ref=f1e323]: 3.22. 产品迭代管理
+              - generic [ref=f1e325]: 03-全流程知识
+            - generic [ref=f1e326] [cursor=pointer]:
+              - generic [ref=f1e327]: 3.23. 资源管理
+              - generic [ref=f1e329]: 03-全流程知识
+            - generic [ref=f1e330] [cursor=pointer]:
+              - generic [ref=f1e331]: 3.24. Research
+              - generic [ref=f1e333]: 03-全流程知识
+            - generic [ref=f1e334] [cursor=pointer]:
+              - generic [ref=f1e335]: 3.25. 工具
+              - generic [ref=f1e337]: 03-全流程知识
+            - generic [ref=f1e338] [cursor=pointer]:
+              - generic [ref=f1e339]: 3.26. 估值
+              - generic [ref=f1e341]: 03-全流程知识
+            - generic [ref=f1e342] [cursor=pointer]:
+              - generic [ref=f1e343]: 3.27. 产品定价
+              - generic [ref=f1e345]: 03-全流程知识
+            - generic [ref=f1e346] [cursor=pointer]:
+              - generic [ref=f1e347]: 3.28. 推广产品
+              - generic [ref=f1e349]: 03-全流程知识
+            - generic [ref=f1e350] [cursor=pointer]:
+              - generic [ref=f1e351]: 3.3 行业分析
+              - generic [ref=f1e353]: 03-全流程知识
+            - generic [ref=f1e354] [cursor=pointer]:
+              - generic [ref=f1e355]: 3.4. 市场分析
+              - generic [ref=f1e357]: 03-全流程知识
+            - generic [ref=f1e358] [cursor=pointer]:
+              - generic [ref=f1e359]: 3.5. 竞品分析
+              - generic [ref=f1e361]: 03-全流程知识
+            - generic [ref=f1e362] [cursor=pointer]:
+              - generic [ref=f1e363]: 3.6. 用户需求研究
+              - generic [ref=f1e365]: 03-全流程知识
+            - generic [ref=f1e366] [cursor=pointer]:
+              - generic [ref=f1e367]: 3.7. 需求分析
+              - generic [ref=f1e369]: 03-全流程知识
+            - generic [ref=f1e370] [cursor=pointer]:
+              - generic [ref=f1e371]: 3.8. 产品体验报告
+              - generic [ref=f1e373]: 03-全流程知识
+            - generic [ref=f1e374] [cursor=pointer]:
+              - generic [ref=f1e375]: 3.9. 竞争分析
+              - generic [ref=f1e377]: 03-全流程知识
+            - generic [ref=f1e378] [cursor=pointer]:
+              - generic [ref=f1e379]: 4.1 早期工作
+              - generic [ref=f1e381]: 04-前人经验
+            - generic [ref=f1e382] [cursor=pointer]:
+              - generic [ref=f1e383]: 4.10 4年产品工作总结
+              - generic [ref=f1e385]: 04-前人经验
+            - generic [ref=f1e386] [cursor=pointer]:
+              - generic [ref=f1e387]: 4.11 剧本杀
+              - generic [ref=f1e389]: 04-前人经验
+            - generic [ref=f1e390] [cursor=pointer]:
+              - generic [ref=f1e391]: 4.12 失败
+              - generic [ref=f1e393]: 04-前人经验
+            - generic [ref=f1e394] [cursor=pointer]:
+              - generic [ref=f1e395]: 4.13 AI PM的隐性工作
+              - generic [ref=f1e397]: 04-前人经验
+            - generic [ref=f1e398] [cursor=pointer]:
+              - generic [ref=f1e399]: 4.2 行业巨变
+              - generic [ref=f1e401]: 04-前人经验
+            - generic [ref=f1e402] [cursor=pointer]:
+              - generic [ref=f1e403]: 4.3 盒马鲜生
+              - generic [ref=f1e405]: 04-前人经验
+            - generic [ref=f1e406] [cursor=pointer]:
+              - generic [ref=f1e407]: 4.4 Jamin
+              - generic [ref=f1e409]: 04-前人经验
+            - generic [ref=f1e410] [cursor=pointer]:
+              - generic [ref=f1e411]: 4.5 淘宝
+              - generic [ref=f1e413]: 04-前人经验
+            - generic [ref=f1e414] [cursor=pointer]:
+              - generic [ref=f1e415]: 4.6 腾讯
+              - generic [ref=f1e417]: 04-前人经验
+            - generic [ref=f1e418] [cursor=pointer]:
+              - generic [ref=f1e419]: 4.7 蚂蚁借呗的金融产品解析
+              - generic [ref=f1e421]: 04-前人经验
+            - generic [ref=f1e422] [cursor=pointer]:
+              - generic [ref=f1e423]: 4.8 diudiu
+              - generic [ref=f1e425]: 04-前人经验
+            - generic [ref=f1e426] [cursor=pointer]:
+              - generic [ref=f1e427]: 4.9 钉钉
+              - generic [ref=f1e429]: 04-前人经验
+            - generic [ref=f1e430] [cursor=pointer]:
+              - generic [ref=f1e431]: 5.1 AI行业分析
+              - generic [ref=f1e433]: 05-项目实践
+            - generic [ref=f1e434] [cursor=pointer]:
+              - generic [ref=f1e435]: 5.10 原型检验
+              - generic [ref=f1e437]: 05-项目实践
+            - generic [ref=f1e438] [cursor=pointer]:
+              - generic [ref=f1e439]: 5.11 产品文档
+              - generic [ref=f1e441]: 05-项目实践
+            - generic [ref=f1e442] [cursor=pointer]:
+              - generic [ref=f1e443]: 5.12 Roadmap
+              - generic [ref=f1e445]: 05-项目实践
+            - generic [ref=f1e446] [cursor=pointer]:
+              - generic [ref=f1e447]: 5.13 Scrum
+              - generic [ref=f1e449]: 05-项目实践
+            - generic [ref=f1e450] [cursor=pointer]:
+              - generic [ref=f1e451]: 5.14 需求价值的分析方法
+              - generic [ref=f1e453]: 05-项目实践
+            - generic [ref=f1e454] [cursor=pointer]:
+              - generic [ref=f1e455]: 5.15 价值
+              - generic [ref=f1e457]: 05-项目实践
+            - generic [ref=f1e458] [cursor=pointer]:
+              - generic [ref=f1e459]: 5.16 产品体验
+              - generic [ref=f1e461]: 05-项目实践
+            - generic [ref=f1e462] [cursor=pointer]:
+              - generic [ref=f1e463]: 5.2 AI公司
+              - generic [ref=f1e465]: 05-项目实践
+            - generic [ref=f1e466] [cursor=pointer]:
+              - generic [ref=f1e467]: 5.3 AI人才
+              - generic [ref=f1e469]: 05-项目实践
+            - generic [ref=f1e470] [cursor=pointer]:
+              - generic [ref=f1e471]: 5.4 AI金融
+              - generic [ref=f1e473]: 05-项目实践
+            - generic [ref=f1e474] [cursor=pointer]:
+              - generic [ref=f1e475]: 5.5 AI健身
+              - generic [ref=f1e477]: 05-项目实践
+            - generic [ref=f1e478] [cursor=pointer]:
+              - generic [ref=f1e479]: 5.6 AI硬件
+              - generic [ref=f1e481]: 05-项目实践
+            - generic [ref=f1e482] [cursor=pointer]:
+              - generic [ref=f1e483]: 5.7 产品整个流程
+              - generic [ref=f1e485]: 05-项目实践
+            - generic [ref=f1e486] [cursor=pointer]:
+              - generic [ref=f1e487]: 5.8 数据处理流程拆解
+              - generic [ref=f1e489]: 05-项目实践
+            - generic [ref=f1e490] [cursor=pointer]:
+              - generic [ref=f1e491]: 5.9 模型过程
+              - generic [ref=f1e493]: 05-项目实践
+            - generic [ref=f1e494] [cursor=pointer]:
+              - generic [ref=f1e495]: 6.1.1 心态
+              - generic [ref=f1e497]: 06-面试
+            - generic [ref=f1e498] [cursor=pointer]:
+              - generic [ref=f1e499]: 6.1.10 一面数据笔试
+              - generic [ref=f1e501]: 06-面试
+            - generic [ref=f1e502] [cursor=pointer]:
+              - generic [ref=f1e503]: 6.1.11 metaapp笔试
+              - generic [ref=f1e505]: 06-面试
+            - generic [ref=f1e506] [cursor=pointer]:
+              - generic [ref=f1e507]: 6.1.12 面试官
+              - generic [ref=f1e509]: 06-面试
+            - generic [ref=f1e510] [cursor=pointer]:
+              - generic [ref=f1e511]: 6.1.13 常见问题
+              - generic [ref=f1e513]: 06-面试
+            - generic [ref=f1e514] [cursor=pointer]:
+              - generic [ref=f1e515]: 6.1.14 模拟面试
+              - generic [ref=f1e517]: 06-面试
+            - generic [ref=f1e518] [cursor=pointer]:
+              - generic [ref=f1e519]: 6.1.15 HR
+              - generic [ref=f1e521]: 06-面试
+            - generic [ref=f1e522] [cursor=pointer]:
+              - generic [ref=f1e523]: 6.1.16 回报
+              - generic [ref=f1e525]: 06-面试
+            - generic [ref=f1e526] [cursor=pointer]:
+              - generic [ref=f1e527]: 6.1.17 工作
+              - generic [ref=f1e529]: 06-面试
+            - generic [ref=f1e530] [cursor=pointer]:
+              - generic [ref=f1e531]: 6.1.18 背景调查
+              - generic [ref=f1e533]: 06-面试
+            - generic [ref=f1e534] [cursor=pointer]:
+              - generic [ref=f1e535]: 6.1.19 招不到合适
+              - generic [ref=f1e537]: 06-面试
+            - generic [ref=f1e538] [cursor=pointer]:
+              - generic [ref=f1e539]: 6.1.2 职场选择
+              - generic [ref=f1e541]: 06-面试
+            - generic [ref=f1e542] [cursor=pointer]:
+              - generic [ref=f1e543]: 6.1.20 初入职场
+              - generic [ref=f1e545]: 06-面试
+            - generic [ref=f1e546] [cursor=pointer]:
+              - generic [ref=f1e547]: 6.1.3 申请要求
+              - generic [ref=f1e549]: 06-面试
+            - generic [ref=f1e550] [cursor=pointer]:
+              - generic [ref=f1e551]: 6.1.4 令人喜爱的新人
+              - generic [ref=f1e553]: 06-面试
+            - generic [ref=f1e554] [cursor=pointer]:
+              - generic [ref=f1e555]: 6.1.5 简历CV
+              - generic [ref=f1e557]: 06-面试
+            - generic [ref=f1e558] [cursor=pointer]:
+              - generic [ref=f1e559]: 6.1.6 金融产品经理的简历
+              - generic [ref=f1e561]: 06-面试
+            - generic [ref=f1e562] [cursor=pointer]:
+              - generic [ref=f1e563]: 6.1.7 不能去的公司
+              - generic [ref=f1e565]: 06-面试
+            - generic [ref=f1e566] [cursor=pointer]:
+              - generic [ref=f1e567]: 6.1.8 常见企业文化
+              - generic [ref=f1e569]: 06-面试
+            - generic [ref=f1e570] [cursor=pointer]:
+              - generic [ref=f1e571]: 6.1.9 笔试题
+              - generic [ref=f1e573]: 06-面试
+            - generic [ref=f1e574] [cursor=pointer]:
+              - generic [ref=f1e575]: 7.1 学生身份
+              - generic [ref=f1e577]: 07-AI工作
+            - generic [ref=f1e578] [cursor=pointer]:
+              - generic [ref=f1e579]: 7.2 移民
+              - generic [ref=f1e581]: 07-AI工作
+            - generic [ref=f1e582] [cursor=pointer]:
+              - generic [ref=f1e583]: 7.3 大会
+              - generic [ref=f1e585]: 07-AI工作
+            - generic [ref=f1e586] [cursor=pointer]:
+              - generic [ref=f1e587]: 7.4 金融实习
+              - generic [ref=f1e589]: 07-AI工作
+            - generic [ref=f1e590] [cursor=pointer]:
+              - generic [ref=f1e591]: 7.5 challenge
+              - generic [ref=f1e593]: 07-AI工作
+            - generic [ref=f1e594] [cursor=pointer]:
+              - generic [ref=f1e595]: 8.1. 数据
+              - generic [ref=f1e597]: 08-深入学习数据
+            - generic [ref=f1e598] [cursor=pointer]:
+              - generic [ref=f1e599]: 8.10. 知识产权
+              - generic [ref=f1e601]: 08-深入学习数据
+            - generic [ref=f1e602] [cursor=pointer]:
+              - generic [ref=f1e603]: 8.11. 非对称信息
+              - generic [ref=f1e605]: 08-深入学习数据
+            - generic [ref=f1e606] [cursor=pointer]:
+              - generic [ref=f1e607]: 8.12. 区块链
+              - generic [ref=f1e609]: 08-深入学习数据
+            - generic [ref=f1e610] [cursor=pointer]:
+              - generic [ref=f1e611]: 8.13. 数据产品
+              - generic [ref=f1e613]: 08-深入学习数据
+            - generic [ref=f1e614] [cursor=pointer]:
+              - generic [ref=f1e615]: 8.14. dataworks平台
+              - generic [ref=f1e617]: 08-深入学习数据
+            - generic [ref=f1e618] [cursor=pointer]:
+              - generic [ref=f1e619]: 8.2. 数据产业
+              - generic [ref=f1e621]: 08-深入学习数据
+            - generic [ref=f1e622] [cursor=pointer]:
+              - generic [ref=f1e623]: 8.3. 合规数据
+              - generic [ref=f1e625]: 08-深入学习数据
+            - generic [ref=f1e626] [cursor=pointer]:
+              - generic [ref=f1e627]: 8.4. 数据准备
+              - generic [ref=f1e629]: 08-深入学习数据
+            - generic [ref=f1e630] [cursor=pointer]:
+              - generic [ref=f1e631]: 8.5. 信息
+              - generic [ref=f1e633]: 08-深入学习数据
+            - generic [ref=f1e634] [cursor=pointer]:
+              - generic [ref=f1e635]: 8.6. 侵权
+              - generic [ref=f1e637]: 08-深入学习数据
+            - generic [ref=f1e638] [cursor=pointer]:
+              - generic [ref=f1e639]: 8.7. 法律
+              - generic [ref=f1e641]: 08-深入学习数据
+            - generic [ref=f1e642] [cursor=pointer]:
+              - generic [ref=f1e643]: 8.8. 隐私
+              - generic [ref=f1e645]: 08-深入学习数据
+            - generic [ref=f1e646] [cursor=pointer]:
+              - generic [ref=f1e647]: 8.9. 隐私计算
+              - generic [ref=f1e649]: 08-深入学习数据
+            - generic [ref=f1e650] [cursor=pointer]:
+              - generic [ref=f1e651]: 9.1. 理解AI
+              - generic [ref=f1e653]: 09-深入学习AI
+            - generic [ref=f1e654] [cursor=pointer]:
+              - generic [ref=f1e655]: 9.10. GAN
+              - generic [ref=f1e657]: 09-深入学习AI
+            - generic [ref=f1e658] [cursor=pointer]:
+              - generic [ref=f1e659]: 9.11. OCR
+              - generic [ref=f1e661]: 09-深入学习AI
+            - generic [ref=f1e662] [cursor=pointer]:
+              - generic [ref=f1e663]: 9.12. NLP
+              - generic [ref=f1e665]: 09-深入学习AI
+            - generic [ref=f1e666] [cursor=pointer]:
+              - generic [ref=f1e667]: 9.13. 知识图谱
+              - generic [ref=f1e669]: 09-深入学习AI
+            - generic [ref=f1e670] [cursor=pointer]:
+              - generic [ref=f1e671]: 9.14. 语音
+              - generic [ref=f1e673]: 09-深入学习AI
+            - generic [ref=f1e674] [cursor=pointer]:
+              - generic [ref=f1e675]: 9.15. 音乐
+              - generic [ref=f1e677]: 09-深入学习AI
+            - generic [ref=f1e678] [cursor=pointer]:
+              - generic [ref=f1e679]: 9.16. FAQ
+              - generic [ref=f1e681]: 09-深入学习AI
+            - generic [ref=f1e682] [cursor=pointer]:
+              - generic [ref=f1e683]: 9.17. 聊天机器人
+              - generic [ref=f1e685]: 09-深入学习AI
+            - generic [ref=f1e686] [cursor=pointer]:
+              - generic [ref=f1e687]: 9.18. 视频
+              - generic [ref=f1e689]: 09-深入学习AI
+            - generic [ref=f1e690] [cursor=pointer]:
+              - generic [ref=f1e691]: 9.19. 联邦学习
+              - generic [ref=f1e693]: 09-深入学习AI
+            - generic [ref=f1e694] [cursor=pointer]:
+              - generic [ref=f1e695]: 9.2. AI 研究
+              - generic [ref=f1e697]: 09-深入学习AI
+            - generic [ref=f1e698] [cursor=pointer]:
+              - generic [ref=f1e699]: 9.20. 移动端
+              - generic [ref=f1e701]: 09-深入学习AI
+            - generic [ref=f1e702] [cursor=pointer]:
+              - generic [ref=f1e703]: 9.21. 认知智能
+              - generic [ref=f1e705]: 09-深入学习AI
+            - generic [ref=f1e706] [cursor=pointer]:
+              - generic [ref=f1e707]: 9.22. 现实
+              - generic [ref=f1e709]: 09-深入学习AI
+            - generic [ref=f1e710] [cursor=pointer]:
+              - generic [ref=f1e711]: 9.23. AI产品的测试
+              - generic [ref=f1e713]: 09-深入学习AI
+            - generic [ref=f1e714] [cursor=pointer]:
+              - generic [ref=f1e715]: 9.24. 灰度发布
+              - generic [ref=f1e717]: 09-深入学习AI
+            - generic [ref=f1e718] [cursor=pointer]:
+              - generic [ref=f1e719]: 9.25. AI部署
+              - generic [ref=f1e721]: 09-深入学习AI
+            - generic [ref=f1e722] [cursor=pointer]:
+              - generic [ref=f1e723]: 9.26. AI监控
+              - generic [ref=f1e725]: 09-深入学习AI
+            - generic [ref=f1e726] [cursor=pointer]:
+              - generic [ref=f1e727]: 9.27. 人才培养
+              - generic [ref=f1e729]: 09-深入学习AI
+            - generic [ref=f1e730] [cursor=pointer]:
+              - generic [ref=f1e731]: 9.3. code
+              - generic [ref=f1e733]: 09-深入学习AI
+            - generic [ref=f1e734] [cursor=pointer]:
+              - generic [ref=f1e735]: 9.4. 特征工程
+              - generic [ref=f1e737]: 09-深入学习AI
+            - generic [ref=f1e738] [cursor=pointer]:
+              - generic [ref=f1e739]: 9.5. ML
+              - generic [ref=f1e741]: 09-深入学习AI
+            - generic [ref=f1e742] [cursor=pointer]:
+              - generic [ref=f1e743]: 9.6. MLOps
+              - generic [ref=f1e745]: 09-深入学习AI
+            - generic [ref=f1e746] [cursor=pointer]:
+              - generic [ref=f1e747]: 9.7. 深度学习算法
+              - generic [ref=f1e749]: 09-深入学习AI
+            - generic [ref=f1e750] [cursor=pointer]:
+              - generic [ref=f1e751]: 9.8. CV
+              - generic [ref=f1e753]: 09-深入学习AI
+            - generic [ref=f1e754] [cursor=pointer]:
+              - generic [ref=f1e755]: 9.9. 画画
+              - generic [ref=f1e757]: 09-深入学习AI
+            - generic [ref=f1e758] [cursor=pointer]:
+              - generic [ref=f1e759]: 10.1. 引言
+              - generic [ref=f1e761]: 10-AI政治
+            - generic [ref=f1e762] [cursor=pointer]:
+              - generic [ref=f1e763]: 10.2. 积累
+              - generic [ref=f1e765]: 10-AI政治
+            - generic [ref=f1e766] [cursor=pointer]:
+              - generic [ref=f1e767]: 11.1. 公司研究
+              - generic [ref=f1e769]: 11-AI公司研究
+            - generic [ref=f1e770] [cursor=pointer]:
+              - generic [ref=f1e771]: 11.10. 美团
+              - generic [ref=f1e773]: 11-AI公司研究
+            - generic [ref=f1e774] [cursor=pointer]:
+              - generic [ref=f1e775]: 11.11. 红棉小冰
+              - generic [ref=f1e777]: 11-AI公司研究
+            - generic [ref=f1e778] [cursor=pointer]:
+              - generic [ref=f1e779]: 11.12. 小米
+              - generic [ref=f1e781]: 11-AI公司研究
+            - generic [ref=f1e782] [cursor=pointer]:
+              - generic [ref=f1e783]: 11.13. 华泰证券
+              - generic [ref=f1e785]: 11-AI公司研究
+            - generic [ref=f1e786] [cursor=pointer]:
+              - generic [ref=f1e787]: 11.14. 摩根大通
+              - generic [ref=f1e789]: 11-AI公司研究
+            - generic [ref=f1e790] [cursor=pointer]:
+              - generic [ref=f1e791]: 11.15. 天眼查
+              - generic [ref=f1e793]: 11-AI公司研究
+            - generic [ref=f1e794] [cursor=pointer]:
+              - generic [ref=f1e795]: 11.16. MRSai
+              - generic [ref=f1e797]: 11-AI公司研究
+            - generic [ref=f1e798] [cursor=pointer]:
+              - generic [ref=f1e799]: 11.17. 陌陌
+              - generic [ref=f1e801]: 11-AI公司研究
+            - generic [ref=f1e802] [cursor=pointer]:
+              - generic [ref=f1e803]: 11.18. datayes
+              - generic [ref=f1e805]: 11-AI公司研究
+            - generic [ref=f1e806] [cursor=pointer]:
+              - generic [ref=f1e807]: 11.19. 图灵机器人
+              - generic [ref=f1e809]: 11-AI公司研究
+            - generic [ref=f1e810] [cursor=pointer]:
+              - generic [ref=f1e811]: 11.2. 百度
+              - generic [ref=f1e813]: 11-AI公司研究
+            - generic [ref=f1e814] [cursor=pointer]:
+              - generic [ref=f1e815]: 11.20. RealAI
+              - generic [ref=f1e817]: 11-AI公司研究
+            - generic [ref=f1e818] [cursor=pointer]:
+              - generic [ref=f1e819]: 11.21. 云从
+              - generic [ref=f1e821]: 11-AI公司研究
+            - generic [ref=f1e822] [cursor=pointer]:
+              - generic [ref=f1e823]: 11.22. 金证
+              - generic [ref=f1e825]: 11-AI公司研究
+            - generic [ref=f1e826] [cursor=pointer]:
+              - generic [ref=f1e827]: 11.23. 吐槽
+              - generic [ref=f1e829]: 11-AI公司研究
+            - generic [ref=f1e830] [cursor=pointer]:
+              - generic [ref=f1e831]: 11.24. Intel
+              - generic [ref=f1e833]: 11-AI公司研究
+            - generic [ref=f1e834] [cursor=pointer]:
+              - generic [ref=f1e835]: 11.25. 旷视
+              - generic [ref=f1e837]: 11-AI公司研究
+            - generic [ref=f1e838] [cursor=pointer]:
+              - generic [ref=f1e839]: 11.26. 更多
+              - generic [ref=f1e841]: 11-AI公司研究
+            - generic [ref=f1e842] [cursor=pointer]:
+              - generic [ref=f1e843]: 11.3. 阿里巴巴
+              - generic [ref=f1e845]: 11-AI公司研究
+            - generic [ref=f1e846] [cursor=pointer]:
+              - generic [ref=f1e847]: 11.4. 蚂蚁集团
+              - generic [ref=f1e849]: 11-AI公司研究
+            - generic [ref=f1e850] [cursor=pointer]:
+              - generic [ref=f1e851]: 11.5. 支付宝
+              - generic [ref=f1e853]: 11-AI公司研究
+            - generic [ref=f1e854] [cursor=pointer]:
+              - generic [ref=f1e855]: 11.6. 怼 蓝象智联
+              - generic [ref=f1e857]: 11-AI公司研究
+            - generic [ref=f1e858] [cursor=pointer]:
+              - generic [ref=f1e859]: 11.7. 腾讯
+              - generic [ref=f1e861]: 11-AI公司研究
+            - generic [ref=f1e862] [cursor=pointer]:
+              - generic [ref=f1e863]: 11.8. 暗物智能
+              - generic [ref=f1e865]: 11-AI公司研究
+            - generic [ref=f1e866] [cursor=pointer]:
+              - generic [ref=f1e867]: 11.9. 京东
+              - generic [ref=f1e869]: 11-AI公司研究
+            - generic [ref=f1e870] [cursor=pointer]:
+              - generic [ref=f1e871]: 12.1. 专家
+              - generic [ref=f1e873]: 12-AI或产品专家
+            - generic [ref=f1e874] [cursor=pointer]:
+              - generic [ref=f1e875]: 12.2. 漆远
+              - generic [ref=f1e877]: 12-AI或产品专家
+            - generic [ref=f1e878] [cursor=pointer]:
+              - generic [ref=f1e879]: 12.3. 裴健
+              - generic [ref=f1e881]: 12-AI或产品专家
+            - generic [ref=f1e882] [cursor=pointer]:
+              - generic [ref=f1e883]: 12.4. 谢梁
+              - generic [ref=f1e885]: 12-AI或产品专家
+            - generic [ref=f1e886] [cursor=pointer]:
+              - generic [ref=f1e887]: 12.5. 俞军
+              - generic [ref=f1e889]: 12-AI或产品专家
+            - generic [ref=f1e890] [cursor=pointer]:
+              - generic [ref=f1e891]: 12.6. 马占凯
+              - generic [ref=f1e893]: 12-AI或产品专家
+            - generic [ref=f1e894] [cursor=pointer]:
+              - generic [ref=f1e895]: 12.7. 朱孙纯
+              - generic [ref=f1e897]: 12-AI或产品专家
+            - generic [ref=f1e898] [cursor=pointer]:
+              - generic [ref=f1e899]: 13.1 金融
+              - generic [ref=f1e901]: 13-AI金融
+            - generic [ref=f1e902] [cursor=pointer]:
+              - generic [ref=f1e903]: 13.10 智能营销
+              - generic [ref=f1e905]: 13-AI金融
+            - generic [ref=f1e906] [cursor=pointer]:
+              - generic [ref=f1e907]: 13.11 全栈金融
+              - generic [ref=f1e909]: 13-AI金融
+            - generic [ref=f1e910] [cursor=pointer]:
+              - generic [ref=f1e911]: 13.12 AI安全
+              - generic [ref=f1e913]: 13-AI金融
+            - generic [ref=f1e914] [cursor=pointer]:
+              - generic [ref=f1e915]: 13.13 Quant
+              - generic [ref=f1e917]: 13-AI金融
+            - generic [ref=f1e918] [cursor=pointer]:
+              - generic [ref=f1e919]: 13.14 天星术科
+              - generic [ref=f1e921]: 13-AI金融
+            - generic [ref=f1e922] [cursor=pointer]:
+              - generic [ref=f1e923]: 13.2 金融科技（FinTech）
+              - generic [ref=f1e925]: 13-AI金融
+            - generic [ref=f1e926] [cursor=pointer]:
+              - generic [ref=f1e927]: 13.3 AI+Finance
+              - generic [ref=f1e929]: 13-AI金融
+            - generic [ref=f1e930] [cursor=pointer]:
+              - generic [ref=f1e931]: 13.4 投资
+              - generic [ref=f1e933]: 13-AI金融
+            - generic [ref=f1e934] [cursor=pointer]:
+              - generic [ref=f1e935]: 13.5 智能顾投
+              - generic [ref=f1e937]: 13-AI金融
+            - generic [ref=f1e938] [cursor=pointer]:
+              - generic [ref=f1e939]: 13.6 智能投研
+              - generic [ref=f1e941]: 13-AI金融
+            - generic [ref=f1e942] [cursor=pointer]:
+              - generic [ref=f1e943]: 13.7 智能风控
+              - generic [ref=f1e945]: 13-AI金融
+            - generic [ref=f1e946] [cursor=pointer]:
+              - generic [ref=f1e947]: 13.8 智能客服
+              - generic [ref=f1e949]: 13-AI金融
+            - generic [ref=f1e950] [cursor=pointer]:
+              - generic [ref=f1e951]: 13.9 RPA
+              - generic [ref=f1e953]: 13-AI金融
+        - generic [ref=f1e132]:
+          - generic [ref=f1e133]:
+            - generic [ref=f1e954]:
+              - heading "1.1 需求" [level=1] [ref=f1e955]
+              - generic [ref=f1e956]: 01-入门/1.1-需求.md
+            - link "在 Obsidian 打开" [ref=f1e957] [cursor=pointer]:
+              - /url: obsidian://open?vault=从零开始成为ai产品经理&file=01-入门/1.1-需求
+              - img [ref=f1e958]
+              - text: 在 Obsidian 打开
+          - generic [ref=f1e963]:
+            - heading "1.1 需求" [level=1] [ref=f1e964]
+            - blockquote [ref=f1e965]:
+              - paragraph [ref=f1e966]:
+                - text: 来源：
+                - link "自学成AI产品经理" [ref=f1e967] [cursor=pointer]:
+                  - /url: https://stevenjokess.github.io/2bPM/chapter_introduction/need.html
+            - separator [ref=f1e968]
+            - heading "📌 核心概念" [level=2] [ref=f1e969]
+            - paragraph [ref=f1e970]:
+              - text: 人类为了维持生活机能或健全心灵的基础满足条件，更多见
+              - link "需求层次理论" [ref=f1e971] [cursor=pointer]:
+                - /url: https://zh.wikipedia.org/wiki/%E9%9C%80%E6%B1%82%E5%B1%82%E6%AC%A1%E7%90%86%E8%AE%BA
+            - paragraph [ref=f1e972]:
+              - text: 需求是产品产生的前提，如果没有需求，产品也就不会存在，从而产品经理这个岗位也就不会存在了。
+              - link "9" [ref=f1e973] [cursor=pointer]:
+                - /url: https://www.zhihu.com/pub/reader/119980992/chapter/1284104614460440576
+            - blockquote [ref=f1e974]:
+              - paragraph [ref=f1e975]:
+                - text: 💡
+                - strong [ref=f1e976]: 需求蛋模型
+                - text: ：需求总是含混的，做需求相关的工作，就是不断地降低含混。——《探索需求》
+                - link "7" [ref=f1e977] [cursor=pointer]:
+                  - /url: https://www.yinxiang.com/everhub/note/f9ab87ee-73e6-4241-9428-9507cbfd007f
+            - paragraph [ref=f1e978]:
+              - strong [ref=f1e979]: 需求决定产品核心价值
+              - text: ：解决的需求越重要，你的产品核心价值就越大。
+            - separator [ref=f1e980]
+            - heading "🎯 别做「传话筒」" [level=2] [ref=f1e981]
+            - paragraph [ref=f1e982]:
+              - text: 产品经理作为需求「收纳箱」，要接收来自四面八方的需求，然后将需求串起来并进行有效的规划后，形成产品需求。可是很多时候，产品经理只是被动地接收需求，对需求不进行任何的分析和转换，直接就放到了产品规划清单里，等待着开发上线，似乎一切就这样完成了。
+              - link "8" [ref=f1e983] [cursor=pointer]:
+                - /url: https://www.zhihu.com/pub/reader/119980992/chapter/1284104607329615872
+            - paragraph [ref=f1e984]: 如果只是简单传个话，公司直接用一支录音笔是否更合适呢？而且录音笔的保真率至少能够达到 95%，而人的保真率可能连 80% 都达不到。
+            - blockquote [ref=f1e985]:
+              - paragraph [ref=f1e986]:
+                - text: ⚠️
+                - strong [ref=f1e987]: 最糟情况
+                - text: ：东西做出来了，对方不认可，而怪罪：
+              - list [ref=f1e988]:
+                - listitem [ref=f1e989]: 需求方提需求没说清楚（手机端搞成PC）
+                - listitem [ref=f1e990]: 研发部实现不了（无第三方稳定接口、自研耗时长）
+                - listitem [ref=f1e991]: 老板定的（先抓紧上线PC端，再慢慢研究手机端）
+            - separator [ref=f1e992]
+            - heading "📝 产品需求举例 13" [level=2] [ref=f1e993]:
+              - text: 📝 产品需求举例
+              - link "13" [ref=f1e994] [cursor=pointer]:
+                - /url: http://www.shuahuangpu.com/articles/110937.html
+            - list [ref=f1e995]:
+              - listitem [ref=f1e996]:
+                - strong [ref=f1e997]: 滴滴
+                - text: ：解决了用户想要便捷出行的基本出行需求
+              - listitem [ref=f1e998]:
+                - strong [ref=f1e999]: 抖音
+                - text: ：解决了新时代下用户的娱乐需求，表达展示自己的需求
+              - listitem [ref=f1e1000]:
+                - strong [ref=f1e1001]: 美团外卖
+                - text: ：解决了用户懒和吃的需求，用户无需出门就能吃到想吃的东西
+            - separator [ref=f1e1002]
+            - heading "❓ 需求 or 伪需求" [level=2] [ref=f1e1003]
+            - paragraph [ref=f1e1004]:
+              - strong [ref=f1e1005]: 真需求
+              - text: ："客户不是想买一个1英寸的电钻，而是想要一个1英寸的钻孔！"——市场营销学教授西奥多·莱维特
+            - paragraph [ref=f1e1006]:
+              - strong [ref=f1e1007]: 伪需求
+              - text: ：有对大学情侣去酒店开房，和酒店的老板说开房的目的是为了考试想找个安静的地方学习。于是老板就把房间改成书房的形式，最后酒店倒闭了。从这里我们可以发现，情侣用学习来掩饰他们去酒店的真实动机，这也是人性使然。老板并没有理解到这对情侣的本质需求，以提供安静舒适的学习环境来满足情侣口中的"伪需求"，情侣的本质需求没有得到满足自然不会再来。
+              - link "16" [ref=f1e1008] [cursor=pointer]:
+                - /url: https://zhuanlan.zhihu.com/p/390835483
+            - paragraph [ref=f1e1009]:
+              - strong [ref=f1e1010]: 判断标准
+              - text: ：
+            - list [ref=f1e1011]:
+              - listitem [ref=f1e1012]:
+                - text: 是否是围绕主路径；迅雷：搜电影-下电影-看电影，"边看边播"、影评和打分
+                - link "2" [ref=f1e1013] [cursor=pointer]:
+                  - /url: http://www.woshipm.com/pmd/2903334.html
+              - listitem [ref=f1e1014]: 该需求的使用频率；必须高频
+            - separator [ref=f1e1015]
+            - heading "🔄 需求来源" [level=2] [ref=f1e1016]
+            - code [ref=f1e1018]: 商业 → 市场 → 用户 → 需求
+            - paragraph [ref=f1e1019]:
+              - link "14" [ref=f1e1020] [cursor=pointer]:
+                - /url: https://zhuanlan.zhihu.com/p/25965712
+            - separator [ref=f1e1021]
+            - heading "📋 需求职责" [level=2] [ref=f1e1022]
+            - paragraph [ref=f1e1023]:
+              - text: 需求管理、需求定义、需求确认、需求跟踪等与需求相关的职责都是公司对产品经理最基本的要求。原因是产品经理是对公司产品的负责人，而产品是为用户解决某种特定需求的，因此即使我们来到了人工智能时代，产品依然是围绕用户需求定义的，这个本质是不变的。
+              - link "12" [ref=f1e1024] [cursor=pointer]:
+                - /url: https://zhuanlan.zhihu.com/p/36871139
+            - separator [ref=f1e1025]
+            - heading "🔍 需求采集" [level=2] [ref=f1e1026]
+            - paragraph [ref=f1e1027]: 直接采集与间接采集，获取到的需求分别是一手需求与二手需求。
+            - paragraph [ref=f1e1028]: 可以从两个角度来理解它们的差异：
+            - list [ref=f1e1029]:
+              - listitem [ref=f1e1030]: 需求的提出者是不是有需求的人
+              - listitem [ref=f1e1031]: 需求是原始的还是加工过的
+            - blockquote [ref=f1e1032]:
+              - paragraph [ref=f1e1033]: 💡 比喻：生孩子与养孩子
+            - paragraph [ref=f1e1034]:
+              - strong [ref=f1e1035]: 关键点
+              - text: ：
+            - list [ref=f1e1036]:
+              - listitem [ref=f1e1037]: 直接从用户处采集的一手需求更准确，所以产品经理一定要确保手里有足够比例的需求是直接采集的，这样才能让产品本身和自己对产品的判断更接地气
+              - listitem [ref=f1e1038]:
+                - text: 而从销售、营销、服务人员
+                - link "6" [ref=f1e1039] [cursor=pointer]:
+                  - /url: https://quizlet.com/129588206/%E4%BA%BA%E4%BA%BA%E9%83%BD%E6%98%AF%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E7%AC%94%E8%AE%B0-flash-cards/
+                - text: 等间接采集的二手需求，有可能被扭曲，就需要带着"问号"来看，思考原始需求方和转述者分别是谁，以及它有没有被曲解过
+              - listitem [ref=f1e1040]: 但二手需求（比如一份客户反馈周报）可以通过更多的人，收集到更多的用户声音，而且是经过梳理的，所以获取信息的效率更高
+            - paragraph [ref=f1e1041]:
+              - strong [ref=f1e1042]: 实践建议
+              - text: ：团队内"全员参与采集，产品人员处理"是比较可行的模式，是一种效率和准确度的兼顾方案。
+            - heading "用户需求 vs 产品需求" [level=3] [ref=f1e1043]
+            - table [ref=f1e1044]:
+              - rowgroup [ref=f1e1045]:
+                - row "类型 定义" [ref=f1e1046]:
+                  - columnheader "类型" [ref=f1e1047]
+                  - columnheader "定义" [ref=f1e1048]
+              - rowgroup [ref=f1e1049]:
+                - row "用户需求 用户自以为的需求，并且经常表达为用户的解决方案" [ref=f1e1050]:
+                  - cell "用户需求" [ref=f1e1051]
+                  - cell "用户自以为的需求，并且经常表达为用户的解决方案" [ref=f1e1052]
+                - row "产品需求 经过我们分析，找到的真实需求，并且表达为产品的解决方案" [ref=f1e1053]:
+                  - cell "产品需求" [ref=f1e1054]
+                  - cell "经过我们分析，找到的真实需求，并且表达为产品的解决方案" [ref=f1e1055]
+                - row "需求分析 从用户需求出发，找到用户内心真正的渴望，再转化为产品需求的过程" [ref=f1e1056]:
+                  - cell "需求分析" [ref=f1e1057]
+                  - cell "从用户需求出发，找到用户内心真正的渴望，再转化为产品需求的过程" [ref=f1e1058]
+            - code [ref=f1e1060]: 用户需求 →（需求分析）→ 产品需求
+            - heading "直接采集的途径 3" [level=3] [ref=f1e1061]:
+              - text: 直接采集的途径
+              - link "3" [ref=f1e1062] [cursor=pointer]:
+                - /url: http://www.woshipm.com/zhichang/459131.html
+            - list [ref=f1e1063]:
+              - listitem [ref=f1e1064]: 用户访谈提出需求（问题集中体现在视觉、交互或一些漏洞等体验侧层面）
+              - listitem [ref=f1e1065]: 其他参与者和关注者反馈的需求
+            - heading "间接采集的途径 3" [level=3] [ref=f1e1066]:
+              - text: 间接采集的途径
+              - link "3" [ref=f1e1067] [cursor=pointer]:
+                - /url: http://www.woshipm.com/zhichang/459131.html
+            - list [ref=f1e1068]:
+              - listitem [ref=f1e1069]: 老板提出的战略性需求（往往体验侧的，给老板时间去深度思考）
+              - listitem [ref=f1e1070]: 产品经理根据产品方向规划需求
+              - listitem [ref=f1e1071]: 推广规划的活动和数据分析出来一些需求（反馈能够产生实际收益，更关注业务的优化空间）
+            - separator [ref=f1e1072]
+            - heading "✅ 满足需求 6" [level=2] [ref=f1e1073]:
+              - text: ✅ 满足需求
+              - link "6" [ref=f1e1074] [cursor=pointer]:
+                - /url: https://quizlet.com/129588206/%E4%BA%BA%E4%BA%BA%E9%83%BD%E6%98%AF%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E7%AC%94%E8%AE%B0-flash-cards/
+            - paragraph [ref=f1e1075]: 由于理想与现实的差距产生需求，所以满足需求有3种方式：
+            - list [ref=f1e1076]:
+              - listitem [ref=f1e1077]:
+                - strong [ref=f1e1078]: 改变现状
+              - listitem [ref=f1e1079]:
+                - strong [ref=f1e1080]: 降低理想
+              - listitem [ref=f1e1081]:
+                - strong [ref=f1e1082]: 转移需求
+            - heading "降低理想" [level=3] [ref=f1e1083]
+            - heading "商业化与用户体验冲突" [level=4] [ref=f1e1084]
+            - paragraph [ref=f1e1085]:
+              - text: 对于中小企业的产品经理来说，生存才是第一要义，因此中小企业的产品经理一定要优先考虑商业化。产品经理只有在对利益诉求没有那么高的情况下，才会优先考虑用户体验。
+              - link "10" [ref=f1e1086] [cursor=pointer]:
+                - /url: https://www.zhihu.com/pub/reader/119980992/chapter/1284104619489460224
+            - heading "先满足哪类用户？" [level=4] [ref=f1e1087]
+            - paragraph [ref=f1e1088]: 如果说，普通用户有一个需求，核心用户也有一个需求，而且，两种用户群体的需求都是比较重要的大需求，那么，你觉得应该先满足哪类用户？
+            - paragraph [ref=f1e1089]:
+              - strong [ref=f1e1090]: 答案是先满足普通用户。
+            - paragraph [ref=f1e1091]: 因为核心用户属于平台忠诚度非常高的用户群体，在产品里已经投入了较多的时间和精力，并不会因为你的需求稍微晚一些就选择离开；即使离开也只是暂时的，他还会回来的，因为这是沉没成本，而且你并没有做出严重伤害他们的行为。
+            - blockquote [ref=f1e1092]:
+              - paragraph [ref=f1e1093]: 💡 不论运营还是产品，都应该重视用户留存，也必须绝对肯定的要重视，甚至在产品的爆发期，留存大于一切。
+            - heading "小众需求" [level=4] [ref=f1e1094]
+            - paragraph [ref=f1e1095]:
+              - text: 区别是小众还是大部分用户的需求，优先满足大部分用户的需求。
+              - link "15" [ref=f1e1096] [cursor=pointer]:
+                - /url: https://www.zhihu.com/question/59911327/answer/259895734
+            - heading "转移需求" [level=3] [ref=f1e1097]
+            - paragraph [ref=f1e1098]: 需求延期
+            - separator [ref=f1e1099]
+            - heading "📊 需求的 checklist" [level=2] [ref=f1e1100]
+            - paragraph [ref=f1e1101]:
+              - img "需求的checklist" [ref=f1e1102]
+            - separator [ref=f1e1103]
+            - heading "📈 需求管理附加值" [level=2] [ref=f1e1104]
+            - paragraph [ref=f1e1105]: 通过对需求各项属性的统计，进行需求管理：
+            - list [ref=f1e1106]:
+              - listitem [ref=f1e1107]: 统计提交人的需求数量
+              - listitem [ref=f1e1108]: 提交时间等信息
+              - listitem [ref=f1e1109]: 每个模块的需求数量
+              - listitem [ref=f1e1110]: 每个分类的需求数量等
+            - separator [ref=f1e1111]
+            - heading "🛠️ 需求管理软件" [level=2] [ref=f1e1112]
+            - paragraph [ref=f1e1113]:
+              - img "产品需求list" [ref=f1e1114]
+            - paragraph [ref=f1e1115]: 除了excel，还有：
+            - list [ref=f1e1116]:
+              - listitem [ref=f1e1117]: Mantis
+              - listitem [ref=f1e1118]: Mercury Interactive 公司的 Quality Center
+              - listitem [ref=f1e1119]: IBM 的 Rational RequisitePro 等
+            - separator [ref=f1e1120]
+            - heading "👥 需求评审" [level=2] [ref=f1e1121]
+            - paragraph [ref=f1e1122]: 统一思想，明确需求，确定实现过程的会议
+            - paragraph [ref=f1e1123]:
+              - img "需求评审参与人员" [ref=f1e1124]
+            - separator [ref=f1e1125]
+            - heading "📐 量化需求 11" [level=2] [ref=f1e1126]:
+              - text: 📐 量化需求
+              - link "11" [ref=f1e1127] [cursor=pointer]:
+                - /url: http://www.xmamiga.com/3573/s
+            - heading "为什么要量化需求" [level=3] [ref=f1e1128]
+            - code [ref=f1e1130]: 基于概率 → 需求量化 → 技术可行性预研 → 得出结论 → 开发、测试、上线 → 复盘
+            - paragraph [ref=f1e1131]: 在产品开始之前提出量化标准，方便对工作成果进行衡量；一般有三种结果：
+            - list [ref=f1e1132]:
+              - listitem [ref=f1e1133]: 存在"小数据"或若标注的情况 → 保持上线时间不变，需求更改：在算法精度上进行妥协【尽量避免】
+              - listitem [ref=f1e1134]: 存在"小数据"或若标注的情况 → 保持量化标准不变：申请更多的资源【尽量避免】
+              - listitem [ref=f1e1135]: 基于现有资源在规定时间内可以实现量化要求
+            - heading "需要考虑的点" [level=3] [ref=f1e1136]
+            - table [ref=f1e1137]:
+              - rowgroup [ref=f1e1138]:
+                - row "阶段 重点" [ref=f1e1139]:
+                  - columnheader "阶段" [ref=f1e1140]
+                  - columnheader "重点" [ref=f1e1141]
+              - rowgroup [ref=f1e1142]:
+                - row "预研期间 衡量数据质量、算力资源、上线时间，在算法精度上给出合理量化标准，或者要求增加资源投入" [ref=f1e1143]:
+                  - cell "预研期间" [ref=f1e1144]
+                  - cell "衡量数据质量、算力资源、上线时间，在算法精度上给出合理量化标准，或者要求增加资源投入" [ref=f1e1145]
+                - row "开发、测试、上线后 对量化的目标进行精准地验证，进行 A/B 测试时可以比较 A、B 两个方案的效果" [ref=f1e1146]:
+                  - cell "开发、测试、上线后" [ref=f1e1147]
+                  - cell "对量化的目标进行精准地验证，进行 A/B 测试时可以比较 A、B 两个方案的效果" [ref=f1e1148]
+                - row "复盘期间 总结量化评估经验，和研发团队沟通，了解团队技术实力和算法能力边界。争取量化更靠谱，减少需求变更和额外申请资源" [ref=f1e1149]:
+                  - cell "复盘期间" [ref=f1e1150]
+                  - cell "总结量化评估经验，和研发团队沟通，了解团队技术实力和算法能力边界。争取量化更靠谱，减少需求变更和额外申请资源" [ref=f1e1151]
+            - separator [ref=f1e1152]
+            - heading "📚 示例" [level=2] [ref=f1e1153]
+            - paragraph [ref=f1e1154]:
+              - text: 同花顺问财功能需求分析文档：
+              - link "https://www.jianshu.com/p/130fb4f1036a" [ref=f1e1155] [cursor=pointer]:
+                - /url: https://www.jianshu.com/p/130fb4f1036a
