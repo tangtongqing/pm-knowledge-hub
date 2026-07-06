@@ -1,19 +1,20 @@
 # 📋 任务清单 — Sprint 1
 
-> **Sprint目标**：完成 Phase A/B/C 闭环，进入 Phase D 文档与部署
-> **Sprint状态**：🔄 Phase A/B/C 全部验收通过，Phase D 启动中
+> **Sprint目标**：完成 Phase A/B/C 闭环，完成 Phase D 文档与部署正式交付
+> **Sprint状态**：✅ v1.0.0 已全部交付并正式发布
 > **更新时间**：2026-07-06
 
 ---
 
 ## 🔄 进行中
 
-- [ ] **[TASK-024]** Phase D：README 完善（截图 + 架构图 + 启动说明）
-- [ ] **[TASK-025]** Phase D：Demo 视频脚本与简历项目描述整理
-- [ ] **[TASK-026]** Phase D：GitHub 仓库最终整理与 v1.0.0 tag
+（无，全部任务已完结）
 
 ## ✅ 已完成
 
+- [x] **[TASK-024]** Phase D：README 完善（截图 + 架构图 + 启动说明） *(2026-07-06)*
+- [x] **[TASK-025]** Phase D：Demo 视频脚本与简历项目描述整理 *(2026-07-06)*
+- [x] **[TASK-026]** Phase D：GitHub 仓库最终整理与 v1.0.0 tag *(2026-07-06)*
 - [x] **[TASK-023]** Phase C-3：学习地图 react-force-graph 力导向图谱与系统验收 *(2026-07-06，系统验收 15/15 通过)*
 - [x] **[TASK-022]** Phase C-2：前端接入 FastAPI 真实接口（health/search/qa/interview） *(2026-07-03，独立验收复核通过)*
 - [x] **[TASK-019]** Next.js 前端项目初始化与默认模板清理 *(2026-06-30)*
@@ -43,9 +44,7 @@
 
 ## 📌 Backlog（未来Sprint）
 
-- [ ] 文档/部署阶段 README 截图与启动说明
-- [ ] Demo 视频脚本与简历项目描述整理
-- [ ] GitHub 仓库最终整理与 v1.0.0 标记
+（无，一期开发计划已完美收官）
 
 ---
 

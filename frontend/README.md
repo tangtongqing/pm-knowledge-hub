@@ -1,51 +1,75 @@
 # PM Knowledge Hub Frontend
 
-Phase C 前端界面，基于 Next.js 构建。
+Phase C 前端界面，基于 Next.js + React 构建。采用 Clarity Console 视觉设计（低灰背景、白色卡片、蓝紫主色），全面对接后端真实数据接口。
 
-## 当前阶段
+---
 
-已完成 C-1：设计系统、浅色首页工作台、核心指标卡、检索趋势图、来源摘要、知识工作记录和匹配笔记列表。
+## 📌 当前状态
 
-下一步 C-2：接入 FastAPI 真实接口：
+**Phase C 前端开发已全部完成（C-1 / C-2 / C-3）并顺利通过全量验收**。
 
-- `GET /api/v1/health`
-- `GET /api/v1/search/semantic`
-- `GET /api/v1/search/keyword`
-- `POST /api/v1/qa/ask`
-- `POST /api/v1/interview/start`
-- `POST /api/v1/interview/evaluate`
-- `GET /api/v1/graph` (C-3 学习地图图谱接口)
+- ✅ **C-1 基础布局与工作台**：完成首页工作台看板、检索趋势图、Recent 记录。
+- ✅ **C-2 真实 API 联调**：语义/关键词检索、三栏知识库大纲、Gemini 实时模拟面试与 STAR 结果雷达对接。
+- ✅ **C-3 交互式力导向图谱**：完全取代旧版静态 SVG，实现全局/单章知识网动态可视化。
 
-## 新增依赖
+---
 
-- `react-force-graph-2d`：力导向图可视化组件。
-- `d3`：Peer 依赖库（react-force-graph 自动引入）。
+## 📦 已完成核心功能清单
 
-## 本地启动
+### 1. 首页工作台看板 (`/`)
+- 实时展示健康状况和在线状态（支持后端挂掉时的 Offline 优雅降级）。
+- 检索频率趋势折线图，以及最近浏览过的文档快捷卡片。
+
+### 2. 知识库管理 (`/knowledge`)
+- 分类三栏布局：左侧 13 个对齐物理文件夹的大纲目录，中间文档列表，右侧 MarkDown 正文渲染。
+- 支持无搜索词时展示全局目录列表，有搜索词时切换为“语义 RAG 检索”召回切片模式（带相关度分数显示）。
+
+### 3. AI 问答助手 (`/assistant`)
+- 围绕私有知识库向大语言模型提问，渲染出格式规整的 Markdown 答案。
+- 提取并卡片化显示所有的“证据链条”（Evidence Sources），注明章节、小节与相似度，并提供回跳 Obsidian 打开的原生按钮。
+
+### 4. 模拟面试官 (`/interview`)
+- 支持指定章节出题（或全部题库随机出题）。
+- 用户作答后，大模型实时进行 STAR 法则四维度（Situation, Task, Action, Result）客观评估。
+- 自动渲染建议答案要点及相关追问，提供流畅的面试演练闭环。
+
+### 5. 学习地图知识图谱 (`/map`)
+- 使用 `react-force-graph-2d` 库实现客户端的力导向网络视图。
+- **高亮微动效**：hover 节点自动高亮一度关联邻居及连接边线（带有流动粒子动效展示序列指向）。
+- **视口缩放**：点击节点自动执行 pan/zoom 物理平移聚焦。
+- **过滤与防卡顿**：支持“按目录聚合”与“按笔记展开”层级切换，支持右上角单章节下拉过滤以提高运行性能。
+- **Obsidian 联动**：点击笔记可直接拉起本地 Obsidian 客户端并定位至对应文件。
+
+---
+
+## 🚀 本地启动
+
+确保后端服务（`http://localhost:8000`）已运行。然后在前端目录下：
 
 ```bash
-npm.cmd run dev
+# 安装依赖（已引入 react-force-graph-2d）
+npm install
+
+# 启动开发服务器
+npm run dev
 ```
 
-默认访问：
+打开浏览器访问 `http://localhost:3000`。
 
-```text
-http://localhost:3000
-```
+---
 
-后端默认地址：
-
-```text
-http://localhost:8000
-```
-
-## 验证命令
+## 📋 校验与编译
 
 ```bash
-npm.cmd run lint
-npm.cmd run build
+# 语法与 Lint 校验
+npm run lint
+
+# 生产环境打包编译自检
+npm run build
 ```
 
-## 设计方向
+---
 
-视觉方向为 Clarity Console（浅色 SaaS 知识工作台）。界面参考成熟运营后台的低灰背景、白色卡片、蓝紫主色和轻量状态色，避免深色 AI 概念稿。核心差异化锚点是 Evidence Sources：所有 AI 回答后续都需要显式展示引用来源、章节、标签、相似度和 Obsidian 回跳入口。
+## 🖼️ 截图展示
+系统运行相关高保真截图请参阅项目主文档目录：
+[docs/screenshots/](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/screenshots/)
