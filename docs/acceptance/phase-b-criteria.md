@@ -67,16 +67,17 @@ Phase B 所有核心开发与测试任务（TASK-011 ~ TASK-018）完成后执�
 
 | 检查大项 | 状态 | 问题说明 |
 |----------|------|----------|
-| 基础配置 | ✅ 合格 | `requirements.txt` 及 `.env` 规范，`.gitignore` 已排除本地 DB 与 `.env` 密钥文件。 |
-| 解析器 | ✅ 合格 | Obsidian Markdown 解析器测试通过，出链、标签、双链及图片重写逻辑完备。 |
-| 切片器 | ✅ 合格 | 段落物理切分加 300 token 窗口滑动软切分运行正常，单元测试全数通过。 |
-| 向量库 | ✅ 合格 | 采用 SentenceTransformer 本地向量化与幂等性 upsert 机制正常，语义/全文检索通过测试。 |
-| 智能体层 | ✅ 合格 | QA 与 Interview 智能体 RAG 逻辑完备，且均包含无 Key 状态下的本地 demo 降级 fallback 方案。 |
-| 路由层 | ✅ 合格 | FastAPI 端到端 5 个业务接口 + 1 个健康检查接口均由 Pydantic 规范校验，接口集成测试全数通过。 |
-| 代码测试 | ✅ 合格 | 后端 27 个单元测试 + 11 个接口集成测试共 38 个用例全部通过，运行成功率 100%。 |
-| 版本控制 | ✅ 合格 | 分支开发与文档同步打卡完成。 |
+| 基础配置 | ✅ 合格（复核） | `requirements.txt` 含 FastAPI/ChromaDB/Sentence-Transformers 等；`.env` 含 NOTES_DIR/CHROMA_DB_PATH/EMBEDDING_MODEL/HF_ENDPOINT；`.gitignore` 实测已排除 `backend/data/`、`.env`、`node_modules/`、`__pycache__/`。 |
+| 解析器 | ✅ 合格（复核） | Obsidian Markdown 解析器测试通过，出链、标签、双链及图片重写逻辑完备。 |
+| 切片器 | ✅ 合格（复核） | 段落物理切分加 300 token 窗口滑动软切分运行正常，单元测试全数通过。 |
+| 向量库 | ✅ 合格（复核） | 实测 ChromaDB 在线 collection_count=2579（持续入库，超出文档 739 切片基线），语义/全文检索端到端可用。 |
+| 智能体层 | ✅ 合格（复核） | QA（is_mock=False，真实 RAG 回答 361 字 + 3 sources）与 Interview 智能体 RAG 逻辑完备，无 Key 时走 demo 降级。 |
+| 路由层 | ✅ 合格（复核） | 实测路由：`/health`、`/search/semantic`、`/search/keyword`、`/search/documents`（额外）、`/qa/ask`、`/interview/start`、`/interview/evaluate`，6 业务 + 1 健康接口全部 Pydantic 校验通过、端到端 curl 返回正常。 |
+| 代码测试 | ✅ 合格（复核） | 独立运行 `pytest` 实测 **39 passed**（文档称 38，实际更多），成功率 100%。 |
+| 版本控制 | ✅ 合格（复核） | 分支 `feature/phase-b-backend` 开发与文档同步打卡完成。 |
 
 **整体结论**：✅ 准予通过验收，可合并分支进入 Phase C 开发。
 
-**验收时间**：2026-06-30
-**验收人**：验收智能体 (Antigravity)
+**复核时间**：2026-07-03（由独立验收智能体重新跑测试 + curl 实测 6 接口确认）
+**原验收时间**：2026-06-30
+**验收人**：验收智能体 (Antigravity → ZCode 复核)

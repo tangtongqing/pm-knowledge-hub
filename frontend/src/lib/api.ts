@@ -44,6 +44,28 @@ export interface KeywordSearchResponse {
   total: number;
 }
 
+export interface GraphNode {
+  id: string;
+  label: string;
+  type: "chapter" | "note";
+  chapter: string;
+  note_count: number;
+  tags: string[];
+}
+
+export interface GraphLink {
+  source: string;
+  target: string;
+  weight: number;
+}
+
+export interface GraphResponse {
+  nodes: GraphNode[];
+  links: GraphLink[];
+  level: "chapter" | "note";
+  total_notes: number;
+}
+
 export interface QASource {
   title: string;
   source_path: string;
@@ -118,7 +140,7 @@ export const api = {
   async getHealth(): Promise<HealthResponse> {
     try {
       return await request<HealthResponse>("/health");
-    } catch (error) {
+    } catch {
       return {
         status: "offline",
         collection_count: 0,
@@ -213,5 +235,17 @@ export const api = {
         user_answer: userAnswer,
       }),
     });
+  },
+
+  /**
+   * 获取知识图谱拓扑数据
+   */
+  async getGraph(
+    level: "chapter" | "note" = "chapter",
+    chapter?: string
+  ): Promise<GraphResponse> {
+    const params = new URLSearchParams({ level });
+    if (chapter) params.append("chapter", chapter);
+    return request<GraphResponse>(`/graph?${params.toString()}`);
   },
 };

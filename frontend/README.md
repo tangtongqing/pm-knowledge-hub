@@ -14,6 +14,12 @@ Phase C 前端界面，基于 Next.js 构建。
 - `POST /api/v1/qa/ask`
 - `POST /api/v1/interview/start`
 - `POST /api/v1/interview/evaluate`
+- `GET /api/v1/graph` (C-3 学习地图图谱接口)
+
+## 新增依赖
+
+- `react-force-graph-2d`：力导向图可视化组件。
+- `d3`：Peer 依赖库（react-force-graph 自动引入）。
 
 ## 本地启动
 

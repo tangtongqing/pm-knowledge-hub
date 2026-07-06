@@ -4,6 +4,21 @@
 
 ---
 
+## [1.0.0-rc.1] — 2026-07-06 — Phase C-2/C-3 完成 + 系统验收通过
+
+### Added
+- **Phase C-2 真实接口联调**：前端首页/知识库/AI问答/模拟面试四大模块全部接入 FastAPI 真实接口（health/search/qa/interview），替换静态演示数据。
+- **Phase C-3 力导向图谱**：后端新增 `GET /api/v1/graph`（chapter/note 两层聚合 + 章节过滤）；前端 `/map` 用 `react-force-graph-2d` 实现可交互知识图谱，支持 hover 高亮+流动粒子、click 聚焦 zoom、章节下拉过滤、Obsidian URI 跳转。
+- 后端新增 2 项图谱集成测试（`test_api_graph_chapter_level` / `test_api_graph_note_level_filter`）。
+- 新增系统级验收测试清单 `acceptance_test.md`，覆盖 5 个 Phase 共 15 个 Test Case。
+
+### Verification
+- 系统验收 **15/15 Test Case 全过**（含真实 Gemini is_mock=False、力导向图谱交互、离线降级文案逐字命中）。
+- `python -m pytest tests/test_api.py -v` → **9 passed**。
+- `npm run build` → 7 路由静态生成，0 错误。
+
+---
+
 ## [0.5.0] — 2026-06-30 — Phase C-1 前端工作台雏形
 
 ### Added

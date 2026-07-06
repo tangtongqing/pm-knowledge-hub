@@ -1,18 +1,21 @@
 # 📋 任务清单 — Sprint 1
 
-> **Sprint目标**：完成 Phase A/B 闭环，并启动 Phase C 前端界面分阶段制作  
-> **Sprint状态**：🔄 进行中  
-> **更新时间**：2026-06-30
+> **Sprint目标**：完成 Phase A/B/C 闭环，进入 Phase D 文档与部署
+> **Sprint状态**：🔄 Phase A/B/C 全部验收通过，Phase D 启动中
+> **更新时间**：2026-07-06
 
 ---
 
 ## 🔄 进行中
 
-- [ ] **[TASK-022]** Phase C-2：前端接入 FastAPI 真实接口（health/search/qa/interview）
-- [ ] **[TASK-023]** Phase C-3：学习地图 D3.js 图谱与响应式/无障碍验收打磨
+- [ ] **[TASK-024]** Phase D：README 完善（截图 + 架构图 + 启动说明）
+- [ ] **[TASK-025]** Phase D：Demo 视频脚本与简历项目描述整理
+- [ ] **[TASK-026]** Phase D：GitHub 仓库最终整理与 v1.0.0 tag
 
 ## ✅ 已完成
 
+- [x] **[TASK-023]** Phase C-3：学习地图 react-force-graph 力导向图谱与系统验收 *(2026-07-06，系统验收 15/15 通过)*
+- [x] **[TASK-022]** Phase C-2：前端接入 FastAPI 真实接口（health/search/qa/interview） *(2026-07-03，独立验收复核通过)*
 - [x] **[TASK-019]** Next.js 前端项目初始化与默认模板清理 *(2026-06-30)*
 - [x] **[TASK-020]** Phase C-1 设计系统与首页工作台实现 *(2026-06-30)*
 - [x] **[TASK-021]** 浅色工作台界面雏形、Evidence Sources 来源摘要与匹配笔记列表 *(2026-06-30)*

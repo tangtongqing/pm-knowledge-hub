@@ -6,11 +6,11 @@
 
 ## 🚦 当前状态
 
-| **当前阶段** | Phase C：前端界面 |
-| **当前Sprint** | Sprint 1 — Phase C 前端界面分阶段制作 |
-| **整体完成度** | 56% |
-| **最后更新** | 2026-06-30 |
-| **下一个里程碑** | Phase C-2 前端真实 API 联调（health/search/qa/interview）|
+| **当前阶段** | Phase D：文档与部署 |
+| **当前Sprint** | Sprint 1 — 收尾交付 |
+| **整体完成度** | 92% |
+| **最后更新** | 2026-07-06 |
+| **下一个里程碑** | Phase D：README/截图/Demo 视频/简历描述 + v1.0.0 打 tag |
 
 ---
 
@@ -19,8 +19,8 @@
 ```
 Phase A [产品文档]    ████████████████ 100%  ✅ 已完成
 Phase B [知识库引擎]  ████████████████ 100%  ✅ 已完成
-Phase C [前端界面]    ████░░░░░░░░░░░░  25%  🔄 进行中
-Phase D [文档与部署]  ░░░░░░░░░░░░░░░░   0%  ⏳ 未开始
+Phase C [前端界面]    ████████████████ 100%  ✅ 已完成（C-1/C-2/C-3 全验收）
+Phase D [文档与部署]  ██░░░░░░░░░░░░░░  10%  🔄 未开始
 ```
 
 ---
@@ -65,15 +65,18 @@ Phase D [文档与部署]  ░░░░░░░░░░░░░░░░   0%
 
 | 任务 | 负责 | 状态 | 完成时间 |
 |------|------|------|---------|
-| 设计系统（Design Tokens） | 工作智能体 | ✅ C-1 完成 | 2026-06-30 |
-| 首页（知识图谱Hero + 导航）| 工作智能体 | ✅ C-1 完成 | 2026-06-30 |
-| 知识库页（三栏浏览）| 工作智能体 | 🔄 基础雏形完成，待接真实搜索 API | 2026-06-30 |
-| AI助手页（对话界面）| 工作智能体 | 🔄 基础雏形完成，待接 QA API | 2026-06-30 |
-| 学习地图页（D3.js图谱）| 工作智能体 | 🔄 静态预览完成，D3.js 待实现 | 2026-06-30 |
-| 关于页 | 工作智能体 | ⏳ 未开始 | — |
-| 响应式适配 | 工作智能体 | 🔄 C-1 基础适配完成，待真机/截图验收 | 2026-06-30 |
-| 无障碍审查 | 验收智能体 | ⏳ 未开始 | — |
-| **Phase C 验收** | 验收智能体 | ⏳ 未开始 | — |
+| 设计系统（Design Tokens） | 工作智能体 | ✅ C-1 完成（验收通过） | 2026-06-30 |
+| 首页（工作台 + 真实 health 接入）| 工作智能体 | ✅ C-1+C-2 完成（验收通过）| 2026-07-03 |
+| 知识库页（三栏浏览 + 真实搜索）| 工作智能体 | ✅ C-1+C-2 完成（验收通过）| 2026-07-03 |
+| AI助手页（对话 + 真实 RAG）| 工作智能体 | ✅ C-1+C-2 完成（验收通过）| 2026-07-03 |
+| 面试训练页（STAR 评估闭环）| 工作智能体 | ✅ C-1+C-2 完成（验收通过）| 2026-07-03 |
+| 关于页 | 工作智能体 | ✅ 完成（验收通过） | 2026-07-03 |
+| 学习地图页（react-force-graph 图谱）| 工作智能体 | ✅ C-3 完成（验收通过）| 2026-07-06 |
+| 响应式适配 | 验收智能体 | ✅ 桌面+移动截图复核通过 | 2026-07-03 |
+| 无障碍审查 | 验收智能体 | ✅ 语义化+focus 复核通过 | 2026-07-03 |
+| **Phase C-1/C-2 验收** | 验收智能体 | ✅ 通过（含端到端实测）| 2026-07-03 |
+| **Phase C-3 验收** | 验收智能体 | ✅ 通过（系统验收 15/15）| 2026-07-06 |
+| **Phase C 整体验收** | 验收智能体 | ✅ 全部通过 | 2026-07-06 |
 
 ---
 
@@ -91,6 +94,19 @@ Phase D [文档与部署]  ░░░░░░░░░░░░░░░░   0%
 ---
 
 ## 📝 开发日志
+
+### 2026-07-06 — Phase C-3 完成与系统验收 (92% 进度)
+- ✅ **C-3 力导向图谱实现**：工作智能体落地 TASK-023——后端新增 `GET /api/v1/graph`（chapter/note 两层聚合，13 节点+12 边，0 自环）+ 2 项集成测试；前端 `/map` 用 `react-force-graph-2d`（`next/dynamic ssr:false`）重写，支持 hover 高亮+流动粒子、click 聚焦 zoom、章节下拉过滤、Obsidian URI 跳转。
+- ✅ **系统验收全过**：独立验收智能体执行 `acceptance_test.md` 全部 **15/15 Test Case** 通过——Phase 1 环境连通、Phase 2 知识库、Phase 3 模拟面试（is_mock=False 真实 Gemini）、Phase 4 交互图谱、Phase 5 代码质量（pytest 9 passed + npm build 0 error）。
+- 📌 验收截图：`acceptance-test-2-3-full-preview.png`、`acceptance-test-2-4-semantic-rag.png`、`acceptance-test-3-1-live-gemini.png`、`acceptance-test-4-2-force-graph.png`、`acceptance-test-4-3-note-level-filter.png`。
+- 🔄 下一步：进入 **Phase D（文档与部署）**——README 截图与启动说明、Demo 视频脚本、简历描述、GitHub 仓库整理、v1.0.0 打 tag。
+
+### 2026-07-03 — 三阶段独立验收复核 (80% 进度)
+- ✅ **Phase A 复核**：7 份 PM 文档（BRD/MRD/PRD/旅程图/指标/架构/Roadmap）关键章节与字数全部达标，更新 `phase-a-criteria.md` 结论为「准予通过」。
+- ✅ **Phase B 复核**：独立运行 `pytest` 实测 **39 passed**（文档称 38）；curl 实测 6 业务 + 1 健康接口全部正常，QA 接口 is_mock=False 返回真实 RAG 回答；ChromaDB 在线 collection_count=2579。
+- ✅ **Phase C-1+C-2 复核**：`npm run lint`（0 error）/`npm run build`（7 路由静态生成）通过；启动后端 8000 + 前端 3000，用 Playwright 端到端实测首页（真实 2579 数据）/知识库（真实检索三态）/AI问答（真实 RAG + 5 证据分片）/面试（STAR 75 分闭环），留存 5 张验收截图。
+- ⏳ **Phase C-3 未完成**：学习地图 D3.js 图谱未实现（页面已标注 Phase D 推出），为当前唯一未通过项。
+- 📌 验收截图：`acceptance-c1-workspace-desktop.png`、`acceptance-c1-workspace-mobile.png`、`acceptance-c2-knowledge-search.png`、`acceptance-c2-qa-rag-real.png`、`acceptance-c2-interview-star.png`。
 
 ### 2026-06-30 — Phase C-1 前端设计系统与工作台雏形 (56% 进度)
 - ✅ 清理 Next.js 默认模板，并根据视觉评审反馈将界面方向调整为 Clarity Console：浅色 SaaS 工作台、低灰背景、白色卡片、蓝紫主色。

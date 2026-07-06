@@ -1,0 +1,96 @@
+- generic [active] [ref=f3e1]:
+  - button "Open Next.js Dev Tools" [ref=f3e7] [cursor=pointer]:
+    - img [ref=f3e8]
+  - alert [ref=f3e33]
+  - generic [ref=f3e34]:
+    - navigation [ref=f3e35]:
+      - img [ref=f3e37]
+      - generic [ref=f3e41]:
+        - link "工作台" [ref=f3e42] [cursor=pointer]:
+          - /url: /
+          - img [ref=f3e44]
+          - generic [ref=f3e47]: 工作台
+        - link "知识库" [ref=f3e48] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=f3e50]
+          - generic [ref=f3e52]: 知识库
+        - link "AI 问答" [ref=f3e53] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=f3e55]
+          - generic [ref=f3e57]: AI 问答
+        - link "模拟面试" [ref=f3e58] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=f3e60]
+          - generic [ref=f3e64]: 模拟面试
+        - link "知识图谱" [ref=f3e65] [cursor=pointer]:
+          - /url: /map
+          - img [ref=f3e67]
+          - generic [ref=f3e73]: 知识图谱
+        - link "关于" [ref=f3e74] [cursor=pointer]:
+          - /url: /about
+          - img [ref=f3e76]
+          - generic [ref=f3e78]: 关于
+      - button "切换深色模式" [ref=f3e80] [cursor=pointer]:
+        - img [ref=f3e81]
+    - main [ref=f3e11]:
+      - generic [ref=f3e12]:
+        - generic [ref=f3e13]:
+          - generic [ref=f3e14]:
+            - generic [ref=f3e15]:
+              - heading "模拟面试" [level=1] [ref=f3e16]
+              - paragraph [ref=f3e17]: STAR 法则深度演练
+            - button "重新开始" [ref=f3e84] [cursor=pointer]
+          - generic [ref=f3e85]:
+            - generic [ref=f3e86]:
+              - img [ref=f3e88]
+              - paragraph [ref=f3e93]: 假设你负责一款面向中大型企业的营销自动化SaaS产品，发现新付费用户在第三个月活跃度显著下降，导致一年期续费率低于行业平均。请结合B端产品经典模型，设计一套提升用户长期活跃和续费的策略方案。
+            - generic [ref=f3e102]:
+              - img [ref=f3e104]
+              - paragraph [ref=f3e109]: 我会先用 AARRR 模型定位第三个月流失环节，分析用户行为数据找出活跃下降的功能点。然后设计新手引导优化和触达策略，比如关键节点邮件提醒。最后用 A/B 测试验证效果，目标是把续费率提升 15%。
+            - generic [ref=f3e110]:
+              - img [ref=f3e112]
+              - generic [ref=f3e116]:
+                - paragraph [ref=f3e120]: "大模型评估遇到异常，自动降级为静态评估模式。错误原因: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+                - paragraph [ref=f3e121]:
+                  - strong [ref=f3e122]: 建议回答框架：
+                  - text: 建议以 S-T-A-R 分层陈述，第一步说明背景，第二步提炼核心挑战，第三步详细阐述解决方案，第四步总结量化成效。
+                - separator [ref=f3e123]
+                - paragraph [ref=f3e124]:
+                  - strong [ref=f3e125]: 下一个问题：
+                  - text: 追问：如果把该功能推广到海外市场，面临哪些本地化的挑战？
+          - generic [ref=f3e94]:
+            - generic [ref=f3e95]:
+              - textbox "输入你的回答 (支持多行)..." [ref=f3e96]
+              - button [disabled] [ref=f3e97]:
+                - img [ref=f3e98]
+            - generic [ref=f3e101]: Shift + Enter 换行，Enter 发送
+        - generic [ref=f3e27]:
+          - heading "STAR 评估" [level=2] [ref=f3e29]
+          - generic [ref=f3e31]:
+            - generic [ref=f3e126]:
+              - generic [ref=f3e127]: 综合得分
+              - generic [ref=f3e128]:
+                - generic [ref=f3e129]: "75"
+                - generic [ref=f3e130]: /100
+              - generic [ref=f3e131]: 演示数据
+            - generic [ref=f3e132]:
+              - generic [ref=f3e133]:
+                - generic [ref=f3e134]:
+                  - generic [ref=f3e135]: S
+                  - generic [ref=f3e136]: Situation (情景)
+                - paragraph [ref=f3e137]: 背景基本涵盖，细节有待补充。
+              - generic [ref=f3e138]:
+                - generic [ref=f3e139]:
+                  - generic [ref=f3e140]: T
+                  - generic [ref=f3e141]: Task (任务)
+                - paragraph [ref=f3e142]: 定义了核心的要解决的产品矛盾。
+              - generic [ref=f3e143]:
+                - generic [ref=f3e144]:
+                  - generic [ref=f3e145]: A
+                  - generic [ref=f3e146]: Action (行动)
+                - paragraph [ref=f3e147]: 提出了基本的需求拆解与优先级思考。
+              - generic [ref=f3e148]:
+                - generic [ref=f3e149]:
+                  - generic [ref=f3e150]: R
+                  - generic [ref=f3e151]: Result (结果)
+                - paragraph [ref=f3e152]: 缺乏数据指标的量化闭环。

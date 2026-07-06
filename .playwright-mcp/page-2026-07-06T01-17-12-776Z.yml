@@ -1,0 +1,54 @@
+- generic [active] [ref=f3e1]:
+  - button "Open Next.js Dev Tools" [ref=f3e7] [cursor=pointer]:
+    - img [ref=f3e8]
+  - alert [ref=f3e11]
+  - generic [ref=f3e12]:
+    - navigation [ref=f3e13]:
+      - img [ref=f3e15]
+      - generic [ref=f3e19]:
+        - link "工作台" [ref=f3e20] [cursor=pointer]:
+          - /url: /
+          - img [ref=f3e22]
+          - generic [ref=f3e25]: 工作台
+        - link "知识库" [ref=f3e26] [cursor=pointer]:
+          - /url: /knowledge
+          - img [ref=f3e28]
+          - generic [ref=f3e30]: 知识库
+        - link "AI 问答" [ref=f3e31] [cursor=pointer]:
+          - /url: /assistant
+          - img [ref=f3e33]
+          - generic [ref=f3e35]: AI 问答
+        - link "模拟面试" [ref=f3e36] [cursor=pointer]:
+          - /url: /interview
+          - img [ref=f3e38]
+          - generic [ref=f3e42]: 模拟面试
+        - link "知识图谱" [ref=f3e43] [cursor=pointer]:
+          - /url: /map
+          - img [ref=f3e45]
+          - generic [ref=f3e51]: 知识图谱
+        - link "关于" [ref=f3e52] [cursor=pointer]:
+          - /url: /about
+          - img [ref=f3e54]
+          - generic [ref=f3e56]: 关于
+      - button "切换深色模式" [ref=f3e58] [cursor=pointer]:
+        - img [ref=f3e59]
+    - main [ref=f3e61]:
+      - generic [ref=f3e62]:
+        - generic [ref=f3e63]:
+          - generic [ref=f3e64]:
+            - generic [ref=f3e65]:
+              - heading "模拟面试" [level=1] [ref=f3e66]
+              - paragraph [ref=f3e67]: STAR 法则深度演练
+            - button "重新开始" [ref=f3e83] [cursor=pointer]
+          - generic [ref=f3e85]:
+            - img [ref=f3e87]
+            - paragraph [ref=f3e92]: 在负责一款用户量过亿的社交产品新功能（例如：直播互动）上线迭代时，你面对来自用户、运营、商业化等多个团队的复杂需求清单。请你结合需求分析的四个步骤（需求分类、需求分析与判断、需求分位、需求分级），详细阐述你将如何系统性地管理这些需求，以平衡各方利益、实现核心价值的快速交付，并规划后续迭代路径。
+          - generic [ref=f3e93]:
+            - generic [ref=f3e94]:
+              - textbox "输入你的回答 (支持多行)..." [ref=f3e95]
+              - button [disabled] [ref=f3e96]:
+                - img [ref=f3e97]
+            - generic [ref=f3e100]: Shift + Enter 换行，Enter 发送
+        - generic [ref=f3e77]:
+          - heading "STAR 评估" [level=2] [ref=f3e79]
+          - paragraph [ref=f3e82]: 回答问题后，此处将显示你的表现评分和详细反馈。

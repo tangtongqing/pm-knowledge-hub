@@ -17,7 +17,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from api.routes import search, health, qa, interview
+from api.routes import search, health, qa, interview, graph
 
 # ── 环境变量 ────────────────────────────────────────────────────────────
 # 加载 backend/.env（使用绝对路径，兼容从任意目录启动）
@@ -93,6 +93,7 @@ app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(search.router, prefix="/api/v1", tags=["Search"])
 app.include_router(qa.router, prefix="/api/v1", tags=["QA"])
 app.include_router(interview.router, prefix="/api/v1", tags=["Interview"])
+app.include_router(graph.router, prefix="/api/v1", tags=["Graph"])
 
 
 @app.get("/", include_in_schema=False)
