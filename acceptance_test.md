@@ -12,7 +12,7 @@ This document contains structured test cases for verifying the frontend layout, 
 ### Test Case 1.1: Backend Health Check (后端健康检查)
 * **Action**: Start the FastAPI backend and query the health endpoint.
 * **Command**: `curl http://127.0.0.1:8000/api/v1/health`
-* **Expected Result**:
+* **Expected Result**: 
   * Returns `200 OK` status.
   * JSON body contains `"status": "ok"`, `"collection_count": 2579` (or similar chunk count), and `"embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"`.
 * **✅ 实测结果 (2026-07-06)**：返回 `{"status":"ok","collection_count":2579,"embedding_model":"paraphrase-multilingual-MiniLM-L12-v2","version":"0.1.0"}`，HTTP 200，三字段全部命中预期。
@@ -31,8 +31,7 @@ This document contains structured test cases for verifying the frontend layout, 
   * The frontend does not throw a React component crash or show a white screen.
   * The status indicator in the page footer changes to red (error state).
   * The footer text displays a friendly tip: `Backend connection error (Ensure python server is running on port 8000)`.
-
-**✅ 实测结果 (2026-07-06)**：`taskkill` 后端后刷新首页，页面未白屏（body 文本 335 字符），footer 显示 `Backend connection error (Ensure python server is running on port 8000)`，文案与预期逐字一致。
+* **✅ 实测结果 (2026-07-06)**：`taskkill` 后端后刷新首页，页面未白屏（body 文本 335 字符），footer显示 `Backend connection error (Ensure python server is running on port 8000)`，文案与预期逐字一致。
 
 ---
 
@@ -43,23 +42,20 @@ This document contains structured test cases for verifying the frontend layout, 
 * **Expected Configuration**:
   * Open `frontend/src/app/knowledge/page.tsx` and inspect the `CHAPTERS` constant.
   * It must contain mappings corresponding directly to physical subfolders inside `NOTES_DIR`, such as `01-入门`, `02-思维与软实力`, `07-AI工作`, etc., rather than generic IDs like `Ch01`.
-
-**✅ 实测结果 (2026-07-06)**：`CHAPTERS` 常量包含 `01-入门`/`02-思维与软实力`/`07-AI工作` 等 13 个真实物理目录名，无 `Ch01` 类泛化 ID。
+* **✅ 实测结果 (2026-07-06)**：`CHAPTERS` 常量包含 `01-入门`/`02-思维与软实力`/`07-AI工作` 等 13 个真实物理目录名，无 `Ch01` 类泛化 ID。
 
 ### Test Case 2.2: Category Full Document Listing (分类目录全量浏览)
 * **Action**: Clear the search input box in the Knowledge page, then click on the `07-AI工作` directory on the left.
 * **Expected Result**:
   * The second column shows all notes under `07-AI工作` (at least 5 unique notes: `7.1 学生身份`, `7.2 移民`, `7.3 大会`, etc.) based on unique `source_path`.
-
-**✅ 实测结果 (2026-07-06)**：点击 `07-AI工作` 返回 `找到 5 篇笔记`，含 `7.1 学生身份`/`7.2 移民`/`7.3 大会`/`7.4 金融实习`/`7.5 challenge`，5 篇全部唯一（uniqueByTitle=5）。
+* **✅ 实测结果 (2026-07-06)**：点击 `07-AI工作` 返回 `找到 5 篇笔记`，含 `7.1 学生身份`/`7.2 移民`/`7.3 大会`/`7.4 金融实习`/`7.5 challenge`，5 篇全部唯一（uniqueByTitle=5）。
 
 ### Test Case 2.3: Full File Preview (完整笔记查看)
 * **Action**: Click on the note `7.3 大会` in the document list.
 * **Expected Result**:
   * The right preview panel renders the **entire** note contents read directly from the local disk, including the subtitle `## 📌 大会` and links like `[全球人工智能技术大会（GAITC）](...)`.
   * YAML Frontmatter (if any) at the beginning of the file is stripped.
-
-**✅ 实测结果 (2026-07-06)**：点击 `7.3 大会` 后预览面板渲染完整正文，含 `📌 大会` 副标题与 `全球人工智能技术大会（GAITC）` 链接，无 YAML frontmatter 残留。截图 `acceptance-test-2-3-full-preview.png`。
+* **✅ 实测结果 (2026-07-06)**：点击 `7.3 大会` 后预览面板渲染完整正文，含 `📌 大会` 副标题与 `全球人工智能技术大会（GAITC）` 链接，无 YAML frontmatter 残留。截图 `acceptance-test-2-3-full-preview.png`。
 
 ### Test Case 2.4: Semantic RAG Search (语义检索模式)
 * **Action**: Enter `"AARRR"` in the search bar of the Knowledge page.
@@ -67,8 +63,7 @@ This document contains structured test cases for verifying the frontend layout, 
   * The list switches to "RAG Search" mode.
   * Search hits show "相关度" (relevance scores) in their subtitles.
   * Clicking on a card shows the matching text slice (chunk) in the preview.
-
-**✅ 实测结果 (2026-07-06)**：搜索 `AARRR` 进入 RAG 模式，返回 20 篇匹配笔记，每条 subtitle 显示 `相关度: 0.67`（relevance score）。截图 `acceptance-test-2-4-semantic-rag.png`。
+* **✅ 实测结果 (2026-07-06)**：搜索 `AARRR` 进入 RAG 模式，返回 20 篇匹配笔记，每条 subtitle 显示 `相关度: 0.67`（relevance score）。截图 `acceptance-test-2-4-semantic-rag.png`。
 
 ---
 
@@ -79,8 +74,7 @@ This document contains structured test cases for verifying the frontend layout, 
 * **Expected Result**:
   * The AI interviewer generates a question.
   * The evaluation card on the right shows `is_mock: false` (or doesn't show "演示模式"), proving a live connection to the Gemini API.
-
-**✅ 实测结果 (2026-07-06)**：`.env` 已配置 `GEMINI_API_KEY`（长度 53）。`POST /interview/start` 返回 `is_mock: False`，生成真实面试题（招聘困境场景题，关联知识库 `6.1.19 招不到合适`）；前端 `/interview` 页面**无**「演示模式/演示数据」标签。截图 `acceptance-test-3-1-live-gemini.png`。
+* **✅ 实测结果 (2026-07-06)**：`.env` 已配置 `GEMINI_API_KEY`（长度 53）。`POST /interview/start` 返回 `is_mock: False`，生成真实面试题（招聘困境场景题，关联知识库 `6.1.19 招不到合适`）；前端 `/interview` 页面**无**「演示模式/演示数据」标签。截图 `acceptance-test-3-1-live-gemini.png`。
 
 ### Test Case 3.2: STAR Evaluation Framework (STAR法则多维打分)
 * **Action**: Type a response and submit.
@@ -88,8 +82,7 @@ This document contains structured test cases for verifying the frontend layout, 
   * The response evaluates candidate answer using the **STAR** framework.
   * The right panel renders a structured feedback object with 4 bars/texts representing `Situation`, `Task`, `Action`, and `Result`.
   * A standard model suggested answer and a relevant follow-up question are provided in Markdown format.
-
-**✅ 实测结果 (2026-07-06)**：`POST /interview/evaluate` 真实 Gemini 模式（`is_mock: False`）返回 `score: 75`，`star_feedback` 四维（Situation/Task/Action/Result）各有 60+ 字深度诊断，`suggested_answer` 与 `next_question` 均存在（下一轮挑战性追问已生成）。
+* **✅ 实测结果 (2026-07-06)**：`POST /interview/evaluate` 真实 Gemini 模式（`is_mock: False`）返回 `score: 75`，`star_feedback` 四维（Situation/Task/Action/Result）各有 60+ 字深度诊断，`suggested_answer` 与 `next_question` 均存在（下一轮挑战性追问已生成）。
 
 ---
 
@@ -104,10 +97,9 @@ This document contains structured test cases for verifying the frontend layout, 
 * **Command 2**: `curl http://127.0.0.1:8000/api/v1/graph?level=note&chapter=01-入门`
 * **Expected Result 2**:
   * Returns `200 OK` with only note-level nodes belonging to `01-入门` (e.g. `01-入门/1.1-需求.md`).
-
-**✅ 实测结果 (2026-07-06)**：
-- `?level=chapter` → HTTP 200，**13 个 chapter 节点 + 12 条 links**，`level:"chapter"`，`total_notes:204`，0 自环，节点含 `note_count` 字段（14/18...）。
-- `?level=note&chapter=01-入门` → HTTP 200，返回笔记级节点 `01-入门/1.1-需求.md`、`1.2-产品.md` 等，全部属于 `01-入门`。
+* **✅ 实测结果 (2026-07-06)**：
+  - `?level=chapter` → HTTP 200，**13 个 chapter 节点 + 12 条 links**，`level:"chapter"`，`total_notes:204`，0 自环，节点含 `note_count` 字段（14/18...）。
+  - `?level=note&chapter=01-入门` → HTTP 200，返回笔记级节点 `01-入门/1.1-需求.md`、`1.2-产品.md` 等，全部属于 `01-入门`。
 
 ### Test Case 4.2: Frontend Force Graph Rendering (前端力导向画布渲染)
 * **Action**: Navigate to the `/map` page.
@@ -115,8 +107,7 @@ This document contains structured test cases for verifying the frontend layout, 
   * **Dynamic Loading**: Canvas renders correctly on screen (proving Next.js dynamic client-side loading works without SSR crash).
   * **Hover Interaction**: Hovering over a node highlights its first-degree neighbor nodes and connects edges with active **flowing particles**, while dimming the rest of the graph.
   * **Focus Zoom**: Clicking a node triggers a smooth pan and zoom animation centering on that node.
-
-**✅ 实测结果 (2026-07-06)**：`/map` 页 `<canvas>` 成功渲染（`next/dynamic ssr:false` 解决了 Next.js 16 SSR 冲突）；源码逐行确认 `onNodeHover={updateHighlight}` 计算一度邻居高亮 + `linkDirectionalParticles` 高亮边返回 4 个流动粒子 + 非邻居节点 `${color}25` 降透明；`handleNodeClick` 调用 `fgRef.centerAt(x,y,800)` + `zoom(4.5,800)` 实现聚焦动画。截图 `acceptance-test-4-2-force-graph.png`。
+* **✅ 实测结果 (2026-07-06)**：`/map` 页 `<canvas>` 成功渲染（`next/dynamic ssr:false` 解决了 Next.js 16 SSR 冲突）；源码逐行确认 `onNodeHover={updateHighlight}` 计算一度邻居高亮 + `linkDirectionalParticles` 高亮边返回 4 个流动粒子 + 非邻居节点 `${color}25` 降透明；`handleNodeClick` 调用 `fgRef.centerAt(x,y,800)` + `zoom(4.5,800)` 实现聚焦动画。截图 `acceptance-test-4-2-force-graph.png`。
 
 ### Test Case 4.3: Graph Controls & Filtering (图谱控制与分级过滤)
 * **Action**: Toggle buttons "按目录聚合" / "按笔记展开". Select a chapter from the dropdown.
@@ -124,16 +115,14 @@ This document contains structured test cases for verifying the frontend layout, 
   * Switching to "按笔记展开" shows the detailed note network.
   * Selecting a specific chapter (e.g., `05-项目实践`) redraws the graph to display only the notes and links within that specific chapter, enhancing rendering speed.
   * Selecting "全部目录" displays a reminder toast: `"💡 笔记数量较多，可使用右上角下拉菜单过滤特定章节。"` to warn about rendering density.
-
-**✅ 实测结果 (2026-07-06)**：点击「按笔记展开」→ 章节下拉出现 + toast 文案**逐字匹配** `💡 笔记数量较多，可使用右上角下拉菜单过滤特定章节。`；下拉选 `05-项目实践` → toast 消失并重绘为该章节子图。截图 `acceptance-test-4-3-note-level-filter.png`。
+* **✅ 实测结果 (2026-07-06)**：点击「按笔记展开」→ 章节下拉出现 + toast 文案**逐字匹配** `💡 笔记数量较多，可使用右上角下拉菜单过滤特定章节。`；下拉选 `05-项目实践` → toast 消失并重绘为该章节子图。截图 `acceptance-test-4-3-note-level-filter.png`。
 
 ### Test Case 4.4: Detail Panel & Obsidian URI Integration (详情卡片与 Obsidian 深度整合)
 * **Action**: Click on a note node in the graph, check the right-side detail panel, and click `"在本地 Obsidian 打开"`.
 * **Expected Result**:
   * The detail panel displays the note title, type, directory path, and source path.
   * The Obsidian button opens/invokes the local Obsidian client targeting the exact note file (via `obsidian://open?vault=从零开始成为产品经理&file=...` scheme).
-
-**✅ 实测结果 (2026-07-06)**：源码确认侧边 `<aside>` 渲染 `selectedNode`（badge 类型/标题/所属大纲 `chapter`/包含笔记数 `note_count` 或文件路径 `id`）；note 类型节点显示「在本地 Obsidian 打开」按钮，`href=getObsidianUri()` 生成 `obsidian://open?vault=从零开始成为产品经理&file=<encodeURIComponent(pathNoExt)>`。
+* **✅ 实测结果 (2026-07-06)**：源码确认侧边 `<aside>` 渲染 `selectedNode`（badge 类型/标题/所属大纲 `chapter`/包含笔记数 `note_count` 或文件路径 `id`）；note 类型节点显示「在本地 Obsidian 打开」按钮，`href=getObsidianUri()` 生成 `obsidian://open?vault=从零开始成为产品经理&file=<encodeURIComponent(pathNoExt)>`。
 
 ---
 
@@ -142,14 +131,40 @@ This document contains structured test cases for verifying the frontend layout, 
 ### Test Case 5.1: Backend Testing (后端单元测试)
 * **Command**: Run `.\venv\Scripts\python.exe -m pytest tests/test_api.py -v`
 * **Expected Result**: All 9 tests (including health, semantic search, qa, interview, document search, and `test_api_graph_chapter_level`/`test_api_graph_note_level_filter`) pass successfully.
-
-**✅ 实测结果 (2026-07-06)**：`python -m pytest tests/test_api.py -v` → **9 passed**，含 `test_api_graph_chapter_level` 与 `test_api_graph_note_level_filter`（C-3 后端测试已就位），无 failure。
+* **✅ 实测结果 (2026-07-06)**：`python -m pytest tests/test_api.py -v` → **9 passed**，含 `test_api_graph_chapter_level` 与 `test_api_graph_note_level_filter`（C-3 后端测试已就位），无 failure。
 
 ### Test Case 5.2: Frontend Production Build (前端打包编译)
 * **Command**: Run `npm run build` inside `frontend/`
 * **Expected Result**: Build completes successfully with zero TypeScript, syntax, or routing compilation errors.
+* **✅ 实测结果 (2026-07-06)**：`npm run build` → Next.js 16.2.9 Turbopack 编译成功（Compiled successfully in 2.3s），TypeScript 检查通过（Finished in 5.1s），7 路由（`/`、`/about`、`/assistant`、`/interview`、`/knowledge`、`/map`、`/_not-found`）全部静态生成，0 错误。
 
-**✅ 实测结果 (2026-07-06)**：`npm run build` → Next.js 16.2.9 Turbopack 编译成功（Compiled successfully in 2.3s），TypeScript 检查通过（Finished in 5.1s），7 路由（`/`、`/about`、`/assistant`、`/interview`、`/knowledge`、`/map`、`/_not-found`）全部静态生成，0 错误。
+---
+
+## 📌 Phase 6: Release & Deliverables (v1.0.0 交付物与仓库验证)
+
+### Test Case 6.1: README Integrity Check (README 完整性校验)
+* **Action**: Check `README.md` at root and `frontend/README.md`.
+* **Expected Result**:
+  * Root `README.md` contains version `v1.0.0` and status `Released` badges, 4 features with screenshot references, Mermaid architecture graph, and Windows-specific Quick Start instructions.
+  * `frontend/README.md` marks Phase C completed and details `/map` force graph features.
+
+### Test Case 6.2: Demo Script and Resume Bullet Verification (演示脚本与简历描述)
+* **Action**: Check `docs/demo/DEMO_SCRIPT.md` and `docs/demo/RESUME_BULLET.md`.
+* **Expected Result**:
+  * `DEMO_SCRIPT.md` contains a structured 1-minute voiceover分镜 table, OBS instructions, and narration script.
+  * `RESUME_BULLET.md` provides 3 length versions of Chinese descriptions, an English short version, and 3 interview prep QA analyses.
+
+### Test Case 6.3: Repository Cleanup & Screenshots Archival (仓库整理与截图归档)
+* **Action**: Check the repository root and `docs/screenshots/`.
+* **Expected Result**:
+  * Root directory is clean of `acceptance-*.png` and `acceptance-test-*.png`.
+  * `docs/screenshots/` contains all 10 original screenshots + 4 renamed semantic screenshots (`workspace.png` etc.).
+
+### Test Case 6.4: Git Tag & Version Verification (Git Tag 与版本标记)
+* **Action**: Run `git describe --tags` and check `docs/versions/CHANGELOG.md`.
+* **Expected Result**:
+  * Git tag `v1.0.0` exists and is pushed.
+  * `CHANGELOG.md` has `[1.0.0] — 2026-07-06` as the latest release entry.
 
 ---
 
@@ -162,10 +177,11 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 3** | 模拟面试 | 3.1 / 3.2 | ✅ 全过 | **is_mock=False** 真实 Gemini；STAR 四维各 60+ 字诊断 + next_question |
 | **Phase 4** | 交互式图谱 (C-3) | 4.1 / 4.2 / 4.3 / 4.4 | ✅ 全过 | 13 节点+12 边；force-graph canvas 渲染；toast 逐字命中；Obsidian URI 正确 |
 | **Phase 5** | 代码质量 | 5.1 / 5.2 | ✅ 全过 | pytest **9 passed**；npm build 7 路由 0 错误 |
+| **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ⏳ 待验 | 等待别智能体验收并签署结论 |
 
-**整体结论**：✅ **系统验收全部通过（15/15 Test Case）**。Phase C-3（TASK-023 力导向图谱）已由工作智能体实现并经独立验收实测确认，Phase C 全部完成，项目可进入 Phase D（文档与部署）。
+**整体结论**：⏳ **交付物部分等待验收。系统核心代码与界面部分已于 2026-07-06 通过全量 15/15 单元与集成测试验收。**
 
 **验收时间**：2026-07-06
 **验收人**：独立验收智能体 (ZCode)
 **验收方式**：启动后端 :8000 + 前端 :3000，curl 实测 6 接口 + Playwright 实测 5 页面交互 + pytest/build 命令实测
-**验收截图**：`acceptance-test-2-3-full-preview.png`、`acceptance-test-2-4-semantic-rag.png`、`acceptance-test-3-1-live-gemini.png`、`acceptance-test-4-2-force-graph.png`、`acceptance-test-4-3-note-level-filter.png`
+**验收截图**：`docs/screenshots/acceptance-test-2-3-full-preview.png` 等 10 张归档截图
