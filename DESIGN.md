@@ -51,3 +51,13 @@ The app shell utilizes a flexible sidebar layout:
 - **Interactive Elements**: Subtle background shift on hover (`var(--surface-2)`).
 - **Focus States**: Strong brand-colored focus rings (`box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--brand);`).
 - **Citation Indicators**: Small inline numbers (e.g. `[1]`) that link to the source panel.
+
+## Design Critique & Audit Reports (v1.1.0)
+
+We have systematically analyzed the design health and code quality of the 5 core pages using the Impeccable framework. Detailed reports are stored under `docs/design/`:
+
+* **Homepage (`/`)**: [critique-home.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/critique-home.md) & [audit-home.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/audit-home.md)
+* **Knowledge base (`/knowledge`)**: [critique-knowledge.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/critique-knowledge.md) & [audit-knowledge.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/audit-knowledge.md)
+* **AI Assistant (`/assistant`)**: [critique-assistant.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/critique-assistant.md) & [audit-assistant.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/audit-assistant.md)
+* **Mock Interview (`/interview`)**: [critique-interview.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/critique-interview.md) & [audit-interview.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/audit-interview.md)
+* **Knowledge Graph (`/map`)**: [critique-map.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/critique-map.md) & [audit-map.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/audit-map.md)
