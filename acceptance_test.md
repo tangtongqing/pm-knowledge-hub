@@ -3,7 +3,7 @@
 This document contains structured test cases for verifying the frontend layout, backend APIs, integration, and RAG features of the PM Knowledge Hub.
 
 > **验收执行**：2026-07-06 由独立验收智能体 (ZCode) 全量执行，启动后端 :8000 + 前端 :3000，用 curl + Playwright 逐项实测。
-> **结论摘要**：✅ **Phase 1–5 共 15 个 Test Case 全部通过**（含 C-3 力导向图谱，TASK-023 已实现）。详见各 Test Case 下的「实测结果」与文末验收结论表。
+> **结论摘要**：🎉 **Phase 1–6 共 19 个 Test Case 全部通过**——Phase 1-5 核心代码与界面（15 项）+ Phase 6 v1.0.0 交付物与仓库治理（4 项）。项目 **v1.0.0 正式发布**。详见各 Test Case 下的「实测结果」与文末验收结论表。
 
 ---
 
@@ -84,6 +84,11 @@ This document contains structured test cases for verifying the frontend layout, 
   * A standard model suggested answer and a relevant follow-up question are provided in Markdown format.
 * **✅ 实测结果 (2026-07-06)**：`POST /interview/evaluate` 真实 Gemini 模式（`is_mock: False`）返回 `score: 75`，`star_feedback` 四维（Situation/Task/Action/Result）各有 60+ 字深度诊断，`suggested_answer` 与 `next_question` 均存在（下一轮挑战性追问已生成）。
 
+### Test Case 3.3: AI-Generated Content Disclaimer (AI 生成内容免责声明校验)
+* **Action**: Open `/assistant` and `/interview` pages.
+* **Expected Result**:
+  * The bottom of the chat panel on both pages displays: `⚠️ 以上内容由 AI 基于本地知识库生成，仅供参考，请结合实际判断。` in a smaller, secondary text color.
+
 ---
 
 ## 📌 Phase 4: Interactive Knowledge Graph (C-3 交互式力导向图谱)
@@ -147,24 +152,28 @@ This document contains structured test cases for verifying the frontend layout, 
 * **Expected Result**:
   * Root `README.md` contains version `v1.0.0` and status `Released` badges, 4 features with screenshot references, Mermaid architecture graph, and Windows-specific Quick Start instructions.
   * `frontend/README.md` marks Phase C completed and details `/map` force graph features.
+* **✅ 实测结果 (2026-07-06)**：根 README badge 为 `version-v1.0.0` + `status-Released`；含 4 大功能 2×2 截图矩阵（引用 `docs/screenshots/{knowledge-search,workspace,interview-star,knowledge-graph}.png`，4 张文件实测存在且非空）；含完整 Mermaid 架构图（前端/后端/存储/外部 LLM 四 subgraph + 数据流）；Windows Quick Start（venv 激活、.env 配置、120MB 模型下载提示）。frontend/README 标注「Phase C 前端开发已全部完成（C-1/C-2/C-3）」，详述 `/map` force-graph 5 项交互（高亮粒子/pan-zoom/层级切换/章节过滤/Obsidian 联动），无 C-2 待办残留。
 
 ### Test Case 6.2: Demo Script and Resume Bullet Verification (演示脚本与简历描述)
 * **Action**: Check `docs/demo/DEMO_SCRIPT.md` and `docs/demo/RESUME_BULLET.md`.
 * **Expected Result**:
   * `DEMO_SCRIPT.md` contains a structured 1-minute voiceover分镜 table, OBS instructions, and narration script.
   * `RESUME_BULLET.md` provides 3 length versions of Chinese descriptions, an English short version, and 3 interview prep QA analyses.
+* **✅ 实测结果 (2026-07-06)**：`DEMO_SCRIPT.md` 含 5 场景分镜表（时间戳/画面/操作/旁白，验收要求 4 场景实际给了 5 个）+ 188 字旁白完整文稿 + OBS 录屏指南（1080p/60FPS/光标美化）+ 录制避坑提示。`RESUME_BULLET.md` 提供 **4 版本**描述（一句话 32 字 / 短版 90 字 / 长版 STAR 260 字 / 英文 90 words，验收要求 3 版本实际给了 4 个）+ 3 个面试 Q&A（ChromaDB 选型 / RAG 防幻觉 / 双链处理）各带详尽回答要点；量化数据（204 篇/739 切片/6 接口/15 测试）准确无夸大。
 
 ### Test Case 6.3: Repository Cleanup & Screenshots Archival (仓库整理与截图归档)
 * **Action**: Check the repository root and `docs/screenshots/`.
 * **Expected Result**:
   * Root directory is clean of `acceptance-*.png` and `acceptance-test-*.png`.
   * `docs/screenshots/` contains all 10 original screenshots + 4 renamed semantic screenshots (`workspace.png` etc.).
+* **✅ 实测结果 (2026-07-06)**：根目录 `acceptance*.png` 计数 = **0**（全部归档）；临时文件 `dir_list.txt`/`_scan.py`/`dev-server.*.log` = **无**（已清理）；`docs/screenshots/` 含 **14 张**（10 原始 + 4 语义化命名 `workspace/knowledge-search/interview-star/knowledge-graph`）；`git ls-files` 抽查 `backend/data/`、`.env`、`node_modules/`、`.next/` = **0 个敏感文件被跟踪**。
 
 ### Test Case 6.4: Git Tag & Version Verification (Git Tag 与版本标记)
 * **Action**: Run `git describe --tags` and check `docs/versions/CHANGELOG.md`.
 * **Expected Result**:
   * Git tag `v1.0.0` exists and is pushed.
   * `CHANGELOG.md` has `[1.0.0] — 2026-07-06` as the latest release entry.
+* **✅ 实测结果 (2026-07-06)**：`git describe --tags` = `v1.0.0`（tag 标注信息完整：Tagger tangtongqing / 2026-07-06 / message「PM Knowledge Hub v1.0.0 — 完整产品发布」）；`git ls-remote --tags origin` 确认 `refs/tags/v1.0.0` **已推送到远程**；CHANGELOG 最新条目 = `## [1.0.0] — 2026-07-06 — Phase D 完成 & 正式 v1.0.0 交付`（版本序列：1.0.0 / 0.5.0 / 0.1.0-alpha / 0.0.1）。
 
 ---
 
@@ -177,11 +186,13 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 3** | 模拟面试 | 3.1 / 3.2 | ✅ 全过 | **is_mock=False** 真实 Gemini；STAR 四维各 60+ 字诊断 + next_question |
 | **Phase 4** | 交互式图谱 (C-3) | 4.1 / 4.2 / 4.3 / 4.4 | ✅ 全过 | 13 节点+12 边；force-graph canvas 渲染；toast 逐字命中；Obsidian URI 正确 |
 | **Phase 5** | 代码质量 | 5.1 / 5.2 | ✅ 全过 | pytest **9 passed**；npm build 7 路由 0 错误 |
-| **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ⏳ 待验 | 等待别智能体验收并签署结论 |
+| **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ✅ 全过 | README v1.0.0+Released badge + 4 截图 + Mermaid 架构；Demo 5 场景分镜 + 简历 4 版本；0 散落 png + 14 归档 + 0 敏感；`v1.0.0` tag 已推远程 + CHANGELOG `[1.0.0]` 就位 |
 
-**整体结论**：⏳ **交付物部分等待验收。系统核心代码与界面部分已于 2026-07-06 通过全量 15/15 单元与集成测试验收。**
+**整体结论**：🎉 **系统验收全部通过（19/19 Test Case）**。Phase 1-5 核心代码与界面 + Phase 6 交付物与仓库治理全部就位，项目 **v1.0.0 正式发布**。
 
-**验收时间**：2026-07-06
+**验收时间**：2026-07-06（Phase 1-5 + Phase 6 同日全量验收）
 **验收人**：独立验收智能体 (ZCode)
-**验收方式**：启动后端 :8000 + 前端 :3000，curl 实测 6 接口 + Playwright 实测 5 页面交互 + pytest/build 命令实测
-**验收截图**：`docs/screenshots/acceptance-test-2-3-full-preview.png` 等 10 张归档截图
+**验收方式**：
+- Phase 1-5：启动后端 :8000 + 前端 :3000，curl 实测 6 接口 + Playwright 实测 5 页面交互 + pytest/build 命令实测。
+- Phase 6：README/demo/RESUME 文件内容核对 + `git describe`/`git ls-remote`/`git ls-files` 命令实测 + 截图目录清点。
+**验收截图**：`docs/screenshots/` 14 张归档截图（含 10 张验收实测 + 4 张语义化命名）

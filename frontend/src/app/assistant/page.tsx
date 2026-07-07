@@ -138,6 +138,9 @@ export default function AssistantPage() {
               </svg>
             </button>
           </form>
+          <div className={styles.disclaimer}>
+            ⚠️ 以上内容由 AI 基于本地知识库生成，仅供参考，请结合实际判断。
+          </div>
         </div>
       </div>
 

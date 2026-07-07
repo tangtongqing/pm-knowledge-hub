@@ -429,3 +429,29 @@
   line-height: 1.5;
   margin: 0;
 }
+
+.inputFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  gap: 16px;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: right;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .inputFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .disclaimer {
+    text-align: left;
+  }
+}

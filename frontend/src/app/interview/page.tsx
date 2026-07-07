@@ -182,7 +182,12 @@ export default function InterviewPage() {
                   </svg>
                 </button>
               </form>
-              <div className={styles.hint}>Shift + Enter 换行，Enter 发送</div>
+              <div className={styles.inputFooter}>
+                <div className={styles.hint}>Shift + Enter 换行，Enter 发送</div>
+                <div className={styles.disclaimer}>
+                  ⚠️ 以上内容由 AI 基于本地知识库生成，仅供参考，请结合实际判断。
+                </div>
+              </div>
             </div>
           </>
         )}

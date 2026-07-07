@@ -383,3 +383,11 @@
   background: var(--surface-2);
   border-color: var(--border-component);
 }
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.4;
+}
