@@ -5,11 +5,13 @@ FastAPI Routes for QA Agent
 
 from fastapi import APIRouter, Request, HTTPException
 from agents.qa_agent import QARequest, QAServiceResponse
+from api.security import limiter, sanitize_user_input
 
 router = APIRouter()
 
 
 @router.post("/qa/ask", response_model=QAServiceResponse)
+@limiter.limit("10/minute")
 async def ask_question(request: Request, body: QARequest) -> QAServiceResponse:
     """
     PM 知识检索问答接口
@@ -22,8 +24,9 @@ async def ask_question(request: Request, body: QARequest) -> QAServiceResponse:
     """
     qa_agent = request.app.state.qa_agent
     try:
+        clean_query = sanitize_user_input(body.query)
         response = qa_agent.answer(
-            query=body.query,
+            query=clean_query,
             top_k=body.top_k,
             chapter_filter=body.chapter,
             tag_filter=body.tag

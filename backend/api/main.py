@@ -76,6 +76,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+from api.security import limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # ── CORS 配置（允许前端 Next.js 开发服务器访问）────────────────────────
 app.add_middleware(
     CORSMiddleware,

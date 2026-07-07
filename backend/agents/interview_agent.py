@@ -11,8 +11,9 @@ Interview Agent — PM 模拟面试智能体
 
 import os
 import random
+import re
 from typing import List, Dict, Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from google import genai
 from google.genai import types
 
@@ -48,8 +49,15 @@ class StartResponse(BaseModel):
 
 class EvaluateRequest(BaseModel):
     question: str
-    user_answer: str
+    user_answer: str = Field(..., max_length=2000, description="候选人回答")
     history: Optional[List[Dict[str, str]]] = None
+
+    @field_validator("user_answer")
+    @classmethod
+    def validate_user_answer(cls, v: str) -> str:
+        if re.search(r'[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]', v):
+            raise ValueError("输入包含非法的控制字符")
+        return v
 
 
 # ── 本地静态高质量题库 (用于 Mock 模式) ───────────────────────────────

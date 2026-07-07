@@ -9,9 +9,10 @@ QA Agent — PM 知识检索问答智能体
 """
 
 import os
+import re
 from typing import List, Dict, Any, Optional
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from google import genai
 from google.genai import types
 
@@ -23,10 +24,17 @@ class QAAgentResponse(BaseModel):
 
 
 class QARequest(BaseModel):
-    query: str
+    query: str = Field(..., max_length=2000, description="用户提问")
     top_k: int = 5
     chapter: Optional[str] = None
     tag: Optional[str] = None
+
+    @field_validator("query")
+    @classmethod
+    def validate_query(cls, v: str) -> str:
+        if re.search(r'[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]', v):
+            raise ValueError("输入包含非法的控制字符")
+        return v
 
 
 class QASource(BaseModel):

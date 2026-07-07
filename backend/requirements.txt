@@ -30,3 +30,6 @@ pyyaml
 pytest
 pytest-cov
 httpx
+
+# Security & Rate Limiting
+slowapi
