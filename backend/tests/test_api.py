@@ -174,6 +174,11 @@ def test_api_graph_note_level_filter(test_client):
 
 def test_api_metrics_endpoint(test_client):
     """测试系统运行指标监控 API (总查询与 Mock 分类计数)"""
+    # 重置全局计数，消除其他测试用例的副作用
+    test_client.app.state.total_queries = 0
+    test_client.app.state.mock_queries = 0
+    test_client.app.state.live_queries = 0
+    
     # 1. 初始状态查询，各项计数应当为 0
     response = test_client.get("/api/v1/metrics")
     assert response.status_code == 200
