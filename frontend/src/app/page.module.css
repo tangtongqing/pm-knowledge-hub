@@ -209,3 +209,144 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Metrics Section Styles */
+.metricsSection {
+  margin-top: 32px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.metricsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.metricsTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+
+.metricsStatus {
+  font-size: 11px;
+  color: var(--success);
+  background: var(--success-subtle);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metricCard {
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.metricSub {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.chartArea {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+}
+
+.chartLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.chartBarWrapper {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: 9999px;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.chartBarLive {
+  background: var(--brand);
+  transition: width 0.3s ease;
+}
+
+.chartBarMock {
+  background: var(--warning);
+  transition: width 0.3s ease;
+}
+
+.chartLegend {
+  display: flex;
+  gap: 16px;
+}
+
+.legendItem {
+  font-size: 11px;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dotLive, .dotMock {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotLive {
+  background: var(--brand);
+}
+
+.dotMock {
+  background: var(--warning);
+}
+

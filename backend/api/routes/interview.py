@@ -58,6 +58,13 @@ async def evaluate_answer(request: Request, body: EvaluateRequest):
             question=body.question,
             user_answer=clean_answer
         )
+        # 递增指标计数
+        request.app.state.total_queries += 1
+        if response.get("is_mock", False):
+            request.app.state.mock_queries += 1
+        else:
+            request.app.state.live_queries += 1
+            
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"评估面试回答失败: {str(e)}")

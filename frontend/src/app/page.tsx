@@ -8,12 +8,20 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [metrics, setMetrics] = useState<{
+    collection_count: number;
+    total_queries: number;
+    mock_queries: number;
+    live_queries: number;
+  } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     // Fetch system health on mount
     api.getHealth().then(setHealth);
+    // Fetch metrics
+    api.getMetrics().then(setMetrics).catch(err => console.error("Failed to fetch metrics", err));
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -126,6 +134,69 @@ export default function Home() {
               可视化你的 PM 知识结构，探索笔记与章节之间的双向链接网络。
             </p>
           </Link>
+        </div>
+
+        {/* Metrics Section */}
+        <div className={styles.metricsSection}>
+          <div className={styles.metricsHeader}>
+            <h2 className={styles.metricsTitle}>系统运行指标 (L1 & L2)</h2>
+            <span className={styles.metricsStatus}>实时更新</span>
+          </div>
+          <div className={styles.metricsGrid}>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>今日问答与面试次数 (L1)</span>
+              <span className={styles.metricValue}>{metrics?.total_queries ?? 0}</span>
+              <span className={styles.metricSub}>会话累计请求总量</span>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>真实 LLM 调用量</span>
+              <span className={styles.metricValue}>{metrics?.live_queries ?? 0}</span>
+              <span className={styles.metricSub}>Gemini API 实时召回</span>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>演示模式降级量</span>
+              <span className={styles.metricValue}>{metrics?.mock_queries ?? 0}</span>
+              <span className={styles.metricSub}>离线安全回退计数</span>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>向量库切片容量 (L2)</span>
+              <span className={styles.metricValue}>{health?.collection_count ?? 2579}</span>
+              <span className={styles.metricSub}>ChromaDB 索引分片数</span>
+            </div>
+          </div>
+
+          <div className={styles.chartArea}>
+            <div className={styles.chartLabels}>
+              <span>LLM 调用配比 (真实 vs 演示)</span>
+              <span>
+                {metrics && metrics.total_queries > 0
+                  ? `${Math.round((metrics.live_queries / metrics.total_queries) * 100)}% 真实`
+                  : "暂无会话数据"}
+              </span>
+            </div>
+            <div className={styles.chartBarWrapper}>
+              <div 
+                className={styles.chartBarLive} 
+                style={{ 
+                  width: metrics && metrics.total_queries > 0 
+                    ? `${(metrics.live_queries / metrics.total_queries) * 100}%` 
+                    : "50%" 
+                }}
+              ></div>
+              <div 
+                className={styles.chartBarMock} 
+                style={{ 
+                  width: metrics && metrics.total_queries > 0 
+                    ? `${(metrics.mock_queries / metrics.total_queries) * 100}%` 
+                    : "50%" 
+                }}
+              ></div>
+            </div>
+            <div className={styles.chartLegend}>
+              <span className={styles.legendItem}><span className={styles.dotLive}></span>真实 API (Gemini)</span>
+              <span className={styles.legendItem}><span className={styles.dotMock}></span>演示模式 (Mock)</span>
+            </div>
+          </div>
         </div>
 
       </div>

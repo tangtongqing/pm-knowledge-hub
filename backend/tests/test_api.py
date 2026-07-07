@@ -47,6 +47,9 @@ def test_client():
     app.state.chroma_client = client
     app.state.qa_agent = QAAgent(collection)
     app.state.interview_agent = InterviewAgent(collection)
+    app.state.total_queries = 0
+    app.state.mock_queries = 0
+    app.state.live_queries = 0
     
     # 禁用其真实的 GEMINI key，强制走 Mock
     app.state.qa_agent.client = None
@@ -167,4 +170,32 @@ def test_api_graph_note_level_filter(test_client):
     assert len(res_data["nodes"]) == 1
     assert res_data["nodes"][0]["id"] == "01-入门/1.1-需求.md"
     assert len(res_data["links"]) == 0  # 单个节点无连线
+
+
+def test_api_metrics_endpoint(test_client):
+    """测试系统运行指标监控 API (总查询与 Mock 分类计数)"""
+    # 1. 初始状态查询，各项计数应当为 0
+    response = test_client.get("/api/v1/metrics")
+    assert response.status_code == 200
+    res_data = response.json()
+    assert "collection_count" in res_data
+    assert res_data["total_queries"] == 0
+    assert res_data["mock_queries"] == 0
+    assert res_data["live_queries"] == 0
+
+    # 2. 发起一次问答请求 (必定走 Mock，因为测试环境无 Gemini Key)
+    response_qa = test_client.post(
+        "/api/v1/qa/ask",
+        json={"query": "什么是需求分析", "top_k": 3}
+    )
+    assert response_qa.status_code == 200
+    assert response_qa.json()["is_mock"] is True
+
+    # 3. 再次查询指标，总数与 Mock 数应递增为 1
+    response = test_client.get("/api/v1/metrics")
+    res_data = response.json()
+    assert res_data["total_queries"] == 1
+    assert res_data["mock_queries"] == 1
+    assert res_data["live_queries"] == 0
+
 

@@ -31,6 +31,13 @@ async def ask_question(request: Request, body: QARequest) -> QAServiceResponse:
             chapter_filter=body.chapter,
             tag_filter=body.tag
         )
+        # 递增指标计数
+        request.app.state.total_queries += 1
+        if response.is_mock:
+            request.app.state.mock_queries += 1
+        else:
+            request.app.state.live_queries += 1
+            
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"QA 问答执行失败: {str(e)}")

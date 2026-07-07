@@ -17,7 +17,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from api.routes import search, health, qa, interview, graph
+from api.routes import search, health, qa, interview, graph, metrics
 
 # ── 环境变量 ────────────────────────────────────────────────────────────
 # 加载 backend/.env（使用绝对路径，兼容从任意目录启动）
@@ -57,8 +57,9 @@ async def lifespan(app: FastAPI):
     app.state.qa_agent = QAAgent(collection)
     app.state.interview_agent = InterviewAgent(collection)
     
-    count = collection.count()
-    print(f"[startup] ChromaDB ready. Collection 'pm_notes' has {count} chunks.")
+    app.state.total_queries = 0
+    app.state.mock_queries = 0
+    app.state.live_queries = 0
     
     yield  # 应用正常运行期间
     
@@ -101,6 +102,7 @@ app.include_router(search.router, prefix="/api/v1", tags=["Search"])
 app.include_router(qa.router, prefix="/api/v1", tags=["QA"])
 app.include_router(interview.router, prefix="/api/v1", tags=["Interview"])
 app.include_router(graph.router, prefix="/api/v1", tags=["Graph"])
+app.include_router(metrics.router, prefix="/api/v1", tags=["Metrics"])
 
 
 @app.get("/", include_in_schema=False)

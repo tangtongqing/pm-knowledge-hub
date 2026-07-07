@@ -238,6 +238,23 @@ export const api = {
   },
 
   /**
+   * 获取系统运行指标
+   */
+  async getMetrics(): Promise<{
+    collection_count: number;
+    total_queries: number;
+    mock_queries: number;
+    live_queries: number;
+  }> {
+    return request<{
+      collection_count: number;
+      total_queries: number;
+      mock_queries: number;
+      live_queries: number;
+    }>("/metrics");
+  },
+
+  /**
    * 获取知识图谱拓扑数据
    */
   async getGraph(
