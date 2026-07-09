@@ -373,6 +373,22 @@
   font-weight: 500;
 }
 
+.scoreProgressBar {
+  width: 100%;
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: 3px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.scoreProgressBarFill {
+  height: 100%;
+  background: var(--brand);
+  border-radius: 3px;
+  transition: width var(--transition);
+}
+
 .mockBadge {
   position: absolute;
   top: 12px;

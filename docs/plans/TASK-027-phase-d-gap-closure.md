@@ -5,6 +5,7 @@
 > **目标版本**：v1.1.0（功能/合规增量）或 v1.0.1（仅补丁），由工作智能体按改动范围自定并回报
 > **创建时间**：2026-07-07
 > **派发人**：主导智能体 (ZCode)
+> **完成状态**：✅ 已完成（2026-07-07，按 v1.1.0 发布）
 
 ---
 
@@ -131,15 +132,15 @@ v1.0.0 从**工程交付**角度已闭环（四阶段验收、tag 推送），�
 
 本任务无独立 criteria 文档，按以下 7 项 checklist + 工作流 Quality Bar 核对：
 
-- [ ] **2.1** `.coveragerc` 存在 + term 报告 TOTAL ≥ 70%（或显式声明实际值）写入 phase-b-criteria。
-- [ ] **2.2** `security.py` + `test_security.py`（≥3）+ slowapi 接入 + 输入校验/输出 schema 全路由生效 + pytest 全绿。
-- [ ] **2.3** 根目录 `LICENSE` 存在且为有效 MIT 文本。
-- [ ] **2.4** `/assistant` 与 `/interview` 页面 DOM 含免责文案 + 截图归档 + acceptance_test.md 加 Test Case 3.3。
-- [ ] **2.5** README 含「数据流向与隐私」小节 + `.env.example` 存在 + `.env` 仍被忽略。
-- [ ] **2.6** `docs/design/` 含 10 份 critique/audit 报告 + P0/P1 已修或声明延后 + PRODUCT.md/DESIGN.md 深化。
-- [ ] **2.7** `/api/v1/metrics` 返回真实计数 + 首页 ≥1 真实指标 + METRICS.md 更新 + metrics 测试通过。
-- [ ] **回归**：重跑 `acceptance_test.md` 全部 19 项 Test Case 仍通过（含免责声明新增项后变 20 项），`pytest` 全绿，`npm run build` 0 错误。
-- [ ] **版本**：CHANGELOG 加 `[1.1.0]`（或 `[1.0.1]`）条目；打 tag 并推送。
+- [x] **2.1** `.coveragerc` 存在 + term 报告 TOTAL ≥ 70%（或显式声明实际值）写入 phase-b-criteria。
+- [x] **2.2** `security.py` + `test_security.py`（≥3）+ slowapi 接入 + 输入校验/输出 schema 全路由生效 + pytest 全绿。
+- [x] **2.3** 根目录 `LICENSE` 存在且为有效 MIT 文本。
+- [x] **2.4** `/assistant` 与 `/interview` 页面 DOM 含免责文案 + 截图归档 + acceptance_test.md 加 Test Case 3.3。
+- [x] **2.5** README 含「数据流向与隐私」小节 + `.env.example` 存在 + `.env` 仍被忽略。
+- [x] **2.6** `docs/design/` 含 10 份 critique/audit 报告 + P0/P1 已修或声明延后 + PRODUCT.md/DESIGN.md 深化。
+- [x] **2.7** `/api/v1/metrics` 返回真实计数 + 首页 ≥1 真实指标 + METRICS.md 更新 + metrics 测试通过。
+- [x] **回归**：重跑 `acceptance_test.md` 全部 19 项 Test Case 仍通过（含免责声明新增项后变 20 项），`pytest` 全绿，`npm run build` 0 错误。
+- [x] **版本**：CHANGELOG 加 `[1.1.0]`（或 `[1.0.1]`）条目；打 tag 并推送。
 
 **完成判定**：上述全部勾选 + 工作流 Quality Bar（product/user context、register、visual direction、states、a11y、security evidence、critique loop）逐项可追溯，即视为 Phase D 缺口补齐、项目从产品设计工作流角度完成。
 

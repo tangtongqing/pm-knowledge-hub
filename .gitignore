@@ -52,3 +52,6 @@ htmlcov/
 # 日志
 *.log
 logs/
+
+# Playwright MCP Snapshots
+.playwright-mcp/

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api, HealthResponse } from "@/lib/api";
@@ -16,12 +16,33 @@ export default function Home() {
   } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Fetch system health on mount
     api.getHealth().then(setHealth);
     // Fetch metrics
     api.getMetrics().then(setMetrics).catch(err => console.error("Failed to fetch metrics", err));
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "/") {
+        const activeEl = document.activeElement;
+        const isInputActive = activeEl && (
+          activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.hasAttribute("contenteditable")
+        );
+        if (!isInputActive) {
+          e.preventDefault();
+          searchRef.current?.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+    };
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -48,12 +69,13 @@ export default function Home() {
         <div className={styles.searchSection}>
           <form className={styles.searchForm} onSubmit={handleSearch}>
             <div className={styles.searchIcon}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
             </div>
             <input
+              ref={searchRef}
               type="text"
               className={styles.searchInput}
               placeholder="搜索你的知识库 (例如: AARRR 模型)"
@@ -76,7 +98,7 @@ export default function Home() {
           <Link href="/knowledge" className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
                 </svg>
               </div>
@@ -90,7 +112,7 @@ export default function Home() {
           <Link href="/assistant" className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
@@ -104,7 +126,7 @@ export default function Home() {
           <Link href="/interview" className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
                   <polyline points="16 11 18 13 22 9" />
@@ -120,7 +142,7 @@ export default function Home() {
           <Link href="/map" className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="18" cy="5" r="3" />
                   <circle cx="6" cy="12" r="3" />
                   <circle cx="18" cy="19" r="3" />
