@@ -176,6 +176,29 @@ export default function MapPage() {
               ))}
             </select>
           )}
+
+          <button
+            className={styles.resetBtn}
+            onClick={() => {
+              if (fgRef.current) {
+                try {
+                  fgRef.current.zoomToFit(400);
+                } catch (e) {
+                  console.error("zoomToFit failed", e);
+                }
+              }
+            }}
+            aria-label="重置视图"
+            title="重置视图"
+          >
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h6v6"></path>
+              <path d="M9 21H3v-6"></path>
+              <path d="M21 3l-7 7"></path>
+              <path d="M3 21l7-7"></path>
+            </svg>
+            重置视图
+          </button>
         </div>
       </header>
 
@@ -302,6 +325,13 @@ export default function MapPage() {
                   }
                 }}
               />
+              {/* Visually hidden screen reader fallback */}
+              {graphData && (
+                <div className={styles.srOnly} aria-label="知识图谱节点摘要">
+                  共 {graphData.nodes.length} 个节点，{graphData.links.length} 条连接。节点列表：
+                  {graphData.nodes.map((n) => n.label).join("、")}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -310,7 +340,7 @@ export default function MapPage() {
         <aside className={styles.sidebar}>
           {!selectedNode ? (
             <div className={styles.emptySidebar}>
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 16v-4M12 8h.01" />
               </svg>
@@ -354,7 +384,7 @@ export default function MapPage() {
                     rel="noreferrer"
                   >
                     在本地 Obsidian 打开
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                       <polyline points="15 3 21 3 21 9" />
                       <line x1="10" y1="14" x2="21" y2="3" />

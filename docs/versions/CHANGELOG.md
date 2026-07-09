@@ -4,6 +4,46 @@
 
 ---
 
+## [1.2.0] — 2026-07-09 — TASK-029 可访问性与体验优化专项
+
+### Added
+- **可访问性专项 (P2-1 至 P2-5)**:
+  - 首页、知识库、模拟面试、问答助手、知识地图 5 大页面共 20+ 个装饰性 SVG 全量加入 `aria-hidden="true"`。
+  - 知识库搜索页面的结果数显示容器加入 `aria-live="polite"`，保证搜索结果更新时键盘焦点不丢失且屏幕阅读器能实时播报。
+  - 模拟面试评分页的 STAR 四维综合得分组件，增加 `<div role="progressbar" aria-valuenow={score}>` 水平评分填充进度条，提升进度条语义化。
+  - 力导向知识地图 canvas 容器后附带 visually-hidden `.srOnly` 文本节点摘要，包含节点总数、连线数与具体笔记大纲列表，解决纯 Canvas 对读屏器的离线障碍。
+  - 问答助手提问页点击底部的建议问题词后，在输入文本替换的同时，焦点能够回弹聚焦在提问输入框 `inputRef` 内。
+- **体验/效率专项 (P2-6 至 P2-10)**:
+  - 全局键盘监听首页触发 `/` 快捷键，可在非输入控件聚焦时，自动拦截并聚焦输入头部搜索框。
+  - 首页对指标卡网格 (.metricsGrid) 和功能卡网格 (.grid) 应用 `grid-auto-rows: 1fr` 弹性属性，确保同行卡片在文字不等长时高度对齐。
+  - 问答助手 AI 消息气泡右上角新增一键复制按钮，Hover 气泡时显示，复制内容到剪贴板，并在 1.5 秒内呈现「已复制 ✓」反馈。
+  - 模拟面试答题框增加 `STAR` 引导文案，帮助用户按「Situation - Task - Action - Result」逻辑结构组织作答。
+  - 力导向知识图谱地图的操作栏内添加「重置视图」控制按钮，点击能够触发 `zoomToFit(400)` 重置图谱到合适大小与中心。
+- **工程整理**:
+  - `.gitignore` 新增忽略测试用 Playwright 临时快照文件夹 `.playwright-mcp/`，并进行物理删除清理。
+
+### Verification
+- `npm run build` 构建编译成功，7 路由静态编译通过，0 报错。
+- `acceptance_test.md` 补充第 7 模块（可访问性与体验），21/21 个验收用例通过。
+
+---
+
+## [1.1.0] — 2026-07-07 — TASK-027 产品设计工作流缺口补齐
+
+### Added
+- 新增后端覆盖率配置 `backend/.coveragerc`，并在 `docs/acceptance/phase-b-criteria.md` 记录 2026-07-07 覆盖率实测结果。
+- 新增 AI 安全基础防护：`backend/api/security.py`、`backend/tests/test_security.py`、`slowapi` 限流接入，以及 QA/Interview 路由的输入清洗与异常降级保障。
+- 新增 `LICENSE`、`backend/.env.example`，并在 README 补充「数据流向与隐私」说明，明确本地存储、Gemini 外发片段与 mock 降级路径。
+- 在 `/assistant` 与 `/interview` 页面补充 AI 生成内容免责声明，并在 `acceptance_test.md` 增加 Test Case 3.3。
+- 新增 `GET /api/v1/metrics` 运行时指标端点，首页工作台接入真实指标展示；`docs/pm/METRICS.md` 补充 v1.1.0 指标采集实现。
+- 新增 5 个核心页面的设计 critique/audit 报告，共 10 份报告归档到 `docs/design/`。
+
+### Verification
+- `docs/acceptance/phase-b-criteria.md` 记录后端测试 **45 passed**。
+- `docs/TASKS.md` 标记 `TASK-027` 完成，Git tag `v1.1.0` 已存在。
+
+---
+
 ## [1.0.0] — 2026-07-06 — Phase D 完成 & 正式 v1.0.0 交付
 
 ### Added

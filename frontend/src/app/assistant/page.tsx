@@ -25,6 +25,8 @@ export default function AssistantPage() {
   const [activeSources, setActiveSources] = useState<QAServiceResponse | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,6 +35,20 @@ export default function AssistantPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleCopy = (text: string, index: number) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIndex(index);
+      setTimeout(() => {
+        setCopiedIndex(null);
+      }, 1500);
+    });
+  };
+
+  const handleRecClick = (rec: string) => {
+    setInput(rec);
+    inputRef.current?.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,9 +108,9 @@ export default function AssistantPage() {
             <div key={idx} className={`${styles.messageWrapper} ${msg.role === 'user' ? styles.wrapperUser : styles.wrapperAssistant}`}>
               <div className={styles.avatar}>
                 {msg.role === 'user' ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                 )}
               </div>
               <div className={`${styles.messageBubble} ${msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant} ${msg.isLoading ? styles.loading : ''}`}>
@@ -108,6 +124,24 @@ export default function AssistantPage() {
                   </div>
                 )}
                 
+                {msg.role === 'assistant' && !msg.isLoading && (
+                  <button 
+                    className={styles.copyBtn} 
+                    onClick={() => handleCopy(msg.content, idx)}
+                    aria-label="复制回答"
+                    title="复制回答"
+                  >
+                    {copiedIndex === idx ? (
+                      <span className={styles.copiedText}>已复制 ✓</span>
+                    ) : (
+                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    )}
+                  </button>
+                )}
+
                 {msg.responseMeta?.is_mock && (
                   <div className={styles.mockWarning}>当前为演示模式</div>
                 )}
@@ -120,6 +154,7 @@ export default function AssistantPage() {
         <div className={styles.inputArea}>
           <form className={styles.inputForm} onSubmit={handleSubmit}>
             <input
+              ref={inputRef}
               type="text"
               className={styles.inputField}
               placeholder="向知识库提问..."
@@ -132,7 +167,7 @@ export default function AssistantPage() {
               className={styles.sendBtn}
               disabled={!input.trim() || isLoading}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
               </svg>
@@ -153,7 +188,7 @@ export default function AssistantPage() {
         <div className={styles.sourceContent}>
           {!activeSources ? (
             <div className={styles.emptySource}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -192,7 +227,7 @@ export default function AssistantPage() {
                       rel="noreferrer"
                     >
                       在 Obsidian 中打开
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="7" y1="17" x2="17" y2="7"></line>
                         <polyline points="7 7 17 7 17 17"></polyline>
                       </svg>
@@ -209,7 +244,7 @@ export default function AssistantPage() {
                       <button 
                         key={idx} 
                         className={styles.recBtn}
-                        onClick={() => setInput(rec)}
+                        onClick={() => handleRecClick(rec)}
                       >
                         {rec}
                       </button>

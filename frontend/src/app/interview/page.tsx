@@ -109,7 +109,7 @@ export default function InterviewPage() {
         {!isStarted ? (
           <div className={styles.startScreen}>
             <div className={styles.startIcon}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <polyline points="16 11 18 13 22 9" />
@@ -134,9 +134,9 @@ export default function InterviewPage() {
                 <div key={idx} className={`${styles.messageWrapper} ${msg.role === 'candidate' ? styles.wrapperCandidate : styles.wrapperInterviewer}`}>
                   <div className={styles.avatar}>
                     {msg.role === 'candidate' ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"></path><path d="M19 13v-1a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v1a7 7 0 0 0 14 0z"></path></svg>
+                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"></path><path d="M19 13v-1a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v1a7 7 0 0 0 14 0z"></path></svg>
                     )}
                   </div>
                   <div className={`${styles.messageBubble} ${msg.role === 'candidate' ? styles.bubbleCandidate : styles.bubbleInterviewer} ${msg.isLoading ? styles.loading : ''}`}>
@@ -159,7 +159,7 @@ export default function InterviewPage() {
               <form className={styles.inputForm} onSubmit={handleSubmit}>
                 <textarea
                   className={styles.inputField}
-                  placeholder="输入你的回答 (支持多行)..."
+                  placeholder="用 STAR 法则作答：Situation（情境）→ Task（任务）→ Action（行动）→ Result（结果）"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
@@ -176,7 +176,7 @@ export default function InterviewPage() {
                   className={styles.sendBtn}
                   disabled={!input.trim() || isLoading}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
@@ -211,6 +211,19 @@ export default function InterviewPage() {
                 <div className={styles.scoreValue}>
                   <span className={styles.scoreNum}>{latestEval.score}</span>
                   <span className={styles.scoreDenom}>/100</span>
+                </div>
+                <div 
+                  className={styles.scoreProgressBar}
+                  role="progressbar"
+                  aria-valuenow={latestEval.score}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="综合得分进度条"
+                >
+                  <div 
+                    className={styles.scoreProgressBarFill} 
+                    style={{ width: `${latestEval.score}%` }}
+                  ></div>
                 </div>
                 {latestEval.is_mock && (
                   <div className={styles.mockBadge}>演示数据</div>

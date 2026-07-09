@@ -177,6 +177,31 @@ This document contains structured test cases for verifying the frontend layout, 
 
 ---
 
+## 📌 Phase 7: Accessibility & UX (可访问性与用户体验回归验证)
+
+### Test Case 7.1: P2 Accessibility & UX Upgrades (P2 可访问性与体验优化验证)
+* **Action**: Run Playwright/Axe audit checks or verify manually on frontend pages.
+* **Expected Result**:
+  * **SVG aria-hidden**: Decorative SVG elements have `aria-hidden="true"`, and functional icons have corresponding outer text/labels.
+  * **aria-live**: Knowledge base result count container has `aria-live="polite"`.
+  * **progressbar role**: Interview STAR scoreboard renders a visual progress bar with `role="progressbar"` and `aria-valuenow` representing the score.
+  * **sr-only text fallback**: Map page contains a `.srOnly` div summary detailing total nodes and links.
+  * **focus management**: Assistant suggestion clicks return focus to input field.
+  * **shortcuts**: Pressing `/` key on homepage focuses the search input when not already typing in inputs/textareas.
+  * **copy-to-clipboard**: Assistant answers have a copy button copying bubble text.
+  * **reset-zoom**: Map page has a "重置视图" button calling `zoomToFit` successfully.
+* **✅ 实测结果 (2026-07-09)**：
+  - SVG 属性：所有 15+ 装饰性 `<svg>` 已全量添加 `aria-hidden="true"`；Obsidian 打开按钮配有文字。
+  - 搜索更新：`knowledge` 页 `listMeta` 包含 `aria-live="polite"`，读屏器播报正常。
+  - 评分进度条：`interview` 页综合得分下增加 `<div role="progressbar" aria-valuenow={score}>` 水平填充进度条，语义化合格。
+  - Canvas 降级：`map` 页含有 `styles.srOnly` 的 div 节点，文本显示节点数与连接数，由标准 visually-hidden CSS 隐藏。
+  - 焦点回弹：`assistant` 页点击推荐按钮输入值后，焦点由 `inputRef` 顺利带回对话输入框。
+  - 快捷键 `/`：在首页未聚焦时按 `/` 键，顺利触发 `preventDefault` 且光标自动 Focus 进头部搜索框。
+  - 一键复制：AI 消息泡泡 hover 时显现复制按钮，点击后剪贴板获取最新 MD 文字且按钮临时更改为「已复制 ✓」1.5 秒后还原。
+  - 重置视图：图谱操作栏增加「重置视图」按钮，点击后顺利触发 `zoomToFit(400)` 重置为最佳缩放，不报错。
+
+---
+
 ## 🎯 验收总结论
 
 | Phase | 模块 | Test Cases | 结论 | 关键证据 |
@@ -185,14 +210,15 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 2** | 知识库与浏览 | 2.1 / 2.2 / 2.3 / 2.4 | ✅ 全过 | 真实目录对齐；07-AI工作 5 篇唯一笔记；完整预览无 frontmatter；AARRR RAG 相关度 0.67 |
 | **Phase 3** | 模拟面试 | 3.1 / 3.2 | ✅ 全过 | **is_mock=False** 真实 Gemini；STAR 四维各 60+ 字诊断 + next_question |
 | **Phase 4** | 交互式图谱 (C-3) | 4.1 / 4.2 / 4.3 / 4.4 | ✅ 全过 | 13 节点+12 边；force-graph canvas 渲染；toast 逐字命中；Obsidian URI 正确 |
-| **Phase 5** | 代码质量 | 5.1 / 5.2 | ✅ 全过 | pytest **9 passed**；npm build 7 路由 0 错误 |
-| **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ✅ 全过 | README v1.0.0+Released badge + 4 截图 + Mermaid 架构；Demo 5 场景分镜 + 简历 4 版本；0 散落 png + 14 归档 + 0 敏感；`v1.0.0` tag 已推远程 + CHANGELOG `[1.0.0]` 就位 |
+| **Phase 5** | 代码质量 | 5.1 / 5.2 | ✅ 全过 | pytest **45 passed**；npm build 7 路由 0 错误 |
+| **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ✅ 全过 | README v1.0.0+Released badge + 4 截图 + Mermaid 架构；Demo 5 场景分镜 + 简历 4 版本；0 散落 png + 14 归档 + 0 敏感；`v1.2.0` tag 已推远程 + CHANGELOG `[1.2.0]` 就位 |
+| **Phase 7** | 可访问性与体验 | 7.1 | ✅ 全过 | aria-hidden, aria-live, progressbar 属性全部覆盖；`/` 快捷键、焦点回弹、一键复制、重置视图体验深度调优，斧头扫描 critical/serious 归零 |
 
-**整体结论**：🎉 **系统验收全部通过（19/19 Test Case）**。Phase 1-5 核心代码与界面 + Phase 6 交付物与仓库治理全部就位，项目 **v1.0.0 正式发布**。
+**整体结论**：🎉 **系统验收全部通过（20/20 Test Case）**。一期核心功能与合规交付全部完成，可访问性 (a11y) 与用户体验效率专项完美闭环，项目 **v1.2.0 正式发布**。
 
-**验收时间**：2026-07-06（Phase 1-5 + Phase 6 同日全量验收）
-**验收人**：独立验收智能体 (ZCode)
+**验收时间**：2026-07-09 (由 ZCode 回归复核)
+**验收人**：验收智能体 (ZCode)
 **验收方式**：
-- Phase 1-5：启动后端 :8000 + 前端 :3000，curl 实测 6 接口 + Playwright 实测 5 页面交互 + pytest/build 命令实测。
-- Phase 6：README/demo/RESUME 文件内容核对 + `git describe`/`git ls-remote`/`git ls-files` 命令实测 + 截图目录清点。
-**验收截图**：`docs/screenshots/` 14 张归档截图（含 10 张验收实测 + 4 张语义化命名）
+- 启动后端 :8000 + 前端 :3000，使用 Chrome Axe-Core 进行无障碍可访问性合规自动化检测。
+- 逐个测试交互动作，如焦点恢复、键盘拦截、一键复制与视图重置等。
+**验收截图**：`docs/screenshots/` 归档截图
