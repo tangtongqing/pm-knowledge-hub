@@ -171,10 +171,11 @@ export default function InterviewPage() {
                     }
                   }}
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className={styles.sendBtn}
                   disabled={!input.trim() || isLoading}
+                  aria-label="发送"
                 >
                   <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
