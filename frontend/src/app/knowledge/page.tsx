@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, isValidElement, cloneElement } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, SearchHit } from "@/lib/api";
+import { escapeRegExp } from "@/lib/utils";
 import styles from "./page.module.css";
 
 // Hardcoded chapters for demonstration (would typically come from a backend /chapters API)
@@ -36,6 +37,49 @@ function KnowledgeBaseContent() {
   const [results, setResults] = useState<SearchHit[]>([]);
   const [activeDoc, setActiveDoc] = useState<SearchHit | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const highlightText = (node: React.ReactNode, searchWord: string): React.ReactNode => {
+    if (!searchWord.trim()) return node;
+    
+    if (typeof node === "string") {
+      const escaped = escapeRegExp(searchWord);
+      const parts = node.split(new RegExp(`(${escaped})`, "gi"));
+      return parts.map((part, i) =>
+        part.toLowerCase() === searchWord.toLowerCase() ? (
+          <mark key={i} className={styles.highlight}>
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      );
+    }
+    
+    if (Array.isArray(node)) {
+      return node.map((child, i) => <React.Fragment key={i}>{highlightText(child, searchWord)}</React.Fragment>);
+    }
+    
+    if (isValidElement(node)) {
+      const element = node as React.ReactElement<any>;
+      if (element.props && element.props.children) {
+        return cloneElement(element, {
+          children: highlightText(element.props.children, searchWord)
+        });
+      }
+    }
+    
+    return node;
+  };
+
+  const markdownComponents = {
+    p: ({ children }: any) => <p>{highlightText(children, initialQuery)}</p>,
+    li: ({ children }: any) => <li>{highlightText(children, initialQuery)}</li>,
+    h1: ({ children }: any) => <h1>{highlightText(children, initialQuery)}</h1>,
+    h2: ({ children }: any) => <h2>{highlightText(children, initialQuery)}</h2>,
+    h3: ({ children }: any) => <h3>{highlightText(children, initialQuery)}</h3>,
+    td: ({ children }: any) => <td>{highlightText(children, initialQuery)}</td>,
+    th: ({ children }: any) => <th>{highlightText(children, initialQuery)}</th>,
+  };
 
   const performSearch = async (q: string, chapter: string) => {
     setIsLoading(true);
@@ -137,7 +181,7 @@ function KnowledgeBaseContent() {
                 className={`${styles.listItem} ${activeDoc === hit ? styles.activeListItem : ''}`}
                 onClick={() => setActiveDoc(hit)}
               >
-                <div className={styles.itemTitle}>{hit.metadata.title}</div>
+                <div className={styles.itemTitle}>{highlightText(hit.metadata.title, initialQuery)}</div>
                 <div className={styles.itemMeta}>
                   <span className={styles.itemChapter}>{hit.metadata.chapter}</span>
                   {hit.distance > 0 && <span className={styles.itemScore}>相关度: {(1 - hit.distance).toFixed(2)}</span>}
@@ -161,7 +205,7 @@ function KnowledgeBaseContent() {
           <>
             <div className={styles.previewHeader}>
               <div className={styles.previewTitleInfo}>
-                <h1 className={styles.previewTitle}>{activeDoc.metadata.title}</h1>
+                <h1 className={styles.previewTitle}>{highlightText(activeDoc.metadata.title, initialQuery)}</h1>
                 <div className={styles.previewPath}>
                   {activeDoc.metadata.source_path} 
                   {activeDoc.metadata.section && activeDoc.metadata.section !== activeDoc.metadata.title ? ` > ${activeDoc.metadata.section}` : ''}
@@ -186,7 +230,7 @@ function KnowledgeBaseContent() {
             </div>
             <div className={styles.previewContent}>
               <div className={styles.markdownContent}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {activeDoc.text}
                 </ReactMarkdown>
               </div>

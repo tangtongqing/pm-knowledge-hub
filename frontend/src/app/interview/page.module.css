@@ -471,3 +471,188 @@
     text-align: left;
   }
 }
+
+/* History Sidebar */
+.historySidebar {
+  width: 260px;
+  background: var(--surface-1);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width var(--transition), padding var(--transition);
+  overflow: hidden;
+}
+
+.sidebarCollapsed {
+  width: 0;
+  border-right: none;
+}
+
+.sidebarHeader {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.newChatBtn {
+  flex: 1;
+  height: 36px;
+  background: var(--brand);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background var(--transition);
+}
+
+.newChatBtn:hover {
+  background: var(--brand-hover, #1d4ed8);
+}
+
+.toggleBtnInside, .toggleBtnCollapsed {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.toggleBtnInside:hover, .toggleBtnCollapsed:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+  border-color: var(--border-component);
+}
+
+.toggleBtnCollapsed {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 100;
+  background: var(--surface-1);
+  box-shadow: var(--shadow-sm);
+}
+
+.sessionList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sessionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.sessionItem:hover {
+  background: var(--surface-2);
+}
+
+.activeSession {
+  background: var(--brand-subtle);
+  border-color: var(--brand-border, #bfdbfe);
+}
+
+.sessionInfo {
+  flex: 1;
+  min-width: 0;
+  margin-right: 8px;
+}
+
+.sessionTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.sessionTime {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.deleteSessionBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sessionItem:hover .deleteSessionBtn {
+  opacity: 1;
+}
+
+.deleteSessionBtn:hover {
+  background: var(--surface-3);
+  color: var(--danger, #ef4444);
+}
+
+.emptySidebar {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.scoreBadge {
+  font-size: 10px;
+  background: var(--brand);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 600;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.pdfBtn {
+  background: var(--surface-2);
+  border: 1px solid var(--border-component);
+  color: var(--text-1);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.pdfBtn:hover {
+  background: var(--surface-3);
+  border-color: var(--text-2);
+}

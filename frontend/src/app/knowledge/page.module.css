@@ -368,3 +368,11 @@
   padding: 0;
   color: var(--text-1);
 }
+
+.highlight {
+  background-color: var(--warning-subtle, #fef08a);
+  color: var(--text-1, #0f172a);
+  border-radius: var(--radius-sm, 2px);
+  padding: 0 2px;
+  font-weight: 500;
+}

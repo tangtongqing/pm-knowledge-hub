@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, EvaluateResponse } from "@/lib/api";
+import { listSessions, saveSession, deleteSession, getSession, HistorySession } from "@/lib/history";
+import { generateUUID, formatDate } from "@/lib/utils";
+import { exportInterviewReport } from "@/lib/pdf";
 import styles from "./page.module.css";
 
 interface ChatMessage {
@@ -19,11 +22,96 @@ export default function InterviewPage() {
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [latestEval, setLatestEval] = useState<EvaluateResponse | null>(null);
   const [isStarted, setIsStarted] = useState(false);
+  const [sessions, setSessions] = useState<HistorySession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string>("");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
+  const [pdfSuccess, setPdfSuccess] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleNewChat = () => {
+    const newId = generateUUID();
+    const newSession: HistorySession = {
+      id: newId,
+      type: "interview",
+      title: "面试练习 - " + formatDate(Date.now()).substring(5),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      messages: [],
+      evaluations: []
+    };
+    saveSession(newSession);
+    setActiveSessionId(newId);
+    setMessages([]);
+    setCurrentQuestion("");
+    setLatestEval(null);
+    setIsStarted(false);
+    setSessions(listSessions("interview"));
+  };
+
+  useEffect(() => {
+    const loaded = listSessions("interview");
+    if (loaded.length > 0) {
+      setSessions(loaded);
+      const latest = loaded[0];
+      setActiveSessionId(latest.id);
+      setMessages(latest.messages as ChatMessage[]);
+      setIsStarted(latest.messages.length > 0);
+      
+      if (latest.evaluations && latest.evaluations.length > 0) {
+        const lastEval = latest.evaluations[latest.evaluations.length - 1];
+        setLatestEval(lastEval);
+        setCurrentQuestion(lastEval.next_question);
+      } else {
+        setLatestEval(null);
+        setCurrentQuestion("");
+      }
+    } else {
+      handleNewChat();
+    }
+  }, []);
+
+  const handleSelectSession = (id: string) => {
+    const s = getSession(id, "interview");
+    if (s) {
+      setActiveSessionId(s.id);
+      setMessages(s.messages as ChatMessage[]);
+      setIsStarted(s.messages.length > 0);
+      
+      if (s.evaluations && s.evaluations.length > 0) {
+        const lastEval = s.evaluations[s.evaluations.length - 1];
+        setLatestEval(lastEval);
+        setCurrentQuestion(lastEval.next_question);
+      } else {
+        setLatestEval(null);
+        setCurrentQuestion("");
+      }
+    }
+  };
+
+  const handleDeleteSession = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    deleteSession(id, "interview");
+    const updated = listSessions("interview");
+    setSessions(updated);
+    if (id === activeSessionId) {
+      if (updated.length > 0) {
+        handleSelectSession(updated[0].id);
+      } else {
+        handleNewChat();
+      }
+    }
+  };
+
+  const getSessionHighScore = (session: HistorySession): number => {
+    if (!session.evaluations || session.evaluations.length === 0) return 0;
+    const scores = session.evaluations.map(e => e.score || 0);
+    return Math.max(...scores);
   };
 
   useEffect(() => {
@@ -35,16 +123,42 @@ export default function InterviewPage() {
     try {
       const res = await api.startInterview();
       setCurrentQuestion(res.question);
-      setMessages([
-        { role: "interviewer", content: res.question }
-      ]);
+      const startMsgs = [
+        { role: "interviewer" as const, content: res.question }
+      ];
+      setMessages(startMsgs);
       setIsStarted(true);
       setLatestEval(null);
+
+      const activeSession = getSession(activeSessionId, "interview");
+      if (activeSession) {
+        activeSession.messages = startMsgs;
+        activeSession.evaluations = [];
+        saveSession(activeSession);
+        setSessions(listSessions("interview"));
+      }
     } catch (error) {
       console.error(error);
       alert("启动面试失败，请检查后端状态。");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleExportPDF = () => {
+    const s = getSession(activeSessionId, "interview");
+    if (!s || !s.evaluations || s.evaluations.length === 0) return;
+    
+    setPdfGenerating(true);
+    try {
+      exportInterviewReport(s);
+      setPdfSuccess(true);
+      setTimeout(() => setPdfSuccess(false), 2000);
+    } catch (err) {
+      console.error("Failed to export PDF", err);
+      alert("生成 PDF 失败，请重试。");
+    } finally {
+      setPdfGenerating(false);
     }
   };
 
@@ -55,36 +169,56 @@ export default function InterviewPage() {
     const userAnswer = input.trim();
     setInput("");
     
-    setMessages(prev => [...prev, { role: "candidate", content: userAnswer }]);
+    const userMsg = { role: "candidate" as const, content: userAnswer };
+    const updatedMsgs = [...messages, userMsg];
+    setMessages(updatedMsgs);
     
+    const activeSession = getSession(activeSessionId, "interview");
+    if (activeSession) {
+      activeSession.messages = updatedMsgs;
+      saveSession(activeSession);
+      setSessions(listSessions("interview"));
+    }
+
     setIsLoading(true);
-    setMessages(prev => [...prev, { role: "interviewer", content: "评估中...", isLoading: true }]);
+    setMessages([...updatedMsgs, { role: "interviewer" as const, content: "评估中...", isLoading: true }]);
 
     try {
       const response = await api.evaluateAnswer(currentQuestion, userAnswer);
-      
-      setMessages(prev => {
-        const newMsgs = [...prev];
-        // Replace loading message with evaluation + next question
-        newMsgs[newMsgs.length - 1] = {
-          role: "interviewer",
-          content: `${response.evaluation}\n\n**建议回答框架：**\n${response.suggested_answer}\n\n---\n**下一个问题：**\n${response.next_question}`
-        };
-        return newMsgs;
-      });
-      
+      const nextMsg = {
+        role: "interviewer" as const,
+        content: `${response.evaluation}\n\n**建议回答框架：**\n${response.suggested_answer}\n\n---\n**下一个问题：**\n${response.next_question}`
+      };
+      const finalMsgs = [...updatedMsgs, nextMsg];
+      setMessages(finalMsgs);
       setCurrentQuestion(response.next_question);
       setLatestEval(response);
+
+      const activeSession = getSession(activeSessionId, "interview");
+      if (activeSession) {
+        activeSession.messages = finalMsgs;
+        const currentEvals = activeSession.evaluations || [];
+        activeSession.evaluations = [...currentEvals, response];
+        saveSession(activeSession);
+        setSessions(listSessions("interview"));
+      }
     } catch (error) {
       console.error(error);
-      setMessages(prev => {
-        const newMsgs = [...prev];
-        newMsgs[newMsgs.length - 1] = {
-          role: "interviewer",
+      const errorMsgs = [
+        ...updatedMsgs,
+        {
+          role: "interviewer" as const,
           content: "抱歉，评估时发生错误。请重试。",
-        };
-        return newMsgs;
-      });
+        }
+      ];
+      setMessages(errorMsgs);
+      
+      const activeSession = getSession(activeSessionId, "interview");
+      if (activeSession) {
+        activeSession.messages = errorMsgs;
+        saveSession(activeSession);
+        setSessions(listSessions("interview"));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -92,6 +226,79 @@ export default function InterviewPage() {
 
   return (
     <div className={styles.container}>
+      {/* Left History Sidebar */}
+      <aside className={`${styles.historySidebar} ${sidebarOpen ? "" : styles.sidebarCollapsed}`}>
+        <div className={styles.sidebarHeader}>
+          <button className={styles.newChatBtn} onClick={handleNewChat}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            新面试
+          </button>
+          <button 
+            className={styles.toggleBtnInside} 
+            onClick={() => setSidebarOpen(false)}
+            title="收起侧边栏"
+            aria-label="收起侧边栏"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <div className={styles.sessionList}>
+          {sessions.length === 0 ? (
+            <div className={styles.emptySidebar}>暂无历史面试</div>
+          ) : (
+            sessions.map(s => {
+              const score = getSessionHighScore(s);
+              return (
+                <div 
+                  key={s.id} 
+                  className={`${styles.sessionItem} ${activeSessionId === s.id ? styles.activeSession : ""}`}
+                  onClick={() => handleSelectSession(s.id)}
+                >
+                  <div className={styles.sessionInfo}>
+                    <div className={styles.sessionTitle} title={s.title}>{s.title}</div>
+                    <div className={styles.sessionTime}>{formatDate(s.updatedAt)}</div>
+                  </div>
+                  {score > 0 && (
+                    <span className={styles.scoreBadge}>{score}分</span>
+                  )}
+                  <button 
+                    className={styles.deleteSessionBtn}
+                    onClick={(e) => handleDeleteSession(s.id, e)}
+                    title="删除会话"
+                    aria-label="删除会话"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </aside>
+
+      {/* Collapsed sidebar trigger when sidebar is closed */}
+      {!sidebarOpen && (
+        <button 
+          className={styles.toggleBtnCollapsed} 
+          onClick={() => setSidebarOpen(true)}
+          title="展开侧边栏"
+          aria-label="展开侧边栏"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      )}
+
       {/* Left Chat Area */}
       <div className={styles.chatArea}>
         <div className={styles.header}>
@@ -198,6 +405,16 @@ export default function InterviewPage() {
       <div className={styles.evalArea}>
         <div className={styles.evalHeader}>
           <h2 className={styles.evalTitle}>STAR 评估</h2>
+          {latestEval && (
+            <button 
+              className={styles.pdfBtn} 
+              onClick={handleExportPDF}
+              disabled={pdfGenerating}
+              title="导出面试报告为 PDF"
+            >
+              {pdfGenerating ? "生成中..." : pdfSuccess ? "已导出 ✓" : "导出 PDF"}
+            </button>
+          )}
         </div>
         
         <div className={styles.evalContent}>
