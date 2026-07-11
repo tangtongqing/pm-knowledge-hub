@@ -238,7 +238,8 @@
   font-size: 14px;
   transition: all var(--transition);
   box-shadow: var(--shadow-sm);
-  resize: none;
+  resize: vertical;
+  max-height: 200px;
 }
 
 .inputField:focus {
@@ -365,6 +366,18 @@
   font-weight: 700;
   color: var(--brand-text);
   line-height: 1;
+  display: inline-block;
+  transition: transform 0.15s ease-out;
+}
+
+@keyframes score-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.scoreNumPop {
+  animation: score-pop 0.3s ease-out;
 }
 
 .scoreDenom {

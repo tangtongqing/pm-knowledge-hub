@@ -103,6 +103,7 @@ export interface EvaluateResponse {
   suggested_answer: string;
   next_question: string;
   is_mock: boolean;
+  question?: string;
 }
 
 // ── 辅助 Fetch 函数 ───────────────────────────────────────────────────────

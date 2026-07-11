@@ -27,6 +27,20 @@ export default function InterviewPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
+  const [animateScore, setAnimateScore] = useState(false);
+
+  useEffect(() => {
+    if (latestEval?.score !== undefined) {
+      const frame = requestAnimationFrame(() => {
+        setAnimateScore(true);
+      });
+      const timer = setTimeout(() => setAnimateScore(false), 300);
+      return () => {
+        cancelAnimationFrame(frame);
+        clearTimeout(timer);
+      };
+    }
+  }, [latestEval?.score]);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -193,6 +207,9 @@ export default function InterviewPage() {
 
     try {
       const response = await api.evaluateAnswer(currentQuestion, userAnswer);
+      // 注入当前问题到 evaluation 对象，供 PDF 导出使用
+      response.question = currentQuestion;
+
       const nextMsg = {
         role: "interviewer" as const,
         content: `${response.evaluation}\n\n**建议回答框架：**\n${response.suggested_answer}\n\n---\n**下一个问题：**\n${response.next_question}`
@@ -435,7 +452,7 @@ export default function InterviewPage() {
               <div className={styles.scoreBoard}>
                 <div className={styles.scoreLabel}>综合得分</div>
                 <div className={styles.scoreValue}>
-                  <span className={styles.scoreNum}>{latestEval.score}</span>
+                  <span className={`${styles.scoreNum} ${animateScore ? styles.scoreNumPop : ""}`}>{latestEval.score}</span>
                   <span className={styles.scoreDenom}>/100</span>
                 </div>
                 <div 

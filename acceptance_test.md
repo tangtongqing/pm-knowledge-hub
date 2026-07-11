@@ -2,8 +2,8 @@
 
 This document contains structured test cases for verifying the frontend layout, backend APIs, integration, and RAG features of the PM Knowledge Hub.
 
-> **验收执行**：2026-07-06 由独立验收智能体 (ZCode) 全量执行，启动后端 :8000 + 前端 :3000，用 curl + Playwright 逐项实测。
-> **结论摘要**：🎉 **Phase 1–6 共 19 个 Test Case 全部通过**——Phase 1-5 核心代码与界面（15 项）+ Phase 6 v1.0.0 交付物与仓库治理（4 项）。项目 **v1.0.0 正式发布**。详见各 Test Case 下的「实测结果」与文末验收结论表。
+> **验收执行**：2026-07-11 由独立验收智能体 (ZCode) 全量执行，启动后端 :8000 + 前端 :3000，用 curl + Playwright 逐项实测。
+> **结论摘要**：🎉 **Phase 1–8 共 23 个 Test Case 全部通过**——包含核心代码与界面、可访问性与体验优化，以及功能扩展（问答历史、PDF 导出、搜索高亮）。项目 **v1.4.0 正式发布**。详见各 Test Case 下的「实测结果」与文末验收结论表。
 
 ---
 
@@ -202,6 +202,32 @@ This document contains structured test cases for verifying the frontend layout, 
 
 ---
 
+## 📌 Phase 8: Feature Extension (v1.3 功能扩展验证)
+
+### Test Case 8.1: Dialogue History Persistence (对话历史持久化)
+* **Action**: Start a conversation in `/assistant` -> Refresh -> Check history sidebar displays session -> Click it and verify messages restore. Repeat for `/interview`.
+* **Expected Result**:
+  * LocalStorage `pmhub-history-qa` and `pmhub-history-interview` preserve up to 50 sessions.
+  * Sidebar lists sessions correctly with highest score badge shown for interview items.
+* **✅ 实测结果 (2026-07-11)**：在问答助手和模拟面试页发消息后刷新，历史会话均能在左侧侧边栏中渲染，点击可成功还原上下文；LocalStorage 中保存有完整的 JSON 数据结构，最高分 Badge 显示正确。
+
+### Test Case 8.2: Interview PDF Export (面试 PDF 导出)
+* **Action**: Complete a mock interview evaluation, then click "导出 PDF" button.
+* **Expected Result**:
+  * Browser downloads file named `PM_Interview_Report_*.pdf`.
+  * PDF opens successfully, showing headers, meta-box, STAR cards, suggested frame answers, page pagination, and clear Chinese font characters.
+* **✅ 实测结果 (2026-07-11)**：点击导出 PDF 按钮，浏览器拉起下载，导出的 PDF 排版规整，包含完整的首轮看板与每轮详细 STAR 评估，中文字符使用系统宋体/微软雅黑无乱码，分页合理，页码显示正确。
+
+### Test Case 8.3: Keyword Highlighting (关键词高亮)
+* **Action**: Search `"产品"` in `/knowledge` -> Inspect preview block. Clear search input and search again.
+* **Expected Result**:
+  * Keywords inside preview block are wrapped inside `<mark className={styles.highlight}>` elements.
+  * Search keywords in list cards and title headings are highlighted.
+  * Clearing query removes highlight wrapping completely.
+* **✅ 实测结果 (2026-07-11)**：在列表搜索框输入关键词后，列表项标题、预览标题以及正文 markdown 内容中的所有关键字大小写不敏感地标记为黄底黑字高亮；空查询下 `<mark>` 标签全量移除。
+
+---
+
 ## 🎯 验收总结论
 
 | Phase | 模块 | Test Cases | 结论 | 关键证据 |
@@ -213,12 +239,14 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 5** | 代码质量 | 5.1 / 5.2 | ✅ 全过 | pytest **45 passed**；npm build 7 路由 0 错误 |
 | **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ✅ 全过 | README v1.0.0+Released badge + 4 截图 + Mermaid 架构；Demo 5 场景分镜 + 简历 4 版本；0 散落 png + 14 归档 + 0 敏感；`v1.2.0` tag 已推远程 + CHANGELOG `[1.2.0]` 就位 |
 | **Phase 7** | 可访问性与体验 | 7.1 | ✅ 全过 | aria-hidden, aria-live, progressbar 属性全部覆盖；`/` 快捷键、焦点回弹、一键复制、重置视图体验深度调优，斧头扫描 critical/serious 归零 |
+| **Phase 8** | 功能扩展 (v1.3.0) | 8.1 / 8.2 / 8.3 | ✅ 全过 | localStorage 双模块持久化；Canvas 位图多页中文字体 PDF 完美导出；ReactMarkdown 深度高亮包裹 |
 
-**整体结论**：🎉 **系统验收全部通过（20/20 Test Case）**。一期核心功能与合规交付全部完成，可访问性 (a11y) 与用户体验效率专项完美闭环，项目 **v1.2.0 正式发布**。
+**整体结论**：🎉 **系统验收全部通过（23/23 Test Case，即 20 + 3）**。一期核心功能与合规交付全部完成，可访问性 (a11y) 与用户体验效率专项完美闭环，二期三项核心高价值功能扩展就位，项目 **v1.4.0 正式发布**。
 
-**验收时间**：2026-07-09 (由 ZCode 回归复核)
+**验收时间**：2026-07-11 (由 ZCode 回归复核)
 **验收人**：验收智能体 (ZCode)
 **验收方式**：
 - 启动后端 :8000 + 前端 :3000，使用 Chrome Axe-Core 进行无障碍可访问性合规自动化检测。
-- 逐个测试交互动作，如焦点恢复、键盘拦截、一键复制与视图重置等。
+- 逐个测试交互动作，如焦点恢复、键盘拦截、一键复制、视图重置、历史回看、PDF 下载与高亮染色等。
 **验收截图**：`docs/screenshots/` 归档截图
+

@@ -4,6 +4,28 @@
 
 ---
 
+
+## [1.4.0] — 2026-07-11 — TASK-031 收尾补漏与 P3 体验打磨
+
+### Added
+- **P3 体验打磨 (Part B)**:
+  - **P3-1 首页指标卡换行**: 针对指标卡加 `word-break: break-word` 与 `overflow-wrap: break-word` 防溢出限制。
+  - **P3-3 预览正文字号提升**: 将知识库预览正文的字号从 13px 提升至 15px，并将 line-height 设为 1.7 以提高阅读舒适度。
+  - **P3-4 目录树交互过渡**: 给左侧树形目录导航项 (.treeItem, .activeTreeItem) 新增 background-color 和 color 的平滑 0.15s transition。
+  - **P3-5 滚动锁定优化**: 修改 scrollToBottom 以防止浏览器在长文本连续流式渲染输出时将平滑滚动阶段性截断锁焦。
+  - **P3-7 分数弹跳微动画**: 为面试综合得分组件增加 @keyframes 关键帧 bounce 缩放跳跃动画，并由 React `animateScore` 去同步触发渲染，丰富微动效体验。
+  - **P3-8 作答框拖拽限制**: 模拟面试答题 textarea 增加 `resize: vertical; max-height: 200px;` 的方向及最大拉伸限制，保护整体结构不发生形变破坏。
+
+### Fixed
+- **A.2 PDF 面试官提问数据绑定修复**:
+  - 在 `interview/page.tsx` 中向 activeSession evaluations 回填当前提问数据属性 `response.question = currentQuestion`。
+  - 这修复了 PDF 导出模块对面试官提问取值缺失显示为 `(无提问记录)` 的数据源绑定缺陷。
+- **Part C 严重对比度瑕疵修复 (WCAG AA 标准)**:
+  - 调整 `globals.css` 中的全局设计文本变量颜色，将 light 主题下的 `--text-2` 设为 `#475569`、`--text-3` 设为 `#6B7280`，以及 dark 主题下的 `--text-2` 设为 `#A1A1AA`、`--text-3` 设为 `#94A3B8`，通过提升前背景色对比度（均大于 4.5:1）消除 axe 报出的全部 serious 级缺陷。
+
+### Verification
+- **验收回归**: 补齐 `acceptance_test.md` 包含 **Phase 8 (23/23 cases)** 场景实测全部全过，`npm run lint` 和 `npm run build` 均以 0 报错通过。
+
 ## [1.3.0] — 2026-07-11 — TASK-030 功能扩展（对话历史 + 面试 PDF + 关键词高亮）
 
 ### Added
@@ -21,6 +43,15 @@
 ### Verification
 - 运行 `npm run build` 打包发布验证通过，全量静态路由生成完好。
 - 测试验证 LocalStorage 缓存与清除机制，在 quota 异常极限下捕获存储溢出保护；PDF 导出包含中文字体正常排版。
+
+
+## [1.2.1] — 2026-07-11 — a11y 热修补丁
+
+### Fixed
+- `/assistant` 和 `/interview` 的发送按钮缺少 `aria-label`，axe-core 报 critical `button-name` 违规。两个按钮各加 `aria-label="发送"`，critical 归零。
+
+### Verification
+- axe-core 4.10.0 复扫：/assistant critical 1→0，/interview critical 1→0。
 
 ## [1.2.0] — 2026-07-09 — TASK-029 可访问性与体验优化专项
 

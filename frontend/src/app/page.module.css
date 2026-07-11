@@ -270,6 +270,8 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .metricLabel {

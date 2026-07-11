@@ -8,10 +8,11 @@
 
 ## 🔄 进行中
 
-- [ ] **[TASK-031]** v1.4 收尾补漏 + P3 体验打磨：补 acceptance Phase 8 + 修 PDF 提问瑕疵 + 归档 v1.2.1 + 6 项 P3（指标卡溢出/预览字号/过渡动画/滚动锁定/分数动画/textarea resize）+ color-contrast 对比度提升 *(2026-07-11 派发)*
+（暂无进行中的开发任务）
 
 ## ✅ 已完成
 
+- [x] **[TASK-031]** v1.4 收尾补漏 + P3 体验打磨：补 acceptance Phase 8 + 修 PDF 提问瑕疵 + 归档 v1.2.1 + 6 项 P3（指标卡溢出/预览字号/过渡动画/滚动锁定/分数动画/textarea resize）+ color-contrast 对比度提升 *(2026-07-11)*
 - [x] **[TASK-030]** v1.3.0 功能扩展：对话历史记录（localStorage 持久化）+ 面试报告 PDF 导出（jsPDF）+ 关键词高亮（react-markdown 自定义渲染器） *(2026-07-11)*
 - [x] **[TASK-029]** v1.2 可访问性专项：修复 BACKLOG.md 的 10 个 P2 项（a11y #1-5 + 体验 #6-10）+ axe 扫描验收 *(2026-07-09)*
 - [x] **[TASK-028]** 收尾补漏：补 Test Case 3.3 实测结果 + 归档 critique/audit P2/P3 backlog *(2026-07-09)*
