@@ -1,10 +1,23 @@
+import { QAServiceResponse } from "./api";
+
 // Re-declare ChatMessage locally or extend it if needed
 export interface HistoryMessage {
   role: "user" | "assistant" | "interviewer" | "candidate";
   content: string;
-  responseMeta?: any;
+  responseMeta?: QAServiceResponse;
   score?: number;
   isLoading?: boolean;
+}
+
+// EvaluateResponse 的最小结构（避免循环依赖 lib/api.ts）
+export interface HistoryEvaluation {
+  score: number;
+  evaluation: string;
+  star_feedback: { situation: string; task: string; action: string; result: string };
+  suggested_answer: string;
+  next_question: string;
+  question?: string;
+  is_mock: boolean;
 }
 
 export interface HistorySession {
@@ -15,7 +28,7 @@ export interface HistorySession {
   updatedAt: number;
   messages: HistoryMessage[];
   // 仅 interview 类型：
-  evaluations?: any[];     // 累积评估数组 EvaluateResponse[]
+  evaluations?: HistoryEvaluation[];     // 累积评估数组 EvaluateResponse[]
 }
 
 const STORAGE_KEYS = {

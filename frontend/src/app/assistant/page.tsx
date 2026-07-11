@@ -58,14 +58,19 @@ export default function AssistantPage() {
   useEffect(() => {
     const loaded = listSessions("qa");
     if (loaded.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSessions(loaded);
       const latest = loaded[0];
+       
       setActiveSessionId(latest.id);
+       
       setMessages(latest.messages as ChatMessage[]);
       const lastMsg = latest.messages[latest.messages.length - 1];
       if (lastMsg.role === "assistant" && lastMsg.responseMeta) {
+         
         setActiveSources(lastMsg.responseMeta);
       } else {
+         
         setActiveSources(null);
       }
     } else {

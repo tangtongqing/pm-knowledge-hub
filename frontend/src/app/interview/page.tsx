@@ -57,18 +57,26 @@ export default function InterviewPage() {
   useEffect(() => {
     const loaded = listSessions("interview");
     if (loaded.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSessions(loaded);
       const latest = loaded[0];
+       
       setActiveSessionId(latest.id);
+       
       setMessages(latest.messages as ChatMessage[]);
+       
       setIsStarted(latest.messages.length > 0);
-      
+
       if (latest.evaluations && latest.evaluations.length > 0) {
         const lastEval = latest.evaluations[latest.evaluations.length - 1];
+         
         setLatestEval(lastEval);
+         
         setCurrentQuestion(lastEval.next_question);
       } else {
+         
         setLatestEval(null);
+         
         setCurrentQuestion("");
       }
     } else {

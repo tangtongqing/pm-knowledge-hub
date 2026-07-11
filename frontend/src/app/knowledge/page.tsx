@@ -60,7 +60,7 @@ function KnowledgeBaseContent() {
     }
     
     if (isValidElement(node)) {
-      const element = node as React.ReactElement<any>;
+      const element = node as React.ReactElement<{ children?: React.ReactNode }>;
       if (element.props && element.props.children) {
         return cloneElement(element, {
           children: highlightText(element.props.children, searchWord)
@@ -72,13 +72,13 @@ function KnowledgeBaseContent() {
   };
 
   const markdownComponents = {
-    p: ({ children }: any) => <p>{highlightText(children, initialQuery)}</p>,
-    li: ({ children }: any) => <li>{highlightText(children, initialQuery)}</li>,
-    h1: ({ children }: any) => <h1>{highlightText(children, initialQuery)}</h1>,
-    h2: ({ children }: any) => <h2>{highlightText(children, initialQuery)}</h2>,
-    h3: ({ children }: any) => <h3>{highlightText(children, initialQuery)}</h3>,
-    td: ({ children }: any) => <td>{highlightText(children, initialQuery)}</td>,
-    th: ({ children }: any) => <th>{highlightText(children, initialQuery)}</th>,
+    p: ({ children }: { children?: React.ReactNode }) => <p>{highlightText(children, initialQuery)}</p>,
+    li: ({ children }: { children?: React.ReactNode }) => <li>{highlightText(children, initialQuery)}</li>,
+    h1: ({ children }: { children?: React.ReactNode }) => <h1>{highlightText(children, initialQuery)}</h1>,
+    h2: ({ children }: { children?: React.ReactNode }) => <h2>{highlightText(children, initialQuery)}</h2>,
+    h3: ({ children }: { children?: React.ReactNode }) => <h3>{highlightText(children, initialQuery)}</h3>,
+    td: ({ children }: { children?: React.ReactNode }) => <td>{highlightText(children, initialQuery)}</td>,
+    th: ({ children }: { children?: React.ReactNode }) => <th>{highlightText(children, initialQuery)}</th>,
   };
 
   const performSearch = async (q: string, chapter: string) => {

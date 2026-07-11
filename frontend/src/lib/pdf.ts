@@ -260,7 +260,7 @@ export function exportInterviewReport(session: HistorySession): void {
 
     // Draw Interviewer Question
     painter.drawText("【面试官提问】", painter.margin, "bold 13px 'Microsoft YaHei', 'Heiti SC', sans-serif", "#475569", 18, 700);
-    painter.drawText(evalItem.question, painter.margin, "italic 13px 'Microsoft YaHei', 'Heiti SC', sans-serif", "#334155", 20, 700 - painter.margin, true);
+    painter.drawText(evalItem.question || "(无提问记录)", painter.margin, "italic 13px 'Microsoft YaHei', 'Heiti SC', sans-serif", "#334155", 20, 700 - painter.margin, true);
 
     // Draw Candidate Answer
     const answer = candidateMsgs[idx]?.content || "未提供回答";
