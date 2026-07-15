@@ -20,18 +20,18 @@
   /* Text */
   --text-1: #18181B;
   --text-2: #475569;
-  --text-3: #6B7280;
+  --text-3: #626B78;
 
   /* Brand */
-  --brand:       #4F6CF7;
+  --brand:       #455ED8;
   --brand-hover: #3D5BE5;
   --brand-subtle: rgba(79, 108, 247, 0.08);
-  --brand-text:  #4F6CF7;
+  --brand-text:  #455ED8;
 
   /* Semantic */
-  --success:      #16A34A;
+  --success:      #15803D;
   --success-subtle: rgba(22, 163, 74, 0.08);
-  --warning:      #CA8A04;
+  --warning:      #92400E;
   --warning-subtle: rgba(202, 138, 4, 0.08);
   --danger:       #DC2626;
   --danger-subtle: rgba(220, 38, 38, 0.08);
@@ -76,9 +76,9 @@
   --text-2: #A1A1AA;
   --text-3: #94A3B8;
 
-  --brand:       #6B8AFF;
-  --brand-hover: #5A79EE;
-  --brand-subtle: rgba(107, 138, 255, 0.10);
+  --brand:       #455ED8;
+  --brand-hover: #3D52C7;
+  --brand-subtle: rgba(69, 94, 216, 0.14);
   --brand-text:  #8BA3FF;
 
   --success:      #34D399;

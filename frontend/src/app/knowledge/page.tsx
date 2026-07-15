@@ -164,7 +164,7 @@ function KnowledgeBaseContent() {
           </div>
         </div>
 
-        <div className={styles.listContent}>
+          <div className={styles.listContent} tabIndex={0} aria-label="知识库文档列表">
           {isLoading ? (
             <div className={styles.loadingState}>
               <div className={styles.spinner}></div>

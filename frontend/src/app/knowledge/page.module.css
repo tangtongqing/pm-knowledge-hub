@@ -336,6 +336,7 @@
 .markdownContent p { margin-bottom: 1.2em; }
 .markdownContent ul, .markdownContent ol { margin-left: 24px; margin-bottom: 1.2em; }
 .markdownContent li { margin-bottom: 6px; }
+.markdownContent a { text-decoration: underline; text-underline-offset: 2px; }
 
 .markdownContent blockquote {
   border-left: 4px solid var(--brand-subtle);
