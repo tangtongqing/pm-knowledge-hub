@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, QAServiceResponse } from "@/lib/api";
@@ -14,6 +14,65 @@ interface ChatMessage {
   responseMeta?: QAServiceResponse;
   isLoading?: boolean;
 }
+
+interface ChatMessageItemProps {
+  msg: ChatMessage;
+  idx: number;
+  copiedIndex: number | null;
+  onCopy: (content: string, idx: number) => void;
+}
+
+const ChatMessageItem = React.memo(function ChatMessageItem({
+  msg,
+  idx,
+  copiedIndex,
+  onCopy
+}: ChatMessageItemProps) {
+  return (
+    <div className={`${styles.messageWrapper} ${msg.role === 'user' ? styles.wrapperUser : styles.wrapperAssistant}`}>
+      <div className={styles.avatar}>
+        {msg.role === 'user' ? (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        ) : (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        )}
+      </div>
+      <div className={`${styles.messageBubble} ${msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant} ${msg.isLoading ? styles.loading : ''}`}>
+        {msg.isLoading ? (
+          <div className={styles.typingDots}><span></span><span></span><span></span></div>
+        ) : (
+          <div className={styles.markdownContent}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {msg.content}
+            </ReactMarkdown>
+          </div>
+        )}
+        
+        {msg.role === 'assistant' && !msg.isLoading && (
+          <button 
+            className={styles.copyBtn} 
+            onClick={() => onCopy(msg.content, idx)}
+            aria-label="复制回答"
+            title="复制回答"
+          >
+            {copiedIndex === idx ? (
+              <span className={styles.copiedText}>已复制 ✓</span>
+            ) : (
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            )}
+          </button>
+        )}
+
+        {msg.responseMeta?.is_mock && (
+          <div className={styles.mockWarning}>当前为演示模式</div>
+        )}
+      </div>
+    </div>
+  );
+});
 
 export default function AssistantPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -111,14 +170,14 @@ export default function AssistantPage() {
     scrollToBottom();
   }, [messages]);
 
-  const handleCopy = (text: string, index: number) => {
+  const handleCopy = useCallback((text: string, index: number) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedIndex(index);
       setTimeout(() => {
         setCopiedIndex(null);
       }, 1500);
     });
-  };
+  }, []);
 
   const handleRecClick = (rec: string) => {
     setInput(rec);
@@ -274,48 +333,13 @@ export default function AssistantPage() {
 
         <div className={styles.messageList}>
           {messages.map((msg, idx) => (
-            <div key={idx} className={`${styles.messageWrapper} ${msg.role === 'user' ? styles.wrapperUser : styles.wrapperAssistant}`}>
-              <div className={styles.avatar}>
-                {msg.role === 'user' ? (
-                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                ) : (
-                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                )}
-              </div>
-              <div className={`${styles.messageBubble} ${msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant} ${msg.isLoading ? styles.loading : ''}`}>
-                {msg.isLoading ? (
-                  <div className={styles.typingDots}><span></span><span></span><span></span></div>
-                ) : (
-                  <div className={styles.markdownContent}>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {msg.content}
-                    </ReactMarkdown>
-                  </div>
-                )}
-                
-                {msg.role === 'assistant' && !msg.isLoading && (
-                  <button 
-                    className={styles.copyBtn} 
-                    onClick={() => handleCopy(msg.content, idx)}
-                    aria-label="复制回答"
-                    title="复制回答"
-                  >
-                    {copiedIndex === idx ? (
-                      <span className={styles.copiedText}>已复制 ✓</span>
-                    ) : (
-                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                      </svg>
-                    )}
-                  </button>
-                )}
-
-                {msg.responseMeta?.is_mock && (
-                  <div className={styles.mockWarning}>当前为演示模式</div>
-                )}
-              </div>
-            </div>
+            <ChatMessageItem 
+              key={idx}
+              msg={msg}
+              idx={idx}
+              copiedIndex={copiedIndex}
+              onCopy={handleCopy}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>
@@ -385,9 +409,6 @@ export default function AssistantPage() {
                     {source.source_path} 
                     {source.section && source.section !== source.title ? ` > ${source.section}` : ''}
                   </div>
-                  
-                  {/* Context excerpt would go here, currently the API only returns the title/section. 
-                      In a fuller implementation, we'd show the matched text snippet */}
                   
                   {source.obsidian_uri && (
                     <a 

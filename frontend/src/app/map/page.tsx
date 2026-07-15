@@ -1,34 +1,35 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { api, GraphNode, GraphLink, GraphResponse } from "@/lib/api";
+import { api, GraphResponse, GraphNode } from "@/lib/api";
 import styles from "./page.module.css";
 
-// 动态导入 react-force-graph-2d，避免 SSR / Next.js 16 编译冲突
-const ForceGraph2D = dynamic(
-  () => import("react-force-graph-2d").then((mod) => mod.default),
-  { ssr: false }
-);
+// 动态载入 react-force-graph，避免 Next.js SSR 冲突
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
+  ssr: false,
+});
 
-// 13 个章节调色板
+// 目录对应的精美配色系统
 const CHAPTER_COLORS: Record<string, string> = {
-  "01-入门": "#f43f5e",          // Rose
-  "02-思维与软实力": "#ec4899",   // Pink
-  "03-全流程知识": "#d946ef",     // Fuchsia
-  "04-前人经验": "#a855f7",       // Purple
-  "05-项目实践": "#6366f1",       // Indigo
-  "06-面试": "#3b82f6",          // Blue
-  "07-AI工作": "#0ea5e9",        // Sky
-  "08-深入学习数据": "#06b6d4",   // Cyan
-  "09-深入学习AI": "#14b8a6",     // Teal
-  "10-AI政治": "#10b981",        // Emerald
-  "11-AI公司研究": "#22c55e",     // Green
-  "12-AI或产品专家": "#84cc16",   // Lime
-  "13-AI金融": "#eab308",        // Yellow
+  "01-入门": "#3b82f6", // Blue
+  "02-思维与软实力": "#06b6d4", // Cyan
+  "03-全流程知识": "#10b981", // Emerald
+  "04-前人经验": "#84cc16", // Lime
+  "05-项目实践": "#eab308", // Yellow
+  "06-面试": "#f97316", // Orange
+  "07-AI工作": "#ef4444", // Red
+  "08-深入学习数据": "#ec4899", // Pink
+  "09-深入学习AI": "#d946ef", // Light Magenta
+  "10-AI政治": "#a855f7", // Purple
+  "11-AI公司研究": "#6366f1", // Indigo
+  "12-AI或产品专家": "#64748b", // Slate
+  "13-AI金融": "#14b8a6", // Teal
 };
 
+// 配合 select 下拉的列表
 const CHAPTERS_LIST = [
   { id: "all", name: "全部目录" },
   { id: "01-入门", name: "01-入门" },
@@ -52,6 +53,8 @@ export default function MapPage() {
   const [graphData, setGraphData] = useState<GraphResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
 
   // 交互高亮状态
   const [hoverNode, setHoverNode] = useState<any | null>(null);
@@ -67,9 +70,18 @@ export default function MapPage() {
   const fetchGraph = async (lvl: "chapter" | "note", ch?: string) => {
     setIsLoading(true);
     setError(null);
+    setWarning(null);
     try {
       const filterCh = ch === "all" ? undefined : ch;
       const res = await api.getGraph(lvl, filterCh);
+
+      // 大数据集预警与自动切回
+      if (lvl === "note" && ch === "all" && res.nodes.length > 200) {
+        setLevel("chapter");
+        setWarning("💡 笔记数量较多，为保证渲染流畅，已自动切换为目录级聚合。建议从右上角选择特定章节再展开笔记。");
+        return;
+      }
+
       setGraphData(res);
       setSelectedNode(null);
     } catch (err: any) {
@@ -83,6 +95,21 @@ export default function MapPage() {
   useEffect(() => {
     fetchGraph(level, selectedChapter);
   }, [level, selectedChapter]);
+
+  // localStorage 判断首次引导
+  useEffect(() => {
+    if (graphData) {
+      const seen = localStorage.getItem("pmhub-map-help-seen");
+      if (!seen) {
+        setShowHelp(true);
+      }
+    }
+  }, [graphData]);
+
+  const closeHelp = () => {
+    localStorage.setItem("pmhub-map-help-seen", "1");
+    setShowHelp(false);
+  };
 
   // 构建高亮邻居节点的集合
   const updateHighlight = (node: any) => {
@@ -199,6 +226,20 @@ export default function MapPage() {
             </svg>
             重置视图
           </button>
+
+          <button
+            className={styles.helpBtn}
+            onClick={() => setShowHelp(true)}
+            aria-label="操作指南"
+            title="操作指南"
+          >
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            操作指南
+          </button>
         </div>
       </header>
 
@@ -223,9 +264,56 @@ export default function MapPage() {
 
           {!isLoading && !error && graphData && (
             <>
-              {level === "note" && selectedChapter === "all" && (
+              {warning && (
+                <div className={styles.toast}>
+                  {warning}
+                </div>
+              )}
+
+              {level === "note" && selectedChapter === "all" && !warning && (
                 <div className={styles.toast}>
                   💡 笔记数量较多，可使用右上角下拉菜单过滤特定章节。
+                </div>
+              )}
+
+              {showHelp && (
+                <div className={styles.helpOverlay}>
+                  <div className={styles.helpHeader}>
+                    <h3 className={styles.helpTitle}>
+                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                      </svg>
+                      操作指南
+                    </h3>
+                    <button 
+                      className={styles.helpClose} 
+                      onClick={closeHelp}
+                      aria-label="关闭操作引导"
+                      title="关闭操作引导"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <ul className={styles.helpList}>
+                    <li className={styles.helpItem}>
+                      <span className={styles.helpIcon}>🖱️</span>
+                      <span>拖拽空白处：平移画布</span>
+                    </li>
+                    <li className={styles.helpItem}>
+                      <span className={styles.helpIcon}>🔍</span>
+                      <span>滚轮缩放：缩放图谱视图</span>
+                    </li>
+                    <li className={styles.helpItem}>
+                      <span className={styles.helpIcon}>👆</span>
+                      <span>点击节点：聚焦并跳转 Obsidian</span>
+                    </li>
+                    <li className={styles.helpItem}>
+                      <span className={styles.helpIcon}>✋</span>
+                      <span>拖拽节点：拖拽以重新固定布局</span>
+                    </li>
+                  </ul>
                 </div>
               )}
               
@@ -233,6 +321,9 @@ export default function MapPage() {
                 ref={fgRef}
                 graphData={graphData}
                 nodeRelSize={level === "chapter" ? 8 : 4.5}
+                cooldownTicks={100}
+                d3AlphaDecay={0.05}
+                d3VelocityDecay={0.4}
                 nodeColor={(node: any) => {
                   const color = CHAPTER_COLORS[node.chapter] || "#94a3b8";
                   // hover高亮逻辑
@@ -291,14 +382,32 @@ export default function MapPage() {
                 onNodeHover={updateHighlight}
                 onNodeClick={handleNodeClick}
                 backgroundColor="var(--canvas)"
-                // 自定义节点绘制，增加文字显示
+                // 自定义节点绘制，增加文字显示与性能早退
                 nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
                   const label = node.label;
                   const fontSize = level === "chapter" ? 14 / globalScale : 11 / globalScale;
-                  ctx.font = `${level === "chapter" ? "600" : "400"} ${fontSize}px sans-serif`;
-                  
                   const r = level === "chapter" ? 10 : 5;
                   const color = CHAPTER_COLORS[node.chapter] || "#94a3b8";
+
+                  // hover高亮检查早退优化
+                  if (hoverNode && !highlightNodes.has(node.id)) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = `${color}25`;
+                    ctx.fill();
+                    
+                    if (level === "chapter" || globalScale > 1.2) {
+                      ctx.textAlign = "center";
+                      ctx.textBaseline = "middle";
+                      ctx.font = `${level === "chapter" ? "600" : "400"} ${fontSize}px sans-serif`;
+                      ctx.fillStyle = "var(--text-3)";
+                      ctx.fillText(label, node.x, node.y + r + 8);
+                    }
+                    return;
+                  }
+
+                  // 正常状态或当前处于高亮集合中的节点绘制
+                  ctx.font = `${level === "chapter" ? "600" : "400"} ${fontSize}px sans-serif`;
 
                   // 画外环高亮效果
                   if (hoverNode && highlightNodes.has(node.id)) {
@@ -311,15 +420,15 @@ export default function MapPage() {
                   // 绘制实体圆形节点
                   ctx.beginPath();
                   ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
-                  ctx.fillStyle = hoverNode ? (highlightNodes.has(node.id) ? color : `${color}25`) : color;
+                  ctx.fillStyle = color;
                   ctx.fill();
                   
-                  // 绘制标签文本（仅在足够大的缩放比率下绘制笔记名字，避免层级文字重叠卡顿）
+                  // 绘制标签文本
                   if (level === "chapter" || globalScale > 1.2) {
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.fillStyle = hoverNode 
-                      ? (highlightNodes.has(node.id) ? "var(--text-1)" : "var(--text-3)")
+                      ? "var(--text-1)" 
                       : "var(--text-2)";
                     ctx.fillText(label, node.x, node.y + r + 8);
                   }

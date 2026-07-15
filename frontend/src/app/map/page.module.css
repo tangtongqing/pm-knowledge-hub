@@ -291,7 +291,7 @@
   border-color: var(--text-3);
 }
 
-.resetBtn {
+.resetBtn, .helpBtn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -306,7 +306,7 @@
   transition: all var(--transition);
 }
 
-.resetBtn:hover {
+.resetBtn:hover, .helpBtn:hover {
   background: var(--surface-2);
   color: var(--text-1);
   border-color: var(--text-3);
@@ -322,4 +322,89 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Help Overlay Guide */
+.helpOverlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 250px;
+  max-width: calc(100vw - 32px);
+  background: var(--surface-1);
+  border: 1px solid var(--border-component);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.helpHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+
+.helpTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.helpClose {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all var(--transition);
+}
+
+.helpClose:hover {
+  background: var(--surface-3);
+  color: var(--text-1);
+}
+
+.helpList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.helpItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.helpIcon {
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, EvaluateResponse } from "@/lib/api";
@@ -14,6 +14,35 @@ interface ChatMessage {
   content: string;
   isLoading?: boolean;
 }
+
+interface ChatMessageItemProps {
+  msg: ChatMessage;
+}
+
+const ChatMessageItem = React.memo(function ChatMessageItem({ msg }: ChatMessageItemProps) {
+  return (
+    <div className={`${styles.messageWrapper} ${msg.role === 'candidate' ? styles.wrapperCandidate : styles.wrapperInterviewer}`}>
+      <div className={styles.avatar}>
+        {msg.role === 'candidate' ? (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        ) : (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"></path><path d="M19 13v-1a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v1a7 7 0 0 0 14 0z"></path></svg>
+        )}
+      </div>
+      <div className={`${styles.messageBubble} ${msg.role === 'candidate' ? styles.bubbleCandidate : styles.bubbleInterviewer} ${msg.isLoading ? styles.loading : ''}`}>
+        {msg.isLoading ? (
+          <div className={styles.typingDots}><span></span><span></span><span></span></div>
+        ) : (
+          <div className={styles.markdownContent}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {msg.content}
+            </ReactMarkdown>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
 
 export default function InterviewPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -363,26 +392,7 @@ export default function InterviewPage() {
           <>
             <div className={styles.messageList}>
               {messages.map((msg, idx) => (
-                <div key={idx} className={`${styles.messageWrapper} ${msg.role === 'candidate' ? styles.wrapperCandidate : styles.wrapperInterviewer}`}>
-                  <div className={styles.avatar}>
-                    {msg.role === 'candidate' ? (
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    ) : (
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"></path><path d="M19 13v-1a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v1a7 7 0 0 0 14 0z"></path></svg>
-                    )}
-                  </div>
-                  <div className={`${styles.messageBubble} ${msg.role === 'candidate' ? styles.bubbleCandidate : styles.bubbleInterviewer} ${msg.isLoading ? styles.loading : ''}`}>
-                    {msg.isLoading ? (
-                      <div className={styles.typingDots}><span></span><span></span><span></span></div>
-                    ) : (
-                      <div className={styles.markdownContent}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {msg.content}
-                        </ReactMarkdown>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <ChatMessageItem key={idx} msg={msg} />
               ))}
               <div ref={messagesEndRef} />
             </div>

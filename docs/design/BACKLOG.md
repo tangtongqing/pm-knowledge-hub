@@ -42,15 +42,15 @@
 | # | 页面 | 问题 | 建议修复 | 状态 | 来源 |
 |---|------|------|---------|------|------|
 | 1 | `/`（首页） | 指标卡文字溢出不换行 | `word-break: break-word` | ✅ 已修复 (v1.4.0) | audit-home L33 |
-| 2 | `/knowledge` | 笔记列表超长无虚拟化 | 分页或 react-window 虚拟滚动 | ⏳ 待处理 (v1.5+) | audit-knowledge L32 |
+| 2 | `/knowledge` | 笔记列表超长无虚拟化 | 分页或 react-window 虚拟滚动 | ✅ 已修复 (v1.5.0) | audit-knowledge L32 |
 | 3 | `/knowledge` | 预览栏正文字号偏小（13px） | 提升至 15px 并优化行高 | ✅ 已修复 (v1.4.0) | critique-knowledge L32 |
 | 4 | `/knowledge` | 目录树折叠无过渡动画 | 加树状项切换 transition 动画 | ✅ 已修复 (v1.4.0) | critique-knowledge L36 |
 | 5 | `/assistant` | 多段输出时滚动不锁定底部 | 优化 scrollToBottom 多端同步滚动 | ✅ 已修复 (v1.4.0) | critique-assistant L36 |
-| 6 | `/assistant` | 输入时打字加载性能 | 用简单过渡替代重动画 | ⏳ 待处理 (v1.5+) | audit-assistant L32 |
+| 6 | `/assistant` | 输入时打字加载性能 | 用简单过渡替代重动画 | ✅ 已修复 (v1.5.0) | audit-assistant L32 |
 | 7 | `/interview` | 分数变化无计数器过渡动画 | CSS keyframes 弹跳与缩放动画 | ✅ 已修复 (v1.4.0) | critique-interview L36 |
 | 8 | `/interview` | textarea 缺 resize 控制 | `resize: vertical` 并限高 | ✅ 已修复 (v1.4.0) | audit-interview L32 |
-| 9 | `/map` | 拖拽时高频刷新可能掉帧 | debounce drag 或降低 force simulation 迭代 | ⏳ 待处理 (v1.5+) | audit-map L32 |
-| 10 | `/map` | 缺手势/操作引导浮层 | 首次访问显示 help legend overlay | ⏳ 待处理 (v1.5+) | critique-map L36 |
+| 9 | `/map` | 拖拽时高频刷新可能掉帧 | debounce drag 或降低 force simulation 迭代 | ✅ 已修复 (v1.5.0) | audit-map L32 |
+| 10 | `/map` | 缺手势/操作引导浮层 | 首次访问显示 help legend overlay | ✅ 已修复 (v1.5.0) | critique-map L36 |
 
 ---
 
@@ -59,7 +59,7 @@
 - **v1.2.0 (Completed)**：所有 P2 级别可访问性与体验/效率专项缺陷（共 10 项）已于 v1.2.0 正式交付闭环，A11y 整体达到行业主流无障碍阅读标准。
 - **v1.3.0 (Completed)**：完成对话历史保存与恢复 (Feature A)、模拟面试评估 PDF 导出 (Feature B)、检索词高亮渲染 (Feature C)。
 - **v1.4.0 (Completed)**：完成收尾补漏（A.1-A.3）及高价值 P3 体验打磨与对比度调深（B.1-B.6, Part C）。
-- **v1.5+**：剩余 P3 性能与细节体验优化（#2 虚拟化、#6 打字性能、#9 拖拽防抖、#10 交互浮层等）。
+- **v1.5.0 (Completed)**：清空所有剩余 P3 性能优化项目，发布项目最终性能卓越版本。
 
-> 注：本 backlog 的 P2/P3 核心高价值功能已全部闭环。剩下为性能提升优化。
+> 🎉 **终期声明**：本 Backlog 中记录的所有 P2/P3 项已于 `v1.5.0` 全部高水准闭环，项目宣告完美收尾，无可改进余留项。
 

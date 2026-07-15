@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, Suspense, isValidElement, cloneElement } from "react";
+import React, { useState, useEffect, Suspense, isValidElement, cloneElement, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, SearchHit } from "@/lib/api";
 import { escapeRegExp } from "@/lib/utils";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import styles from "./page.module.css";
 
 // Hardcoded chapters for demonstration (would typically come from a backend /chapters API)
@@ -37,6 +38,15 @@ function KnowledgeBaseContent() {
   const [results, setResults] = useState<SearchHit[]>([]);
   const [activeDoc, setActiveDoc] = useState<SearchHit | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const parentRef = useRef<HTMLDivElement>(null);
+  
+  const virtualizer = useVirtualizer({
+    count: results.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 80,
+    overscan: 5,
+  });
 
   const highlightText = (node: React.ReactNode, searchWord: string): React.ReactNode => {
     if (!searchWord.trim()) return node;
@@ -107,7 +117,6 @@ function KnowledgeBaseContent() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     performSearch(initialQuery, activeChapter);
   }, [initialQuery, activeChapter]);
 
@@ -164,7 +173,13 @@ function KnowledgeBaseContent() {
           </div>
         </div>
 
-          <div className={styles.listContent} tabIndex={0} aria-label="知识库文档列表">
+        <div 
+          ref={parentRef} 
+          className={styles.listContent} 
+          tabIndex={0} 
+          aria-label="知识库文档列表"
+          style={{ position: "relative" }}
+        >
           {isLoading ? (
             <div className={styles.loadingState}>
               <div className={styles.spinner}></div>
@@ -175,26 +190,46 @@ function KnowledgeBaseContent() {
               <span>没有找到相关笔记</span>
             </div>
           ) : (
-            results.map((hit, idx) => (
-              <div 
-                key={idx}
-                className={`${styles.listItem} ${activeDoc === hit ? styles.activeListItem : ''}`}
-                onClick={() => setActiveDoc(hit)}
-              >
-                <div className={styles.itemTitle}>{highlightText(hit.metadata.title, initialQuery)}</div>
-                <div className={styles.itemMeta}>
-                  <span className={styles.itemChapter}>{hit.metadata.chapter}</span>
-                  {hit.distance > 0 && <span className={styles.itemScore}>相关度: {(1 - hit.distance).toFixed(2)}</span>}
-                </div>
-                {hit.metadata.tags && (
-                  <div className={styles.itemTags}>
-                    {hit.metadata.tags.split(',').slice(0, 3).map((t, i) => (
-                      <span key={i} className={styles.tag}>{t.trim()}</span>
-                    ))}
+            <div
+              style={{
+                height: `${virtualizer.getTotalSize()}px`,
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const hit = results[virtualRow.index];
+                if (!hit) return null;
+                return (
+                  <div 
+                    key={virtualRow.key}
+                    className={`${styles.listItem} ${activeDoc === hit ? styles.activeListItem : ''}`}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                    onClick={() => setActiveDoc(hit)}
+                  >
+                    <div className={styles.itemTitle}>{highlightText(hit.metadata.title, initialQuery)}</div>
+                    <div className={styles.itemMeta}>
+                      <span className={styles.itemChapter}>{hit.metadata.chapter}</span>
+                      {hit.distance > 0 && <span className={styles.itemScore}>相关度: {(1 - hit.distance).toFixed(2)}</span>}
+                    </div>
+                    {hit.metadata.tags && (
+                      <div className={styles.itemTags}>
+                        {hit.metadata.tags.split(',').slice(0, 3).map((t, i) => (
+                          <span key={i} className={styles.tag}>{t.trim()}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
