@@ -2,8 +2,8 @@
 
 This document contains structured test cases for verifying the frontend layout, backend APIs, integration, and RAG features of the PM Knowledge Hub.
 
-> **验收执行**：2026-07-11 由独立验收智能体 (ZCode) 全量执行，启动后端 :8000 + 前端 :3000，用 curl + Playwright 逐项实测。
-> **结论摘要**：🎉 **Phase 1–8 共 23 个 Test Case 全部通过**——包含核心代码与界面、可访问性与体验优化，以及功能扩展（问答历史、PDF 导出、搜索高亮）。项目 **v1.4.0 正式发布**。详见各 Test Case 下的「实测结果」与文末验收结论表。
+> **验收执行**：Phase 1–8 于 2026-07-11 完成；Phase 9 于 2026-07-16 针对 v1.6.0-rc.1 发布门禁执行。
+> **结论摘要**：Phase 1–8 的 23 个历史案例保持归档；Phase 9 新增 4 个案例全部通过。v1.6.0-rc.1 是已通过门禁的本地候选版，尚未提交、tag 或远端发布。
 
 ---
 
@@ -228,6 +228,30 @@ This document contains structured test cases for verifying the frontend layout, 
 
 ---
 
+## 📌 Phase 9: Product Design P1 Release Gate (v1.6.0-rc.1)
+
+### Test Case 9.1: Responsive Structure
+* **Action**: 以 Playwright headed 浏览器逐一打开 `/`、`/knowledge`、`/assistant`、`/interview`、`/map`，分别设置 390×844 与 1440×1000。
+* **Expected Result**: `documentElement.scrollWidth === clientWidth`，核心工作区无页面级横向溢出。
+* **✅ 实测结果 (2026-07-16)**：移动端五页均为 `390/390`；桌面端五页均为 `1440/1440`。地图 Canvas 已按父容器 ResizeObserver 尺寸渲染。
+
+### Test Case 9.2: Evidence and Note Assets
+* **Action**: 打开 1.1 需求笔记；滚动加载三张 Markdown 图片。发起“什么是需求分析？”问答并点击正文 `[1]`。
+* **Expected Result**: 图片经 `/api/v1/assets/{filename}` 返回且 `naturalWidth > 0`；引用跳转到 `#source-1`；来源卡包含原文摘录。
+* **✅ 实测结果 (2026-07-16)**：三张图片尺寸分别为 1280×1283、1594×652、917×374；正文引用成功定位 `#source-1`；5 个来源均含证据摘录。
+
+### Test Case 9.3: Failure Recovery and Destructive Undo
+* **Action**: 在 Gemini 返回 403 的环境提交问答；执行“删除会话 → 撤销”。
+* **Expected Result**: 上游错误安全降级为本地回答，不返回 500；失败时保留重试；删除会话可撤销恢复。
+* **✅ 实测结果 (2026-07-16)**：修复 Windows GBK 日志符号导致的二次异常后，403 正常降级；引用仍可用；会话删除后点击“撤销”成功恢复。
+
+### Test Case 9.4: Code and Runtime Gate
+* **Action**: 执行 `npm run lint`、`npm run build`、后端虚拟环境 pytest，并读取 `/api/v1/health`。
+* **Expected Result**: 所有命令成功；运行时版本、笔记数与分片数准确。
+* **✅ 实测结果 (2026-07-16)**：lint 0 error；production build 7 路由成功；pytest **47 passed**；health 返回 `version=1.6.0-rc.1`、`note_count=204`、`collection_count=2579`。
+
+---
+
 ## 🎯 验收总结论
 
 | Phase | 模块 | Test Cases | 结论 | 关键证据 |
@@ -240,11 +264,12 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 6** | 交付物与仓库 (Phase D) | 6.1 / 6.2 / 6.3 / 6.4 | ✅ 全过 | README v1.0.0+Released badge + 4 截图 + Mermaid 架构；Demo 5 场景分镜 + 简历 4 版本；0 散落 png + 14 归档 + 0 敏感；`v1.2.0` tag 已推远程 + CHANGELOG `[1.2.0]` 就位 |
 | **Phase 7** | 可访问性与体验 | 7.1 | ✅ 全过 | aria-hidden, aria-live, progressbar 属性全部覆盖；`/` 快捷键、焦点回弹、一键复制、重置视图体验深度调优，斧头扫描 critical/serious 归零 |
 | **Phase 8** | 功能扩展 (v1.3.0) | 8.1 / 8.2 / 8.3 | ✅ 全过 | localStorage 双模块持久化；Canvas 位图多页中文字体 PDF 完美导出；ReactMarkdown 深度高亮包裹 |
+| **Phase 9** | 产品设计 P1 发布门禁 (v1.6 RC) | 9.1 / 9.2 / 9.3 / 9.4 | ✅ 全过 | 双视口 0 溢出；引用与图片闭环；失败降级与撤销；lint/build/47 pytest |
 
-**整体结论**：🎉 **系统验收全部通过（23/23 Test Case，即 20 + 3）**。一期核心功能与合规交付全部完成，可访问性 (a11y) 与用户体验效率专项完美闭环，二期三项核心高价值功能扩展就位，项目 **v1.4.0 正式发布**。
+**整体结论**：Phase 1–8 的 23 个历史案例已归档；Phase 9 的 4 个 v1.6 RC 发布门禁案例全部通过。当前代码达到本地候选版标准，但正式发布仍需独立完成 Git 提交、远端 tag 与 release。
 
-**验收时间**：2026-07-11 (由 ZCode 回归复核)
-**验收人**：验收智能体 (ZCode)
+**最近验收时间**：2026-07-16
+**验收人**：Codex（Phase 9）；ZCode（Phase 1–8 历史验收）
 **验收方式**：
 - 启动后端 :8000 + 前端 :3000，使用 Chrome Axe-Core 进行无障碍可访问性合规自动化检测。
 - 逐个测试交互动作，如焦点恢复、键盘拦截、一键复制、视图重置、历史回看、PDF 下载与高亮染色等。

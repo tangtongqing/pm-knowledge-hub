@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
 }
@@ -29,6 +29,27 @@
 .headerContent {
   display: flex;
   flex-direction: column;
+}
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--danger-subtle);
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.errorBanner button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
 }
 
 .title {
@@ -493,12 +514,11 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: width var(--transition), padding var(--transition);
   overflow: hidden;
 }
 
 .sidebarCollapsed {
-  width: 0;
+  margin-left: -260px;
   border-right: none;
 }
 
@@ -574,12 +594,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 0 4px 0 0;
   border-radius: var(--radius-md);
-  cursor: pointer;
   transition: all var(--transition);
   position: relative;
   border: 1px solid transparent;
+}
+
+.sessionSelect {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 8px 8px 8px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .sessionItem:hover {
@@ -617,7 +651,8 @@
   border: none;
   color: var(--text-3);
   cursor: pointer;
-  padding: 4px;
+  width: 44px;
+  height: 44px;
   border-radius: 4px;
   opacity: 0;
   transition: all var(--transition);
@@ -627,6 +662,10 @@
 }
 
 .sessionItem:hover .deleteSessionBtn {
+  opacity: 1;
+}
+
+.deleteSessionBtn:focus-visible {
   opacity: 1;
 }
 
@@ -668,4 +707,150 @@
 .pdfBtn:hover {
   background: var(--surface-3);
   border-color: var(--text-2);
+}
+
+.nextActions {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--brand-subtle);
+}
+
+.nextActions h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.nextActions p {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.nextActions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studyLink,
+.nextActions button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--border-component);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  color: var(--text-1);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.undoToast {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 220;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  padding: 10px 12px;
+  border: 1px solid var(--border-component);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  color: var(--text-1);
+  box-shadow: var(--shadow-lg);
+  font-size: 12px;
+}
+
+.undoToast button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .container {
+    position: relative;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .historySidebar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 200;
+    width: min(82vw, 320px);
+    height: 100%;
+    box-shadow: var(--shadow-lg);
+    transform: translateX(0);
+    transition: transform var(--transition);
+  }
+
+  .sidebarCollapsed {
+    width: min(82vw, 320px);
+    margin-left: 0;
+    transform: translateX(-110%);
+  }
+
+  .chatArea {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    border-right: 0;
+  }
+
+  .header {
+    padding: 12px 12px 12px 60px;
+  }
+
+  .restartBtn {
+    min-height: 44px;
+  }
+
+  .messageList {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .messageWrapper {
+    max-width: 100%;
+    gap: 8px;
+  }
+
+  .inputArea {
+    padding: 12px;
+  }
+
+  .sendBtn,
+  .toggleBtnCollapsed,
+  .toggleBtnInside {
+    width: 44px;
+    height: 44px;
+  }
+
+  .evalArea {
+    width: 100%;
+    height: 36dvh;
+    min-height: 230px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .evalHeader {
+    height: 48px;
+    padding: 10px 16px;
+  }
+
+  .evalContent {
+    padding: 14px 16px 24px;
+  }
 }

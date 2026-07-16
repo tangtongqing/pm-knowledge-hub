@@ -69,7 +69,7 @@ class ObsidianNoteParser:
                     metadata = parsed_yaml
             except Exception as e:
                 # 容错：解析失败则记录日志，返回空字典
-                print(f"⚠️ YAML 解析失败: {e}")
+                print(f"[WARN] YAML 解析失败: {e}")
                 
         return metadata, body
 

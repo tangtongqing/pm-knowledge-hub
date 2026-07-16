@@ -65,12 +65,26 @@ export default function MapPage() {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
 
   const fgRef = useRef<any>(null);
+  const graphContainerRef = useRef<HTMLDivElement>(null);
+  const [graphSize, setGraphSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const element = graphContainerRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setGraphSize({
+        width: Math.max(1, Math.floor(entry.contentRect.width)),
+        height: Math.max(1, Math.floor(entry.contentRect.height)),
+      });
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   // 获取后端图谱数据
   const fetchGraph = async (lvl: "chapter" | "note", ch?: string) => {
     setIsLoading(true);
     setError(null);
-    setWarning(null);
     try {
       const filterCh = ch === "all" ? undefined : ch;
       const res = await api.getGraph(lvl, filterCh);
@@ -176,6 +190,7 @@ export default function MapPage() {
             <button
               className={`${styles.ctrlBtn} ${level === "chapter" ? styles.active : ""}`}
               onClick={() => {
+                setWarning(null);
                 setLevel("chapter");
                 setSelectedChapter("all");
               }}
@@ -184,7 +199,10 @@ export default function MapPage() {
             </button>
             <button
               className={`${styles.ctrlBtn} ${level === "note" ? styles.active : ""}`}
-              onClick={() => setLevel("note")}
+              onClick={() => {
+                setWarning(null);
+                setLevel("note");
+              }}
             >
               按笔记展开
             </button>
@@ -194,12 +212,32 @@ export default function MapPage() {
             <select
               className={styles.select}
               value={selectedChapter}
-              onChange={(e) => setSelectedChapter(e.target.value)}
+              onChange={(e) => {
+                setWarning(null);
+                setSelectedChapter(e.target.value);
+              }}
             >
               {CHAPTERS_LIST.map((ch) => (
                 <option key={ch.id} value={ch.id}>
                   {ch.name}
                 </option>
+              ))}
+            </select>
+          )}
+
+          {graphData && graphData.nodes.length > 0 && (
+            <select
+              className={styles.select}
+              aria-label="使用键盘快速选择图谱节点"
+              value={selectedNode?.id || ""}
+              onChange={(event) => {
+                const node = graphData.nodes.find((item) => item.id === event.target.value) || null;
+                setSelectedNode(node);
+              }}
+            >
+              <option value="">快速选择节点</option>
+              {graphData.nodes.map((node) => (
+                <option key={node.id} value={node.id}>{node.label}</option>
               ))}
             </select>
           )}
@@ -245,7 +283,7 @@ export default function MapPage() {
 
       <div className={styles.mainLayout}>
         {/* 图谱渲染区域 */}
-        <div className={styles.graphContainer}>
+        <div ref={graphContainerRef} className={styles.graphContainer}>
           {isLoading && (
             <div className={styles.loadingBox}>
               <div className={styles.spinner}></div>
@@ -320,6 +358,8 @@ export default function MapPage() {
               <ForceGraph2D
                 ref={fgRef}
                 graphData={graphData}
+                width={graphSize.width}
+                height={graphSize.height}
                 nodeRelSize={level === "chapter" ? 8 : 4.5}
                 cooldownTicks={100}
                 d3AlphaDecay={0.05}
@@ -453,7 +493,7 @@ export default function MapPage() {
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 16v-4M12 8h.01" />
               </svg>
-              <h3 className={styles.emptyTitle}>节点详情</h3>
+              <h2 className={styles.emptyTitle}>节点详情</h2>
               <p className={styles.emptyDesc}>点击图谱中的任何节点，可在此处查看对应章节的学习脉络或笔记详情。</p>
             </div>
           ) : (
@@ -462,7 +502,7 @@ export default function MapPage() {
                 <span className={`${styles.badge} ${selectedNode.type === "chapter" ? styles.badgeChapter : styles.badgeNote}`}>
                   {selectedNode.type === "chapter" ? "目录章节" : "知识笔记"}
                 </span>
-                <h3 className={styles.nodeTitle}>{selectedNode.label}</h3>
+                <h2 className={styles.nodeTitle}>{selectedNode.label}</h2>
               </div>
 
               <div className={styles.metaList}>

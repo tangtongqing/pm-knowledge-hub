@@ -19,10 +19,12 @@ export default function Home() {
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Fetch system health on mount
-    api.getHealth().then(setHealth);
-    // Fetch metrics
-    api.getMetrics().then(setMetrics).catch(err => console.error("Failed to fetch metrics", err));
+    const refreshRuntime = () => {
+      api.getHealth().then(setHealth);
+      api.getMetrics().then(setMetrics).catch(err => console.error("Failed to fetch metrics", err));
+    };
+    refreshRuntime();
+    const refreshTimer = window.setInterval(refreshRuntime, 30_000);
 
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.key === "/") {
@@ -42,6 +44,7 @@ export default function Home() {
     window.addEventListener("keydown", handleGlobalKeyDown);
     return () => {
       window.removeEventListener("keydown", handleGlobalKeyDown);
+      window.clearInterval(refreshTimer);
     };
   }, []);
 
@@ -105,7 +108,7 @@ export default function Home() {
               <h2 className={styles.cardTitle}>知识库</h2>
             </div>
             <p className={styles.cardDesc}>
-              浏览和检索 {health?.collection_count || '...'} 篇经过处理的本地 Obsidian 笔记，带有精确引用分片。
+              浏览和检索 {health?.note_count ?? '...'} 篇本地 Obsidian 笔记，并查看对应知识分片。
             </p>
           </Link>
 
@@ -119,7 +122,7 @@ export default function Home() {
               <h2 className={styles.cardTitle}>AI 问答</h2>
             </div>
             <p className={styles.cardDesc}>
-              基于 RAG 引擎的对话系统。获取带溯源标注的结构化回答，消除幻觉。
+              基于 RAG 引擎获取带证据摘录的结构化回答，降低无法核验内容的风险。
             </p>
           </Link>
 
@@ -162,13 +165,13 @@ export default function Home() {
         <div className={styles.metricsSection}>
           <div className={styles.metricsHeader}>
             <h2 className={styles.metricsTitle}>系统运行指标 (L1 & L2)</h2>
-            <span className={styles.metricsStatus}>实时更新</span>
+            <span className={styles.metricsStatus}>每 30 秒刷新</span>
           </div>
           <div className={styles.metricsGrid}>
             <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>今日问答与面试次数 (L1)</span>
+              <span className={styles.metricLabel}>本次服务运行期请求 (L1)</span>
               <span className={styles.metricValue}>{metrics?.total_queries ?? 0}</span>
-              <span className={styles.metricSub}>会话累计请求总量</span>
+              <span className={styles.metricSub}>后端重启后重新计数</span>
             </div>
             <div className={styles.metricCard}>
               <span className={styles.metricLabel}>真实 LLM 调用量</span>
@@ -182,7 +185,7 @@ export default function Home() {
             </div>
             <div className={styles.metricCard}>
               <span className={styles.metricLabel}>向量库切片容量 (L2)</span>
-              <span className={styles.metricValue}>{health?.collection_count ?? 2579}</span>
+              <span className={styles.metricValue}>{health?.collection_count ?? '—'}</span>
               <span className={styles.metricSub}>ChromaDB 索引分片数</span>
             </div>
           </div>
@@ -202,7 +205,7 @@ export default function Home() {
                 style={{ 
                   width: metrics && metrics.total_queries > 0 
                     ? `${(metrics.live_queries / metrics.total_queries) * 100}%` 
-                    : "50%" 
+                    : "0%"
                 }}
               ></div>
               <div 
@@ -210,7 +213,7 @@ export default function Home() {
                 style={{ 
                   width: metrics && metrics.total_queries > 0 
                     ? `${(metrics.mock_queries / metrics.total_queries) * 100}%` 
-                    : "50%" 
+                    : "0%"
                 }}
               ></div>
             </div>

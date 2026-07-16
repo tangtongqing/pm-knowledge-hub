@@ -69,6 +69,8 @@ def test_api_health_endpoint(test_client):
     res_data = response.json()
     assert res_data["status"] == "ok"
     assert res_data["collection_count"] == 1
+    assert res_data["note_count"] == 1
+    assert res_data["version"] == "1.6.0-rc.1"
     assert "paraphrase-multilingual" in res_data["embedding_model"]
 
 
@@ -103,6 +105,7 @@ def test_api_qa_ask_endpoint(test_client):
     assert res_data["query"] == "什么是需求分析？"
     assert "演示模式" in res_data["answer"]
     assert len(res_data["sources"]) >= 1
+    assert "需求分析" in res_data["sources"][0]["excerpt"]
     assert len(res_data["recommendations"]) == 3
     assert res_data["is_mock"] is True
 
@@ -203,4 +206,19 @@ def test_api_metrics_endpoint(test_client):
     assert res_data["mock_queries"] == 1
     assert res_data["live_queries"] == 0
 
+
+def test_note_asset_endpoint(test_client, tmp_path, monkeypatch):
+    """笔记图片只从 NOTES_DIR/_images 安全读取。"""
+    image_dir = tmp_path / "_images"
+    image_dir.mkdir()
+    image_path = image_dir / "evidence.png"
+    image_path.write_bytes(b"fake-png-evidence")
+    monkeypatch.setenv("NOTES_DIR", str(tmp_path))
+
+    response = test_client.get("/api/v1/assets/evidence.png")
+    assert response.status_code == 200
+    assert response.content == b"fake-png-evidence"
+
+    missing = test_client.get("/api/v1/assets/missing.png")
+    assert missing.status_code == 404
 

@@ -2,13 +2,15 @@
 
 > 基于 RAG 技术的 AI 产品经理垂直知识库，集语义知识检索、AI 问答助手、模拟面试、知识图谱于一体的智能知识管理系统。
 
-[![Version](https://img.shields.io/badge/version-v1.0.0-blue)]()
-[![Status](https://img.shields.io/badge/status-Released-green)]()
+[![Version](https://img.shields.io/badge/version-v1.6.0--rc.1-blue)]()
+[![Status](https://img.shields.io/badge/status-local%20release%20candidate-orange)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ---
 
 ## 📌 项目概述
+
+当前工作树是 `v1.6.0-rc.1` 本地发布候选版；远端稳定版本仍为 `v1.4.0`。候选版完成产品设计 P1 收口并通过复验后，才会进入提交、打 tag 与发布流程。
 
 本项目为产品经理（PM）提供了一套本地化的智能学习与复习工作台。系统读取并向量化解析了 **204 篇 AI 产品经理学习笔记**（共计 739 个核心切片），通过多模态与语义检索，将碎片化的知识有机融合：
 
@@ -170,7 +172,7 @@ pm-knowledge-hub/
 │   │   └── lib/           # API 通信与客户端接口
 │   ├── package.json       # 前端依赖配置
 │   └── README.md          # 前端说明文档
-└── acceptance_test.md     # 📌 系统全量手动验收 checklist (15/15)
+└── acceptance_test.md     # 📌 系统验收 checklist（v1.6 RC 发布门禁已通过）
 ```
 
 ---

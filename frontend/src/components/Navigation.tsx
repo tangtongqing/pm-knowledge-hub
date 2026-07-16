@@ -112,6 +112,7 @@ export default function Navigation() {
           className={styles.themeToggle}
           onClick={toggle}
           title={theme === "dark" ? "切换浅色模式" : "切换深色模式"}
+          aria-label={theme === "dark" ? "切换浅色模式" : "切换深色模式"}
           type="button"
         >
           {theme === "dark" ? (

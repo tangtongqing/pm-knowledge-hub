@@ -75,6 +75,25 @@ def test_qa_agent_mock_fallback_on_no_key(mock_collection):
     assert len(response.recommendations) == 3
 
 
+def test_qa_agent_falls_back_when_live_model_fails(mock_collection):
+    """真实模型异常时不能因日志编码问题破坏本地降级。"""
+    class FailingModels:
+        @staticmethod
+        def generate_content(**_kwargs):
+            raise RuntimeError("simulated upstream failure")
+
+    class FailingClient:
+        models = FailingModels()
+
+    agent = QAAgent(mock_collection)
+    agent.client = FailingClient()
+    response = agent.answer("什么是需求分析？", top_k=2)
+
+    assert response.is_mock is True
+    assert len(response.sources) > 0
+    assert "自动降级" in response.answer
+
+
 # ─── Interview Agent 测试 ─────────────────────────────────────────────
 
 def test_interview_agent_initialization(mock_collection):

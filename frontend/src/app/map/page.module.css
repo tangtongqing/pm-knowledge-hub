@@ -1,8 +1,10 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
   background: var(--canvas);
 }
 
@@ -14,6 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
 .headerContent {
@@ -38,6 +41,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .btnGroup {
@@ -58,6 +64,7 @@
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all var(--transition);
+  min-height: 44px;
 }
 
 .ctrlBtn:hover {
@@ -80,6 +87,8 @@
   outline: none;
   cursor: pointer;
   transition: all var(--transition);
+  min-height: 44px;
+  max-width: 220px;
 }
 
 .select:focus {
@@ -91,12 +100,17 @@
   display: flex;
   position: relative;
   overflow: hidden;
+  min-width: 0;
+  min-height: 0;
 }
 
 .graphContainer {
   flex: 1;
   position: relative;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .loadingBox, .errorBox {
@@ -370,8 +384,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   transition: all var(--transition);
 }
@@ -402,6 +416,75 @@
   font-size: 16px;
   width: 24px;
   text-align: center;
+}
+
+@media (max-width: 900px) {
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .controls {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .btnGroup {
+    width: 100%;
+  }
+
+  .ctrlBtn {
+    flex: 1;
+  }
+
+  .select {
+    flex: 1 1 150px;
+    max-width: 100%;
+  }
+
+  .resetBtn,
+  .helpBtn {
+    min-height: 44px;
+  }
+
+  .mainLayout {
+    flex-direction: column;
+  }
+
+  .graphContainer {
+    width: 100%;
+    height: auto;
+    flex: 1 1 58%;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 34dvh;
+    min-height: 190px;
+    border-left: 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .detailBox {
+    padding: 16px;
+  }
+
+  .emptySidebar {
+    padding: 16px;
+  }
+
+  .helpOverlay {
+    inset: 12px;
+    width: auto;
+    max-width: none;
+  }
+
+  .toast {
+    top: 8px;
+    width: calc(100% - 16px);
+    padding: 8px 12px;
+  }
 }
 
 @keyframes fadeIn {

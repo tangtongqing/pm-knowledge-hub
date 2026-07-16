@@ -11,6 +11,7 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 export interface HealthResponse {
   status: string;
   collection_count: number;
+  note_count: number;
   embedding_model: string;
   version: string;
 }
@@ -72,6 +73,7 @@ export interface QASource {
   section: string;
   obsidian_uri: string;
   distance: number;
+  excerpt: string;
 }
 
 export interface QAServiceResponse {
@@ -145,6 +147,7 @@ export const api = {
       return {
         status: "offline",
         collection_count: 0,
+        note_count: 0,
         embedding_model: "Connection Error",
         version: "unknown",
       };

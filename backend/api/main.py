@@ -17,7 +17,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from api.routes import search, health, qa, interview, graph, metrics
+from api.routes import search, health, qa, interview, graph, metrics, assets
+from api.version import PROJECT_VERSION
 
 # ── 环境变量 ────────────────────────────────────────────────────────────
 # 加载 backend/.env（使用绝对路径，兼容从任意目录启动）
@@ -71,7 +72,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="PM Knowledge Hub API",
     description="产品经理知识库 RAG 系统 — 语义检索 & 问答接口",
-    version="0.1.0",
+    version=PROJECT_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
@@ -103,6 +104,7 @@ app.include_router(qa.router, prefix="/api/v1", tags=["QA"])
 app.include_router(interview.router, prefix="/api/v1", tags=["Interview"])
 app.include_router(graph.router, prefix="/api/v1", tags=["Graph"])
 app.include_router(metrics.router, prefix="/api/v1", tags=["Metrics"])
+app.include_router(assets.router, prefix="/api/v1", tags=["Assets"])
 
 
 @app.get("/", include_in_schema=False)

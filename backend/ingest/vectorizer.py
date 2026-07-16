@@ -239,7 +239,7 @@ def get_all_documents(collection, chapter_filter: Optional[str] = None) -> List[
                     if match:
                         full_text = full_text[match.end():]
                 except Exception as e:
-                    print(f"⚠️ 读取本地文件失败 {file_path}: {e}")
+                    print(f"[WARN] 读取本地文件失败 {file_path}: {e}")
         
         if not full_text:
             # 如果本地读取失败，回退到空提示

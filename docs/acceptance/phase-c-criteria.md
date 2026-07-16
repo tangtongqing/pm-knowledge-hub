@@ -53,7 +53,7 @@ Phase C 所有核心前端任务（TASK-019 ~ TASK-023）完成后执行
 ### 7. 响应式与可访问性
 - [x] C-1 已完成桌面/平板/手机基础布局适配。
 - [x] 使用语义化 `main/section/aside/nav/header` 与可见 focus 样式。
-- [x] 使用浏览器截图检查桌面与移动端无重叠、无横向溢出、文本不截断。（复核已截桌面 1440×900 与移动 390×844 两套截图：`acceptance-c1-workspace-desktop.png` / `acceptance-c1-workspace-mobile.png`，无溢出/截断）
+- [x] 使用浏览器检查桌面与移动端无横向溢出。（2026-07-16 v1.6.0-rc.1 复验：五个核心路由在 390×844 均为 `390/390`，在 1440×1000 均为 `1440/1440`。）
 - [x] 验证键盘可访问性、颜色对比和表单 label。（导航/表单均为语义化 button/link/input，带 aria 与可见 focus；支持深色模式切换）
 
 ### 8. 工程质量
@@ -69,15 +69,15 @@ Phase C 所有核心前端任务（TASK-019 ~ TASK-023）完成后执行
 | 检查大项 | 状态 | 问题说明 |
 |----------|------|----------|
 | 设计系统 | ✅ C-1 通过 | 在真实 API 状态下视觉一致性复核通过。 |
-| 首页工作台 | ✅ C-1+C-2 通过 | 实测已接入真实 `/health`，动态显示「2579 篇笔记 / ChromaDB: 2579 chunks」（与后端一致），非静态演示。 |
+| 首页工作台 | ✅ v1.6 RC 通过 | `/health` 区分 204 篇笔记与 2579 个 ChromaDB 分片；不再把分片误标为笔记。 |
 | 知识库浏览 | ✅ C-1+C-2 通过 | semantic/keyword/getDocuments 三接口实测返回真实笔记，三栏布局 + loading/empty/error 三态齐备。截图 `acceptance-c2-knowledge-search.png`。 |
 | AI 助手 | ✅ C-1+C-2 通过 | 实测 `/qa/ask` 返回真实 RAG 回答 + 5 个证据分片 + 推荐问题，is_mock=False。截图 `acceptance-c2-qa-rag-real.png`。 |
 | 面试训练 | ✅ C-1+C-2 通过 | start/evaluate 闭环实测：生成 SaaS 案例题 + STAR 75 分评估。⚠️ 因未配 Gemini Key 走 mock 降级（标注「演示数据」），配 Key 后即为真实 LLM。截图 `acceptance-c2-interview-star.png`。 |
 | 学习地图 | ✅ C-3 通过 | react-force-graph-2d 力导向图谱已实现：13 节点+12 边、hover 高亮+流动粒子、click 聚焦 zoom、章节下拉过滤、Obsidian URI 跳转。后端 `/api/v1/graph` 就位 + 2 项集成测试。截图 `acceptance-test-4-2-force-graph.png` / `acceptance-test-4-3-note-level-filter.png`。 |
-| 响应式与无障碍 | ✅ C-1+C-2 通过 | 桌面 1440 + 移动 390 双截图复核无溢出/截断；语义化标签 + 可见 focus + 深色模式。 |
+| 响应式与无障碍 | ✅ v1.6 RC 通过 | 390×844 与 1440×1000 五页均无横向溢出；笔记/会话行使用语义按钮，关键操作达到 44px 并保留可见 focus。 |
 | 工程质量 | ✅ 通过 | lint（0 error）/ build（7 路由静态生成）复核实测通过。 |
 
-**整体结论**：✅ **Phase C（C-1 + C-2 + C-3）全部准予通过验收**——前端 5 大模块（首页工作台/知识库/AI问答/模拟面试/学习地图）全部端到端接入 FastAPI 真实接口并跑通，C-3 力导向图谱已由工作智能体实现并经 `acceptance_test.md` 15/15 Test Case 实测确认。项目可进入 **Phase D（文档与部署）**。
+**当前结论**：v1.6.0-rc.1 已重新通过响应式、证据闭环和运行降级门禁；这是本地候选版验收结论，不等同于 Git 提交、远端 tag 或正式发布。
 
 **复核时间**：2026-07-03（C-1/C-2）+ 2026-07-06（C-3 系统验收，启动后端 8000 + 前端 3000，curl 实测 6 接口 + Playwright 实测 5 页面 + pytest/build）
 

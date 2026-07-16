@@ -102,7 +102,7 @@ class InterviewAgent:
             self.client = genai.Client(api_key=self.api_key)
         else:
             self.client = None
-            print("⚠️ [Interview Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
+            print("[WARN] [Interview Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
 
     def generate_question(self, chapter: Optional[str] = None) -> StartResponse:
         """
@@ -127,7 +127,7 @@ class InterviewAgent:
                     chapter_filter=chapter
                 )
             except Exception as e:
-                print(f"⚠️ [Interview Agent] 获取笔记材料失败: {e}")
+                print(f"[WARN] [Interview Agent] 获取笔记材料失败: {e}")
                 
         # 2. 如果没有大模型 Key，或者没有获取到向量材料，则从静态题库中抽取
         if not self.client or not material_hits:
@@ -189,7 +189,7 @@ class InterviewAgent:
             )
             
         except Exception as e:
-            print(f"⚠️ [Interview Agent] 出题异常: {e}。自动切换到静态题库。")
+            print(f"[WARN] [Interview Agent] 出题异常: {e}。自动切换到静态题库。")
             q = random.choice(STATIC_QUESTIONS)
             return StartResponse(
                 question=q["question"],
@@ -280,7 +280,7 @@ class InterviewAgent:
             }
             
         except Exception as e:
-            print(f"❌ [Interview Agent] 评估调用失败: {e}。自动切换到本地静态评估模板。")
+            print(f"[ERROR] [Interview Agent] 评估调用失败: {e}。自动切换到本地静态评估模板。")
             return {
                 "score": 75,
                 "evaluation": f"大模型评估遇到异常，自动降级为静态评估模式。错误原因: {str(e)}",

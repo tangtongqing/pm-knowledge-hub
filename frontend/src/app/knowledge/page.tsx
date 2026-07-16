@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense, isValidElement, cloneElement, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api, SearchHit } from "@/lib/api";
 import { escapeRegExp } from "@/lib/utils";
@@ -38,14 +38,19 @@ function KnowledgeBaseContent() {
   const [results, setResults] = useState<SearchHit[]>([]);
   const [activeDoc, setActiveDoc] = useState<SearchHit | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   const parentRef = useRef<HTMLDivElement>(null);
   
+  // TanStack Virtual intentionally returns unstable callback references. The
+  // component does not pass them into memoized children, so skipping React
+  // Compiler memoization here is safe and expected.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: results.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 80,
-    overscan: 5,
+    overscan: 3,
   });
 
   const highlightText = (node: React.ReactNode, searchWord: string): React.ReactNode => {
@@ -81,18 +86,29 @@ function KnowledgeBaseContent() {
     return node;
   };
 
-  const markdownComponents = {
+  const markdownComponents: Components = {
     p: ({ children }: { children?: React.ReactNode }) => <p>{highlightText(children, initialQuery)}</p>,
     li: ({ children }: { children?: React.ReactNode }) => <li>{highlightText(children, initialQuery)}</li>,
-    h1: ({ children }: { children?: React.ReactNode }) => <h1>{highlightText(children, initialQuery)}</h1>,
+    h1: ({ children }: { children?: React.ReactNode }) => <h2>{highlightText(children, initialQuery)}</h2>,
     h2: ({ children }: { children?: React.ReactNode }) => <h2>{highlightText(children, initialQuery)}</h2>,
     h3: ({ children }: { children?: React.ReactNode }) => <h3>{highlightText(children, initialQuery)}</h3>,
     td: ({ children }: { children?: React.ReactNode }) => <td>{highlightText(children, initialQuery)}</td>,
     th: ({ children }: { children?: React.ReactNode }) => <th>{highlightText(children, initialQuery)}</th>,
+    img: ({ src, alt }) => {
+      const source = typeof src === "string" ? src : "";
+      const isRemote = source.startsWith("http://") || source.startsWith("https://") || source.startsWith("data:");
+      const fileName = source.split("/").pop();
+      const resolvedSrc = isRemote || !fileName
+        ? source
+        : `/api/v1/assets/${encodeURIComponent(decodeURIComponent(fileName))}`;
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img src={resolvedSrc} alt={alt || "笔记插图"} loading="lazy" />;
+    },
   };
 
   const performSearch = async (q: string, chapter: string) => {
     setIsLoading(true);
+    setSearchError(null);
     try {
       const chapterFilter = chapter === "all" ? undefined : chapter;
       let res;
@@ -111,6 +127,7 @@ function KnowledgeBaseContent() {
       }
     } catch (error) {
       console.error("Search failed:", error);
+      setSearchError("知识库暂时无法加载，请检查后端连接后重试。");
     } finally {
       setIsLoading(false);
     }
@@ -185,6 +202,11 @@ function KnowledgeBaseContent() {
               <div className={styles.spinner}></div>
               <span>正在加载...</span>
             </div>
+          ) : searchError ? (
+            <div className={styles.errorState} role="alert">
+              <span>{searchError}</span>
+              <button type="button" onClick={() => performSearch(initialQuery, activeChapter)}>重新加载</button>
+            </div>
           ) : results.length === 0 ? (
             <div className={styles.emptyState}>
               <span>没有找到相关笔记</span>
@@ -201,7 +223,8 @@ function KnowledgeBaseContent() {
                 const hit = results[virtualRow.index];
                 if (!hit) return null;
                 return (
-                  <div 
+                  <button
+                    type="button"
                     key={virtualRow.key}
                     className={`${styles.listItem} ${activeDoc === hit ? styles.activeListItem : ''}`}
                     style={{
@@ -226,7 +249,7 @@ function KnowledgeBaseContent() {
                         ))}
                       </div>
                     )}
-                  </div>
+                  </button>
                 );
               })}
             </div>

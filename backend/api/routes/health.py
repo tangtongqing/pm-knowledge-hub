@@ -5,6 +5,7 @@
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
+from api.version import PROJECT_VERSION
 
 router = APIRouter()
 
@@ -12,6 +13,7 @@ router = APIRouter()
 class HealthResponse(BaseModel):
     status: str
     collection_count: int
+    note_count: int
     embedding_model: str
     version: str
 
@@ -26,10 +28,17 @@ async def health_check(request: Request) -> HealthResponse:
     count = collection.count()
     metadata = collection.metadata or {}
     model = metadata.get("embedding_model", "unknown")
+    result = collection.get(include=["metadatas"])
+    note_count = len({
+        item.get("source_path", "")
+        for item in (result.get("metadatas") or [])
+        if item and item.get("source_path")
+    })
 
     return HealthResponse(
         status="ok",
         collection_count=count,
+        note_count=note_count,
         embedding_model=model,
-        version="0.1.0",
+        version=PROJECT_VERSION,
     )

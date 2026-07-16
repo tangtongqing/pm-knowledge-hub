@@ -28,6 +28,8 @@ const ChatMessageItem = React.memo(function ChatMessageItem({
   copiedIndex,
   onCopy
 }: ChatMessageItemProps) {
+  const contentWithCitations = msg.content.replace(/\[(\d+)\](?!\()/g, "[[$1]](#source-$1)");
+
   return (
     <div className={`${styles.messageWrapper} ${msg.role === 'user' ? styles.wrapperUser : styles.wrapperAssistant}`}>
       <div className={styles.avatar}>
@@ -42,8 +44,20 @@ const ChatMessageItem = React.memo(function ChatMessageItem({
           <div className={styles.typingDots}><span></span><span></span><span></span></div>
         ) : (
           <div className={styles.markdownContent}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {msg.content}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    className={href?.startsWith("#source-") ? styles.citationLink : undefined}
+                  >
+                    {children}
+                  </a>
+                ),
+              }}
+            >
+              {contentWithCitations}
             </ReactMarkdown>
           </div>
         )}
@@ -82,10 +96,20 @@ export default function AssistantPage() {
   const [sessions, setSessions] = useState<HistorySession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string>("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [requestError, setRequestError] = useState<string | null>(null);
+  const [retryContext, setRetryContext] = useState<{ query: string; messages: ChatMessage[] } | null>(null);
+  const [deletedSession, setDeletedSession] = useState<HistorySession | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSidebarOpen(false);
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -154,6 +178,7 @@ export default function AssistantPage() {
 
   const handleDeleteSession = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    setDeletedSession(getSession(id, "qa"));
     deleteSession(id, "qa");
     const updated = listSessions("qa");
     setSessions(updated);
@@ -164,6 +189,14 @@ export default function AssistantPage() {
         handleNewChat();
       }
     }
+  };
+
+  const handleRestoreSession = () => {
+    if (!deletedSession) return;
+    saveSession(deletedSession);
+    setSessions(listSessions("qa"));
+    handleSelectSession(deletedSession.id);
+    setDeletedSession(null);
   };
 
   useEffect(() => {
@@ -184,33 +217,11 @@ export default function AssistantPage() {
     inputRef.current?.focus();
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userQuery = input.trim();
-    setInput("");
-    
-    // Add user message
-    const userMsg = { role: "user" as const, content: userQuery };
-    const updatedMsgs = [...messages, userMsg];
-    setMessages(updatedMsgs);
-    
-    // Save intermediate user message
-    const activeSession = getSession(activeSessionId, "qa");
-    if (activeSession) {
-      activeSession.messages = updatedMsgs;
-      if (activeSession.title === "新建对话") {
-        activeSession.title = userQuery.substring(0, 20) || "新对话";
-      }
-      saveSession(activeSession);
-      setSessions(listSessions("qa"));
-    }
-    
-    // Add loading message
+  const executeQuestion = async (userQuery: string, updatedMsgs: ChatMessage[]) => {
+    setRequestError(null);
     setIsLoading(true);
     setMessages([...updatedMsgs, { role: "assistant", content: "思考中...", isLoading: true }]);
-    setActiveSources(null); // Clear active sources while loading
+    setActiveSources(null);
 
     try {
       const response = await api.askQuestion(userQuery);
@@ -224,6 +235,7 @@ export default function AssistantPage() {
       ];
       setMessages(finalMsgs);
       setActiveSources(response);
+      setRetryContext(null);
 
       const activeSession = getSession(activeSessionId, "qa");
       if (activeSession) {
@@ -233,14 +245,19 @@ export default function AssistantPage() {
       }
     } catch (error) {
       console.error(error);
+      const message = error instanceof Error && error.message.toLowerCase().includes("timeout")
+        ? "请求超时，请检查网络或 API Key 额度后重试。"
+        : "知识库问答暂时不可用，请检查后端连接后重试。";
       const errorMsgs = [
         ...updatedMsgs,
         {
           role: "assistant" as const,
-          content: "抱歉，检索知识库时发生错误。请确保后端服务正常运行。",
+          content: message,
         }
       ];
       setMessages(errorMsgs);
+      setRequestError(message);
+      setRetryContext({ query: userQuery, messages: updatedMsgs });
       
       const activeSession = getSession(activeSessionId, "qa");
       if (activeSession) {
@@ -251,6 +268,29 @@ export default function AssistantPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userQuery = input.trim();
+    setInput("");
+    const userMsg = { role: "user" as const, content: userQuery };
+    const updatedMsgs = [...messages, userMsg];
+    setMessages(updatedMsgs);
+
+    const activeSession = getSession(activeSessionId, "qa");
+    if (activeSession) {
+      activeSession.messages = updatedMsgs;
+      if (activeSession.title === "新建对话") {
+        activeSession.title = userQuery.substring(0, 20) || "新对话";
+      }
+      saveSession(activeSession);
+      setSessions(listSessions("qa"));
+    }
+
+    await executeQuestion(userQuery, updatedMsgs);
   };
 
   return (
@@ -282,15 +322,13 @@ export default function AssistantPage() {
             <div className={styles.emptySidebar}>暂无历史会话</div>
           ) : (
             sessions.map(s => (
-              <div 
-                key={s.id} 
-                className={`${styles.sessionItem} ${activeSessionId === s.id ? styles.activeSession : ""}`}
-                onClick={() => handleSelectSession(s.id)}
-              >
-                <div className={styles.sessionInfo}>
-                  <div className={styles.sessionTitle} title={s.title}>{s.title}</div>
-                  <div className={styles.sessionTime}>{formatDate(s.updatedAt)}</div>
-                </div>
+              <div key={s.id} className={`${styles.sessionItem} ${activeSessionId === s.id ? styles.activeSession : ""}`}>
+                <button type="button" className={styles.sessionSelect} onClick={() => handleSelectSession(s.id)}>
+                  <div className={styles.sessionInfo}>
+                    <div className={styles.sessionTitle} title={s.title}>{s.title}</div>
+                    <div className={styles.sessionTime}>{formatDate(s.updatedAt)}</div>
+                  </div>
+                </button>
                 <button 
                   className={styles.deleteSessionBtn}
                   onClick={(e) => handleDeleteSession(s.id, e)}
@@ -331,7 +369,7 @@ export default function AssistantPage() {
           <p className={styles.subtitle}>基于 RAG 引擎的精准知识问答</p>
         </div>
 
-        <div className={styles.messageList}>
+        <div className={styles.messageList} aria-live="polite" aria-busy={isLoading}>
           {messages.map((msg, idx) => (
             <ChatMessageItem 
               key={idx}
@@ -345,6 +383,14 @@ export default function AssistantPage() {
         </div>
 
         <div className={styles.inputArea}>
+          {requestError && retryContext && (
+            <div className={styles.errorBanner} role="alert">
+              <span>{requestError}</span>
+              <button type="button" onClick={() => executeQuestion(retryContext.query, retryContext.messages)} disabled={isLoading}>
+                重试
+              </button>
+            </div>
+          )}
           <form className={styles.inputForm} onSubmit={handleSubmit}>
             <input
               ref={inputRef}
@@ -398,7 +444,7 @@ export default function AssistantPage() {
               </div>
               
               {activeSources.sources.map((source, idx) => (
-                <div key={idx} className={styles.sourceCard}>
+                <article key={idx} id={`source-${idx + 1}`} className={styles.sourceCard} tabIndex={-1}>
                   <div className={styles.sourceCardHeader}>
                     <span className={styles.sourceIndex}>[{idx + 1}]</span>
                     <span className={styles.sourceDocTitle} title={source.title}>{source.title}</span>
@@ -409,6 +455,8 @@ export default function AssistantPage() {
                     {source.source_path} 
                     {source.section && source.section !== source.title ? ` > ${source.section}` : ''}
                   </div>
+
+                  <blockquote className={styles.sourceExcerpt}>{source.excerpt || "该来源暂无可展示摘录。"}</blockquote>
                   
                   {source.obsidian_uri && (
                     <a 
@@ -424,7 +472,7 @@ export default function AssistantPage() {
                       </svg>
                     </a>
                   )}
-                </div>
+                </article>
               ))}
 
               {activeSources.recommendations && activeSources.recommendations.length > 0 && (
@@ -447,6 +495,14 @@ export default function AssistantPage() {
           )}
         </div>
       </div>
+
+      {deletedSession && (
+        <div className={styles.undoToast} role="status">
+          <span>已删除“{deletedSession.title}”</span>
+          <button type="button" onClick={handleRestoreSession}>撤销</button>
+          <button type="button" aria-label="关闭撤销提示" onClick={() => setDeletedSession(null)}>×</button>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,8 +8,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <div className={styles.shell}>
+        <a className={styles.skipLink} href="#main-content">跳到主要内容</a>
         <Navigation />
-        <main className={styles.main}>{children}</main>
+        <main id="main-content" className={styles.main}>{children}</main>
       </div>
     </ThemeProvider>
   );

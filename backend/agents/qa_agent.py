@@ -43,6 +43,7 @@ class QASource(BaseModel):
     section: str
     obsidian_uri: str
     distance: float
+    excerpt: str
 
 
 class QAServiceResponse(BaseModel):
@@ -66,7 +67,7 @@ class QAAgent:
             self.client = genai.Client(api_key=self.api_key)
         else:
             self.client = None
-            print("⚠️ [QA Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
+            print("[WARN] [QA Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
 
     def _generate_mock_response(self, query: str, hits: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -87,7 +88,7 @@ class QAAgent:
         # 简单合成回答
         answer = (
             f"💡 **[演示模式] 知识库已成功检索到相关知识。配置 `GEMINI_API_KEY` 后，AI 将为您自动总结。**\n\n"
-            f"以下是为您检索到的核心笔记 **《{title}》** ({chapter}) 中的内容片段：\n\n"
+            f"以下是为您检索到的核心笔记 **《{title}》** ({chapter}) 中的内容片段 [1]：\n\n"
             f"{text}\n\n"
             f"--- \n"
             f"*提示：您可以在本地 `backend/.env` 文件中配置 `GEMINI_API_KEY=您的Key` 以开启 AI 智能体深度问答功能。*"
@@ -143,7 +144,8 @@ class QAAgent:
                 source_path=h["metadata"].get("source_path", ""),
                 section=h["metadata"].get("section", ""),
                 obsidian_uri=h["metadata"].get("obsidian_uri", ""),
-                distance=h["distance"]
+                distance=h["distance"],
+                excerpt=h["text"][:500].strip()
             )
             for h in hits
         ]
@@ -177,6 +179,7 @@ class QAAgent:
             "1. 你的回答必须严格基于[参考上下文]中的事实，不得凭空捏造事实。如果参考上下文无法充分解答问题，请直白告知用户参考资料不足，但可以结合通用的产品经理方法论给出适当的补充，并明确区分哪部分是资料来源，哪部分是额外补充。\n"
             "2. 回答使用 Markdown 格式。善用粗体、列表、引用和代码块使排版极其精美。\n"
             "3. 保持客观、专业、干练的语气，避免任何废话或前置铺垫（例如：'好的，根据您提供的参考资料...'）。"
+            "4. 每个来自参考上下文的关键结论后必须标注对应来源编号，例如 [1] 或 [2]；编号必须与资料库来源编号一致。"
         )
         
         prompt = (
@@ -211,7 +214,7 @@ class QAAgent:
             )
             
         except Exception as e:
-            print(f"❌ [QA Agent] Gemini 调用异常: {e}。自动切换到本地 Mock 演示模式。")
+            print(f"[ERROR] [QA Agent] Gemini 调用异常: {e}。自动切换到本地 Mock 演示模式。")
             mock_res = self._generate_mock_response(query, hits)
             return QAServiceResponse(
                 query=query,

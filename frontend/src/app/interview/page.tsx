@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Link from "next/link";
 import { api, EvaluateResponse } from "@/lib/api";
 import { listSessions, saveSession, deleteSession, getSession, HistorySession } from "@/lib/history";
 import { generateUUID, formatDate } from "@/lib/utils";
@@ -57,6 +58,15 @@ export default function InterviewPage() {
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
   const [animateScore, setAnimateScore] = useState(false);
+  const [operationError, setOperationError] = useState<string | null>(null);
+  const [deletedSession, setDeletedSession] = useState<HistorySession | null>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSidebarOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (latestEval?.score !== undefined) {
@@ -147,6 +157,7 @@ export default function InterviewPage() {
 
   const handleDeleteSession = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    setDeletedSession(getSession(id, "interview"));
     deleteSession(id, "interview");
     const updated = listSessions("interview");
     setSessions(updated);
@@ -157,6 +168,14 @@ export default function InterviewPage() {
         handleNewChat();
       }
     }
+  };
+
+  const handleRestoreSession = () => {
+    if (!deletedSession) return;
+    saveSession(deletedSession);
+    setSessions(listSessions("interview"));
+    handleSelectSession(deletedSession.id);
+    setDeletedSession(null);
   };
 
   const getSessionHighScore = (session: HistorySession): number => {
@@ -170,6 +189,7 @@ export default function InterviewPage() {
   }, [messages]);
 
   const handleStart = async () => {
+    setOperationError(null);
     setIsLoading(true);
     try {
       const res = await api.startInterview();
@@ -190,7 +210,7 @@ export default function InterviewPage() {
       }
     } catch (error) {
       console.error(error);
-      alert("启动面试失败，请检查后端状态。");
+      setOperationError("启动面试失败，请检查后端状态后重试。");
     } finally {
       setIsLoading(false);
     }
@@ -207,7 +227,7 @@ export default function InterviewPage() {
       setTimeout(() => setPdfSuccess(false), 2000);
     } catch (err) {
       console.error("Failed to export PDF", err);
-      alert("生成 PDF 失败，请重试。");
+      setOperationError("生成 PDF 失败，请重试。");
     } finally {
       setPdfGenerating(false);
     }
@@ -219,6 +239,7 @@ export default function InterviewPage() {
 
     const userAnswer = input.trim();
     setInput("");
+    setOperationError(null);
     
     const userMsg = { role: "candidate" as const, content: userAnswer };
     const updatedMsgs = [...messages, userMsg];
@@ -258,6 +279,7 @@ export default function InterviewPage() {
       }
     } catch (error) {
       console.error(error);
+      setOperationError("评估暂时不可用，你的回答已保留，可以直接重试提交。");
       const errorMsgs = [
         ...updatedMsgs,
         {
@@ -309,18 +331,14 @@ export default function InterviewPage() {
             sessions.map(s => {
               const score = getSessionHighScore(s);
               return (
-                <div 
-                  key={s.id} 
-                  className={`${styles.sessionItem} ${activeSessionId === s.id ? styles.activeSession : ""}`}
-                  onClick={() => handleSelectSession(s.id)}
-                >
-                  <div className={styles.sessionInfo}>
-                    <div className={styles.sessionTitle} title={s.title}>{s.title}</div>
-                    <div className={styles.sessionTime}>{formatDate(s.updatedAt)}</div>
-                  </div>
-                  {score > 0 && (
-                    <span className={styles.scoreBadge}>{score}分</span>
-                  )}
+                <div key={s.id} className={`${styles.sessionItem} ${activeSessionId === s.id ? styles.activeSession : ""}`}>
+                  <button type="button" className={styles.sessionSelect} onClick={() => handleSelectSession(s.id)}>
+                    <div className={styles.sessionInfo}>
+                      <div className={styles.sessionTitle} title={s.title}>{s.title}</div>
+                      <div className={styles.sessionTime}>{formatDate(s.updatedAt)}</div>
+                    </div>
+                    {score > 0 && <span className={styles.scoreBadge}>{score}分</span>}
+                  </button>
                   <button 
                     className={styles.deleteSessionBtn}
                     onClick={(e) => handleDeleteSession(s.id, e)}
@@ -367,6 +385,13 @@ export default function InterviewPage() {
           )}
         </div>
 
+        {operationError && (
+          <div className={styles.errorBanner} role="alert">
+            <span>{operationError}</span>
+            <button type="button" onClick={() => setOperationError(null)} aria-label="关闭错误提示">×</button>
+          </div>
+        )}
+
         {!isStarted ? (
           <div className={styles.startScreen}>
             <div className={styles.startIcon}>
@@ -390,7 +415,7 @@ export default function InterviewPage() {
           </div>
         ) : (
           <>
-            <div className={styles.messageList}>
+            <div className={styles.messageList} aria-live="polite" aria-busy={isLoading}>
               {messages.map((msg, idx) => (
                 <ChatMessageItem key={idx} msg={msg} />
               ))}
@@ -516,10 +541,27 @@ export default function InterviewPage() {
                   <p className={styles.starFeedbackText}>{latestEval.star_feedback.result}</p>
                 </div>
               </div>
+
+              <div className={styles.nextActions}>
+                <h3>下一步练习</h3>
+                <p>把本次反馈转成一个立即可执行的复习动作。</p>
+                <div>
+                  <Link href="/knowledge?q=STAR" className={styles.studyLink}>复习 STAR 方法</Link>
+                  <button type="button" onClick={handleStart} disabled={isLoading}>再练一道</button>
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
+
+      {deletedSession && (
+        <div className={styles.undoToast} role="status">
+          <span>已删除“{deletedSession.title}”</span>
+          <button type="button" onClick={handleRestoreSession}>撤销</button>
+          <button type="button" aria-label="关闭撤销提示" onClick={() => setDeletedSession(null)}>×</button>
+        </div>
+      )}
     </div>
   );
 }
