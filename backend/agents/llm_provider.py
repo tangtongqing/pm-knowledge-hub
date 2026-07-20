@@ -17,8 +17,9 @@ from pydantic import BaseModel
 
 SUPPORTED_PROVIDERS = {"auto", "gemini", "siliconflow"}
 DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
-DEFAULT_SILICONFLOW_MODEL = "deepseek-ai/DeepSeek-V3"
+DEFAULT_SILICONFLOW_MODEL = "THUDM/GLM-4-9B-0414"
 DEFAULT_SILICONFLOW_BASE_URL = "https://api.siliconflow.cn/v1"
+DEFAULT_LLM_TIMEOUT_SECONDS = 90.0
 
 
 @dataclass(frozen=True)
@@ -51,15 +52,21 @@ def _resolve_provider() -> str:
     return "mock"
 
 
-def create_llm_runtime() -> LLMRuntime:
+def create_llm_runtime(task: str | None = None) -> LLMRuntime:
     """根据环境变量创建大模型客户端，不在日志中输出任何密钥。"""
 
     provider = _resolve_provider()
 
     if provider == "siliconflow":
         api_key = os.getenv("SILICONFLOW_API_KEY", "").strip()
+        task_model = (
+            os.getenv(f"SILICONFLOW_{task.upper()}_MODEL", "").strip()
+            if task
+            else ""
+        )
         model_name = (
-            os.getenv("SILICONFLOW_MODEL", DEFAULT_SILICONFLOW_MODEL).strip()
+            task_model
+            or os.getenv("SILICONFLOW_MODEL", DEFAULT_SILICONFLOW_MODEL).strip()
             or DEFAULT_SILICONFLOW_MODEL
         )
         if not api_key:
@@ -75,13 +82,26 @@ def create_llm_runtime() -> LLMRuntime:
             os.getenv("SILICONFLOW_BASE_URL", DEFAULT_SILICONFLOW_BASE_URL).strip()
             or DEFAULT_SILICONFLOW_BASE_URL
         )
-        client = OpenAI(api_key=api_key, base_url=base_url)
+        timeout_seconds = float(
+            os.getenv("SILICONFLOW_TIMEOUT_SECONDS", DEFAULT_LLM_TIMEOUT_SECONDS)
+        )
+        client = OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+            timeout=timeout_seconds,
+            # 自动重试会把单次慢请求叠加成数分钟；业务层已有可见的降级响应。
+            max_retries=0,
+        )
         return LLMRuntime(provider=provider, model_name=model_name, client=client)
 
     if provider == "gemini":
         api_key = os.getenv("GEMINI_API_KEY", "").strip()
+        task_model = (
+            os.getenv(f"GEMINI_{task.upper()}_MODEL", "").strip() if task else ""
+        )
         model_name = (
-            os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL).strip()
+            task_model
+            or os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL).strip()
             or DEFAULT_GEMINI_MODEL
         )
         if not api_key:
@@ -108,6 +128,7 @@ def generate_structured_json(
     prompt: str,
     response_schema: Type[BaseModel],
     temperature: float,
+    max_output_tokens: int,
 ) -> dict[str, Any]:
     """调用指定供应商并返回经过 Pydantic 校验的结构化数据。"""
 
@@ -132,6 +153,7 @@ def generate_structured_json(
             ],
             response_format={"type": "json_object"},
             temperature=temperature,
+            max_tokens=max_output_tokens,
         )
         content = response.choices[0].message.content
         if not content:
@@ -149,6 +171,7 @@ def generate_structured_json(
                 response_mime_type="application/json",
                 response_schema=response_schema,
                 temperature=temperature,
+                max_output_tokens=max_output_tokens,
             ),
         )
         if not response.text:

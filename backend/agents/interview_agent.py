@@ -19,18 +19,18 @@ from agents.llm_provider import create_llm_runtime, generate_structured_json
 # ── 结构化响应模型 ──────────────────────────────────────────────────────
 
 class STARFeedback(BaseModel):
-    situation: str = Field(description="S(情境)：评估候选人对业务场景和背景的描述是否清晰。")
-    task: str = Field(description="T(任务)：评估候选人对核心痛点、业务目标或考核指标的定位是否准确。")
-    action: str = Field(description="A(行动)：评估候选人提出的解决方案和具体执行动作是否逻辑自洽、具有可落地性。")
-    result: str = Field(description="R(结果)：评估候选人是否给出了量化指标或可预期的商业/用户价值。")
+    situation: str = Field(max_length=400, description="S(情境)：用不超过 80 字评估场景与背景是否清晰。")
+    task: str = Field(max_length=400, description="T(任务)：用不超过 80 字评估目标与指标是否准确。")
+    action: str = Field(max_length=400, description="A(行动)：用不超过 80 字评估方案是否自洽、可落地。")
+    result: str = Field(max_length=400, description="R(结果)：用不超过 80 字评估量化结果与价值。")
 
 
 class InterviewEvaluation(BaseModel):
     score: int = Field(description="综合评分（0-100分）。传统大厂/AI 独角兽的评估标准：90+杰出，80+合格，70+需改进，70以下不及格。")
-    evaluation: str = Field(description="综合评估结论：指出候选人回答的闪光点与核心缺陷。使用 Markdown 格式。")
+    evaluation: str = Field(max_length=1200, description="200 字以内的综合结论，指出闪光点、核心缺陷和下一步改进。使用 Markdown。")
     star_feedback: STARFeedback = Field(description="基于 STAR 原则的四个维度的拆解与反馈。")
-    suggested_answer: str = Field(description="一份参考范例回答，指导候选人如何更加完美地回答该问题。使用 Markdown 格式。")
-    next_question: str = Field(description="针对候选人当前的回答，给出一个具有深度和挑战性的追问（Follow-up Question）。")
+    suggested_answer: str = Field(max_length=2400, description="600 字以内的参考答案，只保留关键思路、步骤和指标。使用 Markdown。")
+    next_question: str = Field(max_length=400, description="一个简洁、有挑战性的追问（Follow-up Question）。")
 
 
 class QuestionResponse(BaseModel):
@@ -94,7 +94,7 @@ STATIC_QUESTIONS = [
 class InterviewAgent:
     def __init__(self, collection):
         self.collection = collection
-        runtime = create_llm_runtime()
+        runtime = create_llm_runtime(task="interview")
         self.provider = runtime.provider
         self.model_name = runtime.model_name
         self.client = runtime.client
@@ -173,6 +173,7 @@ class InterviewAgent:
                 prompt=prompt,
                 response_schema=QuestionSchema,
                 temperature=0.7,
+                max_output_tokens=500,
             )
             
             return StartResponse(
@@ -237,9 +238,9 @@ class InterviewAgent:
             "评估准则：\n"
             "1. 严格使用 STAR 法则对用户的回答进行四维度（S-T-A-R）拆解评估。指出其优点与致命缺陷。\n"
             "2. 给出 0-100 分的评分，传统互联网大厂招聘中：90+代表优秀，80+代表合格，70+代表有改进空间，70以下代表未通过。打分必须严谨、客观，不可一味迎合用户。\n"
-            "3. 必须提供一份高质量的[参考标准回答]，向候选人示范完美的思路框架与话术逻辑。\n"
+            "3. 提供一份 600 字以内的[参考回答]，只保留关键思路、执行步骤与量化指标。\n"
             "4. 必须给出一个高难度的追问（Next Question），用以考察候选人在该领域的应变与深入思考能力。\n"
-            "5. 回答内容必须组织为 Markdown 排版，结构极其精美。"
+            "5. 反馈要短而具体：综合结论不超过 200 字，STAR 每项不超过 80 字，避免重复。"
         )
         
         prompt = (
@@ -257,6 +258,7 @@ class InterviewAgent:
                 prompt=prompt,
                 response_schema=InterviewEvaluation,
                 temperature=0.4,
+                max_output_tokens=1800,
             )
             
             # 返回统一结构的 dict

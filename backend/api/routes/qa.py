@@ -4,6 +4,7 @@ FastAPI Routes for QA Agent
 """
 
 from fastapi import APIRouter, Request, HTTPException
+from starlette.concurrency import run_in_threadpool
 from agents.qa_agent import QARequest, QAServiceResponse
 from api.security import limiter, sanitize_user_input
 
@@ -25,7 +26,8 @@ async def ask_question(request: Request, body: QARequest) -> QAServiceResponse:
     qa_agent = request.app.state.qa_agent
     try:
         clean_query = sanitize_user_input(body.query)
-        response = qa_agent.answer(
+        response = await run_in_threadpool(
+            qa_agent.answer,
             query=clean_query,
             top_k=body.top_k,
             chapter_filter=body.chapter,

@@ -5,6 +5,7 @@ FastAPI Routes for Interview Agent
 
 from typing import Optional, Dict
 from fastapi import APIRouter, Request, HTTPException
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from agents.interview_agent import StartResponse, EvaluateRequest, InterviewEvaluation
 from api.security import limiter, sanitize_user_input
@@ -38,7 +39,10 @@ async def start_interview(request: Request, body: StartRequest) -> StartResponse
     """
     interview_agent = request.app.state.interview_agent
     try:
-        response = interview_agent.generate_question(chapter=body.chapter)
+        response = await run_in_threadpool(
+            interview_agent.generate_question,
+            chapter=body.chapter,
+        )
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"生成面试题失败: {str(e)}")
@@ -54,7 +58,8 @@ async def evaluate_answer(request: Request, body: EvaluateRequest):
     interview_agent = request.app.state.interview_agent
     try:
         clean_answer = sanitize_user_input(body.user_answer)
-        response = interview_agent.evaluate(
+        response = await run_in_threadpool(
+            interview_agent.evaluate,
             question=body.question,
             user_answer=clean_answer
         )

@@ -52,6 +52,18 @@ def test_explicit_siliconflow_without_key_is_safe_mock(monkeypatch):
     assert runtime.enabled is False
 
 
+def test_task_specific_siliconflow_model_overrides_default(monkeypatch):
+    monkeypatch.setenv("AI_PROVIDER", "siliconflow")
+    monkeypatch.setenv("SILICONFLOW_API_KEY", "sk-test")
+    monkeypatch.setenv("SILICONFLOW_MODEL", "default/model")
+    monkeypatch.setenv("SILICONFLOW_INTERVIEW_MODEL", "fast-json/model")
+    monkeypatch.setattr("openai.OpenAI", lambda **kwargs: object())
+
+    runtime = create_llm_runtime(task="interview")
+
+    assert runtime.model_name == "fast-json/model"
+
+
 def test_siliconflow_generates_and_validates_json():
     client = FakeSiliconFlowClient(
         json.dumps(
@@ -68,6 +80,7 @@ def test_siliconflow_generates_and_validates_json():
         prompt="什么是需求分析？",
         response_schema=ExampleResponse,
         temperature=0.3,
+        max_output_tokens=800,
     )
 
     assert result["answer"] == "结构化回答"
@@ -75,6 +88,7 @@ def test_siliconflow_generates_and_validates_json():
     request = client.completions.last_request
     assert request["model"] == "test/model"
     assert request["response_format"] == {"type": "json_object"}
+    assert request["max_tokens"] == 800
     assert "JSON Schema" in request["messages"][1]["content"]
 
 
@@ -90,4 +104,5 @@ def test_siliconflow_rejects_invalid_schema_output():
             prompt="什么是需求分析？",
             response_schema=ExampleResponse,
             temperature=0.3,
+            max_output_tokens=800,
         )

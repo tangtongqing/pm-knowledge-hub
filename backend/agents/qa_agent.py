@@ -17,7 +17,10 @@ from agents.llm_provider import create_llm_runtime, generate_structured_json
 # ── 结构化响应模型 ──────────────────────────────────────────────────────
 
 class QAAgentResponse(BaseModel):
-    answer: str = Field(description="基于上下文生成的专业回答。使用 Markdown 格式，层级清晰，结构严谨，不要包含复读或无意义的前置词。")
+    answer: str = Field(
+        max_length=1600,
+        description="基于上下文生成的专业回答，控制在 800 字以内。使用 Markdown 格式，层级清晰、直接回答。",
+    )
     recommendations: List[str] = Field(description="3 个与当前问题及上下文相关的延伸提问或知识点（从检索到的笔记标签、双链或正文中提炼）。")
 
 
@@ -57,7 +60,7 @@ class QAServiceResponse(BaseModel):
 class QAAgent:
     def __init__(self, collection):
         self.collection = collection
-        runtime = create_llm_runtime()
+        runtime = create_llm_runtime(task="qa")
         self.provider = runtime.provider
         self.model_name = runtime.model_name
         self.client = runtime.client
@@ -173,7 +176,7 @@ class QAAgent:
             "你的任务是根据提供的[参考上下文]，以专业、系统、结构化的语言回答用户的问题。\n\n"
             "回答规则：\n"
             "1. 你的回答必须严格基于[参考上下文]中的事实，不得凭空捏造事实。如果参考上下文无法充分解答问题，请直白告知用户参考资料不足，但可以结合通用的产品经理方法论给出适当的补充，并明确区分哪部分是资料来源，哪部分是额外补充。\n"
-            "2. 回答使用 Markdown 格式。善用粗体、列表、引用和代码块使排版极其精美。\n"
+            "2. 回答控制在 800 字以内，使用简洁 Markdown；优先给结论、关键步骤和指标。\n"
             "3. 保持客观、专业、干练的语气，避免任何废话或前置铺垫（例如：'好的，根据您提供的参考资料...'）。"
             "4. 每个来自参考上下文的关键结论后必须标注对应来源编号，例如 [1] 或 [2]；编号必须与资料库来源编号一致。"
         )
@@ -181,7 +184,7 @@ class QAAgent:
         prompt = (
             f"[参考上下文]:\n{context}\n\n"
             f"[用户问题]: {query}\n\n"
-            f"请生成详细总结回答，并给出 3 个相关的延伸提问。"
+            f"请生成一份 800 字以内、可直接执行的回答，并给出 3 个相关的延伸提问。"
         )
         
         try:
@@ -194,6 +197,7 @@ class QAAgent:
                 prompt=prompt,
                 response_schema=QAAgentResponse,
                 temperature=0.3,
+                max_output_tokens=2000,
             )
             
             return QAServiceResponse(
