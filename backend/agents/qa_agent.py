@@ -3,18 +3,16 @@ QA Agent — PM 知识检索问答智能体
 ====================================
 职责：
   1. 接收用户的提问，通过 ChromaDB 检索最相关的知识片段
-  2. 调用 Gemini API 将检索到的上下文进行深度总结与回答
+  2. 调用已配置的大模型 API 将检索到的上下文进行深度总结与回答
   3. 支持结构化输出：包括回答内容、引用来源、相关推荐
   4. 支持本地/演示模式（无 API Key 时进行本地合成，保证系统 100% 可演示）
 """
 
-import os
 import re
 from typing import List, Dict, Any, Optional
-from pathlib import Path
 from pydantic import BaseModel, Field, field_validator
-from google import genai
-from google.genai import types
+
+from agents.llm_provider import create_llm_runtime, generate_structured_json
 
 # ── 结构化响应模型 ──────────────────────────────────────────────────────
 
@@ -59,15 +57,13 @@ class QAServiceResponse(BaseModel):
 class QAAgent:
     def __init__(self, collection):
         self.collection = collection
-        self.api_key = os.getenv("GEMINI_API_KEY", "").strip()
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
-        
-        if self.api_key:
-            # 初始化 Google GenAI 客户端
-            self.client = genai.Client(api_key=self.api_key)
-        else:
-            self.client = None
-            print("[WARN] [QA Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
+        runtime = create_llm_runtime()
+        self.provider = runtime.provider
+        self.model_name = runtime.model_name
+        self.client = runtime.client
+
+        if not self.client:
+            print("[WARN] [QA Agent] 大模型未配置，将以 [演示模式] 运行。")
 
     def _generate_mock_response(self, query: str, hits: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -87,11 +83,11 @@ class QAAgent:
         
         # 简单合成回答
         answer = (
-            f"💡 **[演示模式] 知识库已成功检索到相关知识。配置 `GEMINI_API_KEY` 后，AI 将为您自动总结。**\n\n"
+            f"💡 **[演示模式] 知识库已成功检索到相关知识。配置大模型 API Key 后，AI 将为您自动总结。**\n\n"
             f"以下是为您检索到的核心笔记 **《{title}》** ({chapter}) 中的内容片段 [1]：\n\n"
             f"{text}\n\n"
             f"--- \n"
-            f"*提示：您可以在本地 `backend/.env` 文件中配置 `GEMINI_API_KEY=您的Key` 以开启 AI 智能体深度问答功能。*"
+            f"*提示：您可以在本地 `backend/.env` 文件中配置硅基流动或 Gemini API Key，以开启 AI 智能体深度问答功能。*"
         )
         
         # 从元数据中提炼相关推荐
@@ -123,7 +119,7 @@ class QAAgent:
         问答执行主函数
         1. 检索 ChromaDB
         2. 格式化上下文
-        3. 调用 Gemini API / 触发 Mock 回退
+        3. 调用已配置的大模型 API / 触发 Mock 回退
         4. 返回统一的结构化对象
         """
         from ingest.vectorizer import search
@@ -189,21 +185,16 @@ class QAAgent:
         )
         
         try:
-            # 4. 调用新版 google-genai 客户端，并要求结构化输出
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json",
-                    response_schema=QAAgentResponse,
-                    temperature=0.3
-                )
+            # 4. 通过统一适配层调用当前供应商，并要求结构化输出
+            res_data = generate_structured_json(
+                client=self.client,
+                provider=self.provider,
+                model_name=self.model_name,
+                system_instruction=system_instruction,
+                prompt=prompt,
+                response_schema=QAAgentResponse,
+                temperature=0.3,
             )
-            
-            # 解析 JSON 响应
-            import json
-            res_data = json.loads(response.text)
             
             return QAServiceResponse(
                 query=query,
@@ -214,7 +205,7 @@ class QAAgent:
             )
             
         except Exception as e:
-            print(f"[ERROR] [QA Agent] Gemini 调用异常: {e}。自动切换到本地 Mock 演示模式。")
+            print(f"[ERROR] [QA Agent] {self.provider} 调用异常: {e}。自动切换到本地 Mock 演示模式。")
             mock_res = self._generate_mock_response(query, hits)
             return QAServiceResponse(
                 query=query,

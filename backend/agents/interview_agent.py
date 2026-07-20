@@ -9,13 +9,12 @@ Interview Agent — PM 模拟面试智能体
   5. 兼容本地演示模式：提供默认高质量题库及静态评估模板，防范 API 欠费与断网风险
 """
 
-import os
 import random
 import re
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, field_validator
-from google import genai
-from google.genai import types
+
+from agents.llm_provider import create_llm_runtime, generate_structured_json
 
 # ── 结构化响应模型 ──────────────────────────────────────────────────────
 
@@ -95,14 +94,13 @@ STATIC_QUESTIONS = [
 class InterviewAgent:
     def __init__(self, collection):
         self.collection = collection
-        self.api_key = os.getenv("GEMINI_API_KEY", "").strip()
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
-        
-        if self.api_key:
-            self.client = genai.Client(api_key=self.api_key)
-        else:
-            self.client = None
-            print("[WARN] [Interview Agent] GEMINI_API_KEY 未配置，将以 [演示模式] 运行。")
+        runtime = create_llm_runtime()
+        self.provider = runtime.provider
+        self.model_name = runtime.model_name
+        self.client = runtime.client
+
+        if not self.client:
+            print("[WARN] [Interview Agent] 大模型未配置，将以 [演示模式] 运行。")
 
     def generate_question(self, chapter: Optional[str] = None) -> StartResponse:
         """
@@ -167,19 +165,15 @@ class InterviewAgent:
                 question: str = Field(description="高度提炼且具有深度的产品经理面试问题。")
                 suggested_topics: List[str] = Field(description="2-3 个提示性的技能或知识点标签。")
 
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json",
-                    response_schema=QuestionSchema,
-                    temperature=0.7
-                )
+            res_data = generate_structured_json(
+                client=self.client,
+                provider=self.provider,
+                model_name=self.model_name,
+                system_instruction=system_instruction,
+                prompt=prompt,
+                response_schema=QuestionSchema,
+                temperature=0.7,
             )
-            
-            import json
-            res_data = json.loads(response.text)
             
             return StartResponse(
                 question=res_data.get("question", ""),
@@ -213,7 +207,7 @@ class InterviewAgent:
             return {
                 "score": mock_score,
                 "evaluation": (
-                    f"💡 **[演示模式] 评估已成功生成。配置 `GEMINI_API_KEY` 后将开启大模型 STAR 深度诊断。**\n\n"
+                    f"💡 **[演示模式] 评估已成功生成。配置大模型 API Key 后将开启大模型 STAR 深度诊断。**\n\n"
                     f"您的回答字数共 {len(user_answer)} 字。回答完整度表现尚可，逻辑框架基本符合面试逻辑。\n"
                     f"建议丰富具体的执行步骤与可衡量的结果指标。\n\n"
                     f"--- \n"
@@ -255,19 +249,15 @@ class InterviewAgent:
         )
         
         try:
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json",
-                    response_schema=InterviewEvaluation,
-                    temperature=0.4
-                )
+            res_data = generate_structured_json(
+                client=self.client,
+                provider=self.provider,
+                model_name=self.model_name,
+                system_instruction=system_instruction,
+                prompt=prompt,
+                response_schema=InterviewEvaluation,
+                temperature=0.4,
             )
-            
-            import json
-            res_data = json.loads(response.text)
             
             # 返回统一结构的 dict
             return {

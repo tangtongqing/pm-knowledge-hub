@@ -1,3 +1,6 @@
+import json
+from types import SimpleNamespace
+
 import pytest
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
@@ -92,6 +95,35 @@ def test_qa_agent_falls_back_when_live_model_fails(mock_collection):
     assert response.is_mock is True
     assert len(response.sources) > 0
     assert "自动降级" in response.answer
+
+
+def test_qa_agent_uses_siliconflow_structured_output(mock_collection):
+    """硅基流动适配应返回真实模式结果，而不是进入 mock。"""
+
+    class Completions:
+        @staticmethod
+        def create(**_kwargs):
+            content = json.dumps(
+                {
+                    "answer": "需求分析需要识别用户痛点并转化为功能需求。[1]",
+                    "recommendations": ["如何验证痛点？", "如何定义需求？", "如何排序需求？"],
+                },
+                ensure_ascii=False,
+            )
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content=content))]
+            )
+
+    agent = QAAgent(mock_collection)
+    agent.provider = "siliconflow"
+    agent.model_name = "test/model"
+    agent.client = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
+
+    response = agent.answer("什么是需求分析？", top_k=2)
+
+    assert response.is_mock is False
+    assert "用户痛点" in response.answer
+    assert len(response.recommendations) == 3
 
 
 # ─── Interview Agent 测试 ─────────────────────────────────────────────

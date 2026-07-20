@@ -17,10 +17,10 @@ async def ask_question(request: Request, body: QARequest) -> QAServiceResponse:
     PM 知识检索问答接口
     
     1. 通过 ChromaDB 检索最相关的 204 篇 Obsidian 笔记切片
-    2. 基于检索到的文本上下文，调用 Gemini API 生成高质量的、带有格式的 Markdown 回答
+    2. 基于检索到的文本上下文，调用已配置的大模型生成高质量的 Markdown 回答
     3. 输出包含：回答、参考资料来源（含 Obsidian 一键唤醒 URI）、延伸推荐问题
     
-    **演示模式：** 当未在 `.env` 中配置 `GEMINI_API_KEY` 时，接口将自动降级为本地合成演示模式，保证功能可用且不报错。
+    **演示模式：** 当未在 `.env` 中配置任何大模型 API Key 时，接口将自动降级为本地合成演示模式。
     """
     qa_agent = request.app.state.qa_agent
     try:

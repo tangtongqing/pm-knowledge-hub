@@ -16,7 +16,7 @@
 
 1. 📚 **语义知识检索**：支持对本地知识库进行语义向量和精确关键词双轨召回，解决笔记查找困难的问题。
 2. 🤖 **RAG 问答助手**：基于私有知识库实时生成回答，精确展示引用证据链并支持一键回跳 Obsidian。
-3. 🎤 **STAR 面试模拟**：结合 Gemini API 与 STAR 评估法则，提供真实的 AI 模拟面试和多维度考核打分。
+3. 🎤 **STAR 面试模拟**：结合可切换的大模型 API 与 STAR 评估法则，提供真实的 AI 模拟面试和多维度考核打分。
 4. 🗺️ **知识图谱可视化**：使用 `react-force-graph-2d` 绘制可交互的学习大纲及笔记网络，让知识脉络立体化。
 
 ---
@@ -69,7 +69,7 @@ graph TB
     end
 
     subgraph External [外部大模型层]
-        Gemini[Gemini Flash API]
+        LLM[硅基流动 / Gemini]
     end
 
     %% 数据流与调用关系
@@ -82,8 +82,8 @@ graph TB
     Retriever -->|语义检索| VectorDB
     Retriever -->|关键词检索| RawDocs
     
-    QA -->|召回切片| Gemini
-    Interview -->|生成与评估| Gemini
+    QA -->|召回切片| LLM
+    Interview -->|生成与评估| LLM
     
     %% 初始化与写入流程
     Parser -->|读取| RawDocs
@@ -95,7 +95,7 @@ graph TB
 
 ## 🛠️ 技术栈
 
-* **后端**：Python 3.10+ · FastAPI · LangChain · ChromaDB · Sentence-Transformers (MiniLM) · Gemini Flash API
+* **后端**：Python 3.10+ · FastAPI · LangChain · ChromaDB · Sentence-Transformers (MiniLM) · SiliconFlow / Gemini
 * **前端**：Next.js 16 (App Router) · React 19 · TypeScript · Vanilla CSS · react-force-graph-2d
 * **测试与校验**：pytest · ESLint
 
@@ -127,8 +127,15 @@ graph TB
    CHROMA_DB_PATH="./data/chroma_db"
    # 文本 Embedding 模型名称
    EMBEDDING_MODEL="paraphrase-multilingual-MiniLM-L12-v2"
-   # Google Gemini API 密钥 (用于模拟面试与智能对话)
-   GEMINI_API_KEY="你的密钥"
+   # auto 会优先使用硅基流动，其次 Gemini；均无密钥时使用本地 Mock
+   AI_PROVIDER="auto"
+   SILICONFLOW_API_KEY="你的硅基流动密钥"
+   SILICONFLOW_BASE_URL="https://api.siliconflow.cn/v1"
+   SILICONFLOW_MODEL="deepseek-ai/DeepSeek-V3"
+
+   # 可选的 Gemini 备用配置
+   GEMINI_API_KEY=""
+   GEMINI_MODEL="gemini-2.5-flash"
    ```
 4. 启动后端服务：
    ```bash
@@ -193,8 +200,8 @@ pm-knowledge-hub/
 
 作为一款面向个人知识库的数据智能体，我们高度重视您的隐私和本地数据安全性：
 1. **本地存储**：您的原始 Obsidian 笔记、向量分片及本地向量数据库（ChromaDB）均完全保存在本地磁盘（`backend/data/` 目录下），**不向任何第三方上传笔记全文**。
-2. **数据外发披露**：仅当您在 `.env` 中配置了 `GEMINI_API_KEY` 并且**主动发起**「AI 问答」或「模拟面试评估」时，系统为了生成回答，会把**检索召回的笔记分片（非笔记全文）**与您的提问通过加密连接发送至 Google Gemini API 服务。
-3. **完全本地化降级**：如果不希望数据外传，只需**留空** `GEMINI_API_KEY`。系统将自动切换为本地 Mock 模式（离线静态模板回答），确保本地网络环境的绝对安全与保密。
+2. **数据外发披露**：仅当您配置了硅基流动或 Gemini 密钥并且**主动发起**「AI 问答」或「模拟面试评估」时，系统才会把**检索召回的笔记分片（非笔记全文）**与您的提问通过加密连接发送至所选供应商。
+3. **完全本地化降级**：如果不希望数据外传，只需留空 `SILICONFLOW_API_KEY` 与 `GEMINI_API_KEY`。系统将自动切换为本地 Mock 模式（离线静态模板回答）。
 
 ---
 
