@@ -35,6 +35,19 @@
   transition: transform var(--transition);
 }
 
+.landingMain {
+  width: 100%;
+  min-height: 100dvh;
+  height: auto;
+  margin-left: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .skipLink:focus {
   transform: translateY(0);
+}
+
+.landingSkipLink {
+  left: 16px;
 }
