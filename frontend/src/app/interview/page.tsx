@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { api, EvaluateResponse } from "@/lib/api";
 import { listSessions, saveSession, deleteSession, getSession, HistorySession } from "@/lib/history";
 import { generateUUID, formatDate } from "@/lib/utils";
 import { exportInterviewReport } from "@/lib/pdf";
+import TypewriterMarkdown from "@/components/TypewriterMarkdown";
 import styles from "./page.module.css";
 
 interface ChatMessage {
@@ -18,9 +17,19 @@ interface ChatMessage {
 
 interface ChatMessageItemProps {
   msg: ChatMessage;
+  idx: number;
+  animate: boolean;
+  onTypingComplete: (idx: number) => void;
+  onTypingProgress: () => void;
 }
 
-const ChatMessageItem = React.memo(function ChatMessageItem({ msg }: ChatMessageItemProps) {
+const ChatMessageItem = React.memo(function ChatMessageItem({
+  msg,
+  idx,
+  animate,
+  onTypingComplete,
+  onTypingProgress,
+}: ChatMessageItemProps) {
   return (
     <div className={`${styles.messageWrapper} ${msg.role === 'candidate' ? styles.wrapperCandidate : styles.wrapperInterviewer}`}>
       <div className={styles.avatar}>
@@ -35,9 +44,12 @@ const ChatMessageItem = React.memo(function ChatMessageItem({ msg }: ChatMessage
           <div className={styles.typingDots}><span></span><span></span><span></span></div>
         ) : (
           <div className={styles.markdownContent}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {msg.content}
-            </ReactMarkdown>
+            <TypewriterMarkdown
+              content={msg.content}
+              animate={animate}
+              onComplete={() => onTypingComplete(idx)}
+              onProgress={onTypingProgress}
+            />
           </div>
         )}
       </div>
@@ -60,6 +72,7 @@ export default function InterviewPage() {
   const [animateScore, setAnimateScore] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
   const [deletedSession, setDeletedSession] = useState<HistorySession | null>(null);
+  const [typingMessageIndex, setTypingMessageIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (window.matchMedia("(max-width: 900px)").matches) {
@@ -83,9 +96,13 @@ export default function InterviewPage() {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  }, []);
+
+  const handleTypingComplete = useCallback((index: number) => {
+    setTypingMessageIndex((current) => current === index ? null : current);
+  }, []);
 
   const handleNewChat = () => {
     const newId = generateUUID();
@@ -101,6 +118,7 @@ export default function InterviewPage() {
     saveSession(newSession);
     setActiveSessionId(newId);
     setMessages([]);
+    setTypingMessageIndex(null);
     setCurrentQuestion("");
     setLatestEval(null);
     setIsStarted(false);
@@ -142,6 +160,7 @@ export default function InterviewPage() {
     if (s) {
       setActiveSessionId(s.id);
       setMessages(s.messages as ChatMessage[]);
+      setTypingMessageIndex(null);
       setIsStarted(s.messages.length > 0);
       
       if (s.evaluations && s.evaluations.length > 0) {
@@ -186,11 +205,12 @@ export default function InterviewPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   const handleStart = async () => {
     setOperationError(null);
     setIsLoading(true);
+    setTypingMessageIndex(null);
     try {
       const res = await api.startInterview();
       setCurrentQuestion(res.question);
@@ -198,6 +218,7 @@ export default function InterviewPage() {
         { role: "interviewer" as const, content: res.question }
       ];
       setMessages(startMsgs);
+      setTypingMessageIndex(0);
       setIsStarted(true);
       setLatestEval(null);
 
@@ -253,6 +274,7 @@ export default function InterviewPage() {
     }
 
     setIsLoading(true);
+    setTypingMessageIndex(null);
     setMessages([...updatedMsgs, { role: "interviewer" as const, content: "评估中...", isLoading: true }]);
 
     try {
@@ -266,6 +288,7 @@ export default function InterviewPage() {
       };
       const finalMsgs = [...updatedMsgs, nextMsg];
       setMessages(finalMsgs);
+      setTypingMessageIndex(finalMsgs.length - 1);
       setCurrentQuestion(response.next_question);
       setLatestEval(response);
 
@@ -288,6 +311,7 @@ export default function InterviewPage() {
         }
       ];
       setMessages(errorMsgs);
+      setTypingMessageIndex(null);
       
       const activeSession = getSession(activeSessionId, "interview");
       if (activeSession) {
@@ -417,7 +441,14 @@ export default function InterviewPage() {
           <>
             <div className={styles.messageList} aria-live="polite" aria-busy={isLoading}>
               {messages.map((msg, idx) => (
-                <ChatMessageItem key={idx} msg={msg} />
+                <ChatMessageItem
+                  key={`${activeSessionId}-${idx}-${typingMessageIndex === idx ? "typing" : "static"}`}
+                  msg={msg}
+                  idx={idx}
+                  animate={typingMessageIndex === idx}
+                  onTypingComplete={handleTypingComplete}
+                  onTypingProgress={scrollToBottom}
+                />
               ))}
               <div ref={messagesEndRef} />
             </div>

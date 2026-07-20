@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { api, QAServiceResponse } from "@/lib/api";
 import { listSessions, saveSession, deleteSession, getSession, HistorySession } from "@/lib/history";
 import { generateUUID, formatDate } from "@/lib/utils";
+import TypewriterMarkdown from "@/components/TypewriterMarkdown";
 import styles from "./page.module.css";
 
 interface ChatMessage {
@@ -19,14 +18,20 @@ interface ChatMessageItemProps {
   msg: ChatMessage;
   idx: number;
   copiedIndex: number | null;
+  animate: boolean;
   onCopy: (content: string, idx: number) => void;
+  onTypingComplete: (idx: number) => void;
+  onTypingProgress: () => void;
 }
 
 const ChatMessageItem = React.memo(function ChatMessageItem({
   msg,
   idx,
   copiedIndex,
-  onCopy
+  animate,
+  onCopy,
+  onTypingComplete,
+  onTypingProgress,
 }: ChatMessageItemProps) {
   const contentWithCitations = msg.content.replace(/\[(\d+)\](?!\()/g, "[[$1]](#source-$1)");
 
@@ -44,8 +49,11 @@ const ChatMessageItem = React.memo(function ChatMessageItem({
           <div className={styles.typingDots}><span></span><span></span><span></span></div>
         ) : (
           <div className={styles.markdownContent}>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+            <TypewriterMarkdown
+              content={contentWithCitations}
+              animate={animate}
+              onComplete={() => onTypingComplete(idx)}
+              onProgress={onTypingProgress}
               components={{
                 a: ({ href, children }) => (
                   <a
@@ -56,9 +64,7 @@ const ChatMessageItem = React.memo(function ChatMessageItem({
                   </a>
                 ),
               }}
-            >
-              {contentWithCitations}
-            </ReactMarkdown>
+            />
           </div>
         )}
         
@@ -99,6 +105,7 @@ export default function AssistantPage() {
   const [requestError, setRequestError] = useState<string | null>(null);
   const [retryContext, setRetryContext] = useState<{ query: string; messages: ChatMessage[] } | null>(null);
   const [deletedSession, setDeletedSession] = useState<HistorySession | null>(null);
+  const [typingMessageIndex, setTypingMessageIndex] = useState<number | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -111,10 +118,13 @@ export default function AssistantPage() {
     }
   }, []);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
-  };
+  }, []);
+
+  const handleTypingComplete = useCallback((index: number) => {
+    setTypingMessageIndex((current) => current === index ? null : current);
+  }, []);
 
   const handleNewChat = () => {
     const newId = generateUUID();
@@ -135,6 +145,7 @@ export default function AssistantPage() {
     saveSession(newSession);
     setActiveSessionId(newId);
     setMessages(initialMsgs);
+    setTypingMessageIndex(null);
     setActiveSources(null);
     setSessions(listSessions("qa"));
   };
@@ -167,6 +178,7 @@ export default function AssistantPage() {
     if (s) {
       setActiveSessionId(s.id);
       setMessages(s.messages as ChatMessage[]);
+      setTypingMessageIndex(null);
       const lastMsg = s.messages[s.messages.length - 1];
       if (lastMsg.role === "assistant" && lastMsg.responseMeta) {
         setActiveSources(lastMsg.responseMeta);
@@ -201,7 +213,7 @@ export default function AssistantPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   const handleCopy = useCallback((text: string, index: number) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -220,6 +232,7 @@ export default function AssistantPage() {
   const executeQuestion = async (userQuery: string, updatedMsgs: ChatMessage[]) => {
     setRequestError(null);
     setIsLoading(true);
+    setTypingMessageIndex(null);
     setMessages([...updatedMsgs, { role: "assistant", content: "思考中...", isLoading: true }]);
     setActiveSources(null);
 
@@ -234,6 +247,7 @@ export default function AssistantPage() {
         }
       ];
       setMessages(finalMsgs);
+      setTypingMessageIndex(finalMsgs.length - 1);
       setActiveSources(response);
       setRetryContext(null);
 
@@ -256,6 +270,7 @@ export default function AssistantPage() {
         }
       ];
       setMessages(errorMsgs);
+      setTypingMessageIndex(null);
       setRequestError(message);
       setRetryContext({ query: userQuery, messages: updatedMsgs });
       
@@ -372,11 +387,14 @@ export default function AssistantPage() {
         <div className={styles.messageList} aria-live="polite" aria-busy={isLoading}>
           {messages.map((msg, idx) => (
             <ChatMessageItem 
-              key={idx}
+              key={`${activeSessionId}-${idx}-${typingMessageIndex === idx ? "typing" : "static"}`}
               msg={msg}
               idx={idx}
               copiedIndex={copiedIndex}
+              animate={typingMessageIndex === idx}
               onCopy={handleCopy}
+              onTypingComplete={handleTypingComplete}
+              onTypingProgress={scrollToBottom}
             />
           ))}
           <div ref={messagesEndRef} />
