@@ -7,7 +7,7 @@ import styles from "./AppLayout.module.css";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/";
+  const isLandingPage = pathname === "/" || pathname === "/design";
 
   return (
     <ThemeProvider>

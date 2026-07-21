@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api, HealthResponse } from "@/lib/api";
+import CustomerLanding from "@/components/CustomerLanding";
 import styles from "./page.module.css";
 
 const ArrowIcon = () => (
@@ -50,7 +51,7 @@ function JourneyLink({ href, className, children, onJourney }: JourneyLinkProps)
 
 const sceneLabels = ["找到上下文", "带着证据回答", "把知识练成表达"];
 
-export default function Home() {
+export function KineticShowcase() {
   const router = useRouter();
   const landingRef = useRef<HTMLDivElement>(null);
   const journeyTimer = useRef<number | null>(null);
@@ -382,4 +383,8 @@ export default function Home() {
       </div>
     </div>
   );
+}
+
+export default function Home() {
+  return <CustomerLanding />;
 }
