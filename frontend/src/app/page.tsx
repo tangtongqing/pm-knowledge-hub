@@ -1,300 +1,385 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { api, HealthResponse } from "@/lib/api";
 import styles from "./page.module.css";
 
 const ArrowIcon = () => (
   <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18">
-    <path d="M4 10h11M11 6l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const BrandMark = () => (
-  <svg aria-hidden="true" viewBox="0 0 32 32" width="30" height="30">
-    <path d="M16 3 4 9l12 6 12-6-12-6Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-    <path d="m4 15 12 6 12-6M4 21l12 6 12-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  <svg aria-hidden="true" viewBox="0 0 36 36" width="34" height="34">
+    <path d="M7 8.5 18 3l11 5.5L18 14 7 8.5Z" fill="currentColor" />
+    <path d="m7 15 11 5.5L29 15v5.5L18 26 7 20.5V15Z" fill="currentColor" opacity=".72" />
+    <path d="m7 26 11 5.5L29 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
+type JourneyLinkProps = {
+  href: string;
+  className: string;
+  children: ReactNode;
+  onJourney: (href: string) => void;
+};
+
+function JourneyLink({ href, className, children, onJourney }: JourneyLinkProps) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    onJourney(href);
+  };
+
+  return (
+    <Link href={href} className={className} onClick={handleClick}>
+      {children}
+    </Link>
+  );
+}
+
+const sceneLabels = ["找到上下文", "带着证据回答", "把知识练成表达"];
+
 export default function Home() {
+  const router = useRouter();
+  const landingRef = useRef<HTMLDivElement>(null);
+  const journeyTimer = useRef<number | null>(null);
   const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [activeScene, setActiveScene] = useState(0);
+  const [journeyTarget, setJourneyTarget] = useState<string | null>(null);
 
   useEffect(() => {
     api.getHealth().then(setHealth);
   }, []);
 
+  useEffect(() => {
+    const root = landingRef.current;
+    const scroller = document.getElementById("main-content");
+    if (!root || !scroller) return;
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute("data-visible", "true");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { root: scroller, threshold: 0.16 },
+    );
+
+    root.querySelectorAll("[data-reveal]").forEach((item) => revealObserver.observe(item));
+
+    const sceneObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveScene(Number(visible.target.getAttribute("data-scene-trigger") || 0));
+      },
+      { root: scroller, rootMargin: "-30% 0px -40% 0px", threshold: [0.1, 0.45, 0.75] },
+    );
+
+    root.querySelectorAll("[data-scene-trigger]").forEach((item) => sceneObserver.observe(item));
+
+    const updateProgress = () => {
+      const available = scroller.scrollHeight - scroller.clientHeight;
+      const progress = available > 0 ? scroller.scrollTop / available : 0;
+      root.style.setProperty("--page-progress", progress.toString());
+    };
+
+    scroller.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+
+    return () => {
+      revealObserver.disconnect();
+      sceneObserver.disconnect();
+      scroller.removeEventListener("scroll", updateProgress);
+    };
+  }, []);
+
+  useEffect(() => () => {
+    if (journeyTimer.current) window.clearTimeout(journeyTimer.current);
+  }, []);
+
+  const startJourney = useCallback((href: string) => {
+    if (journeyTarget) return;
+    setJourneyTarget(href);
+    journeyTimer.current = window.setTimeout(() => router.push(href), 640);
+  }, [journeyTarget, router]);
+
+  const handleCanvasMove = (event: MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    event.currentTarget.style.setProperty("--pointer-x", `${x * 100}%`);
+    event.currentTarget.style.setProperty("--pointer-y", `${y * 100}%`);
+    event.currentTarget.style.setProperty("--tilt-x", `${(0.5 - y) * 5}deg`);
+    event.currentTarget.style.setProperty("--tilt-y", `${(x - 0.5) * 6}deg`);
+  };
+
   const noteCount = health?.note_count || 204;
   const chunkCount = health?.collection_count || 2579;
+  const version = health?.version && health.version !== "unknown" ? health.version : "v1.6";
   const isOnline = health?.status === "ok";
 
   return (
-    <div className={styles.landing}>
+    <div ref={landingRef} className={styles.landing} data-leaving={Boolean(journeyTarget)}>
+      <div className={styles.paperGrain} aria-hidden="true" />
+      <div className={styles.scrollProgress} aria-hidden="true"><span /></div>
+
       <header className={styles.siteHeader}>
         <Link href="/" className={styles.brand} aria-label="PM Knowledge Hub 首页">
           <span className={styles.brandMark}><BrandMark /></span>
           <span className={styles.brandName}>PM Knowledge Hub</span>
         </Link>
-
         <nav className={styles.marketingNav} aria-label="营销页导航">
-          <a href="#product">产品</a>
-          <a href="#workflow">工作流</a>
-          <a href="#privacy">隐私</a>
+          <a href="#product">产品现场</a>
+          <a href="#workflow">知识闭环</a>
+          <a href="#privacy">本地掌控</a>
         </nav>
-
-        <Link href="/assistant" className={styles.headerCta}>
-          进入工作台 <ArrowIcon />
-        </Link>
+        <JourneyLink href="/assistant" className={styles.headerCta} onJourney={startJourney}>
+          打开工作台 <ArrowIcon />
+        </JourneyLink>
       </header>
 
       <div>
         <section className={styles.hero} aria-labelledby="hero-title">
-          <div className={styles.heroGrid}>
-            <div className={styles.heroCopy}>
-              <div className={styles.eyebrow}>
-                <span className={styles.signalDot} />
-                Local-first product intelligence
-              </div>
-              <h1 id="hero-title">
-                把零散笔记，
-                <span>变成你的产品判断力。</span>
-              </h1>
-              <p className={styles.heroLead}>
-                将本地 Obsidian 知识库连接成可检索、可追溯、可演练的个人产品知识系统。找到答案，也看见答案从哪里来。
-              </p>
-              <div className={styles.heroActions}>
-                <Link href="/assistant" className={styles.primaryCta}>
-                  用知识库问一个问题 <ArrowIcon />
-                </Link>
-                <a href="#product" className={styles.secondaryCta}>看看它如何工作</a>
-              </div>
-              <div className={styles.heroMeta}>
-                <span>无需注册</span>
-                <span>本地索引</span>
-                <span>自带模型密钥</span>
-              </div>
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}><span />给产品经理的本地知识系统</p>
+            <h1 id="hero-title" aria-label="笔记不是仓库，是你的第二判断现场">
+              <span className={styles.heroLine}><i>笔记</i>不是仓库，</span>
+              <span className={styles.heroLine}>是你的第二</span>
+              <span className={`${styles.heroLine} ${styles.heroAccent}`}>判断现场。</span>
+            </h1>
+            <p className={styles.heroLead}>
+              连接 Obsidian，让每一次搜索都有上下文、每一个答案都有出处、每一场面试都留下可改进的证据。
+            </p>
+            <div className={styles.heroActions}>
+              <JourneyLink href="/assistant" className={styles.primaryCta} onJourney={startJourney}>
+                从一个真实问题开始 <ArrowIcon />
+              </JourneyLink>
+              <a href="#product" className={styles.secondaryCta}>观看知识如何流动 <span>↓</span></a>
+            </div>
+          </div>
+
+          <div
+            className={styles.knowledgeCanvas}
+            onMouseMove={handleCanvasMove}
+            onMouseLeave={(event) => {
+              event.currentTarget.style.setProperty("--pointer-x", "50%");
+              event.currentTarget.style.setProperty("--pointer-y", "50%");
+              event.currentTarget.style.setProperty("--tilt-x", "0deg");
+              event.currentTarget.style.setProperty("--tilt-y", "0deg");
+            }}
+            aria-label="知识从笔记流向答案的动态产品预览"
+          >
+            <div className={`${styles.looseNote} ${styles.looseNoteOne}`} aria-hidden="true">
+              <span>05 / METRICS</span><b>北极星指标</b><i>用户真正获得价值的时刻</i>
+            </div>
+            <div className={`${styles.looseNote} ${styles.looseNoteTwo}`} aria-hidden="true">
+              <span>INTERVIEW</span><b>STAR</b><i>S · T · A · R</i>
+            </div>
+            <div className={`${styles.looseNote} ${styles.looseNoteThree}`} aria-hidden="true">
+              <span>LOCAL FILE</span><b>.md</b><i>Obsidian</i>
             </div>
 
-            <div className={styles.heroStage} aria-label="产品界面预览">
-              <div className={styles.stageGlow} />
-              <div className={styles.productWindow}>
-                <div className={styles.windowBar}>
-                  <div className={styles.windowDots}><i /><i /><i /></div>
-                  <span>PM Knowledge Hub / AI 问答</span>
-                  <div className={styles.runtimeStatus} data-online={isOnline}>
-                    <i /> {isOnline ? "本地服务在线" : "本地工作区"}
-                  </div>
-                </div>
-
-                <div className={styles.windowBody}>
-                  <aside className={styles.previewRail} aria-hidden="true">
-                    <span className={styles.railLogo}><BrandMark /></span>
-                    <span className={styles.railItem} />
-                    <span className={`${styles.railItem} ${styles.railItemActive}`} />
-                    <span className={styles.railItem} />
-                    <span className={styles.railItem} />
-                  </aside>
-
-                  <div className={styles.previewConversation}>
-                    <div className={styles.previewLabel}>基于你的知识库</div>
-                    <div className={styles.questionBubble}>
-                      AI 产品的北极星指标应该怎么定？
-                    </div>
-                    <div className={styles.answerBlock}>
-                      <div className={styles.answerLead}>
-                        先定义用户真正获得价值的那一刻，再选择能持续反映这一价值的行为指标。
-                      </div>
-                      <div className={styles.answerLine}><b>01</b><span>价值时刻：用户完成一次可用的 AI 产出</span><em>[1]</em></div>
-                      <div className={styles.answerLine}><b>02</b><span>领先指标：高质量任务完成率</span><em>[2]</em></div>
-                      <div className={styles.answerLine}><b>03</b><span>护栏指标：人工修订率与次周留存</span><em>[3]</em></div>
-                    </div>
-                  </div>
-
-                  <aside className={styles.evidencePanel}>
-                    <div className={styles.evidenceHeader}>
-                      <span>引用证据</span><strong>3</strong>
-                    </div>
-                    <div className={styles.evidenceCard}>
-                      <div><span>[1]</span> 北极星指标</div>
-                      <p>从用户价值而非流量规模出发……</p>
-                    </div>
-                    <div className={styles.evidenceCard}>
-                      <div><span>[2]</span> AI 产品指标</div>
-                      <p>同时观察质量、效率与留存……</p>
-                    </div>
-                    <div className={styles.evidenceCard}>
-                      <div><span>[3]</span> 数据护栏</div>
-                      <p>避免单一指标带来的局部最优……</p>
-                    </div>
-                  </aside>
-                </div>
+            <div className={styles.answerSheet}>
+              <div className={styles.sheetTopline}>
+                <span className={styles.liveStatus} data-online={isOnline}><i />{isOnline ? "本地服务在线" : "本地工作区"}</span>
+                <span>AI 问答 / 07:21</span>
               </div>
-              <div className={styles.stageCaption}>
-                <span>QUESTION</span>
-                <i />
-                <span>REASONING</span>
-                <i />
-                <span>EVIDENCE</span>
+              <div className={styles.sheetQuestion}>AI 产品的北极星指标应该怎么定？</div>
+              <div className={styles.sheetAnswer}>
+                <span className={styles.typingCursor} />
+                先定义用户真正获得价值的那一刻，再选择能持续反映这一价值的行为指标。
               </div>
+              <div className={styles.sheetMetrics}>
+                <div><small>01</small><span>价值时刻</span><b>[1]</b></div>
+                <div><small>02</small><span>领先指标</span><b>[2]</b></div>
+                <div><small>03</small><span>护栏指标</span><b>[3]</b></div>
+              </div>
+              <div className={styles.sheetFooter}><span>回答</span><i /><span>推理</span><i /><span>证据</span></div>
             </div>
+
+            <div className={styles.sourceTab}>
+              <span>引用 03</span>
+              <b>北极星指标.md</b>
+              <small>原始笔记已连接</small>
+            </div>
+            <div className={styles.pointerOrb} aria-hidden="true"><span>ASK</span></div>
+          </div>
+
+          <div className={styles.heroFootnote}>
+            <span>无需注册</span><span>本地索引</span><span>自带模型密钥</span>
           </div>
         </section>
 
-        <section className={styles.proofRail} aria-label="产品实时数据">
-          <div className={styles.proofIntro}>现在，这个知识系统正在本机运行</div>
-          <div className={styles.proofStats}>
+        <section className={styles.liveStrip} aria-label="产品实时数据">
+          <div className={styles.liveMarquee} aria-hidden="true">
+            <div>SEARCH / CITE / PRACTICE / THINK / SEARCH / CITE / PRACTICE / THINK /</div>
+            <div>SEARCH / CITE / PRACTICE / THINK / SEARCH / CITE / PRACTICE / THINK /</div>
+          </div>
+          <div className={styles.liveStats}>
             <div><strong>{noteCount}</strong><span>篇本地笔记</span></div>
             <div><strong>{chunkCount.toLocaleString()}</strong><span>个语义切片</span></div>
-            <div><strong>4</strong><span>条核心工作流</span></div>
-            <div><strong>{health?.version || "v1.6"}</strong><span>当前版本</span></div>
+            <div><strong>04</strong><span>条知识工作流</span></div>
+            <div><strong>{version}</strong><span>当前版本</span></div>
           </div>
         </section>
 
-        <section className={styles.thesis}>
-          <div className={styles.sectionIndex}>01 / WHY</div>
-          <div className={styles.thesisContent}>
-            <h2>笔记越多，<br />不代表判断越快。</h2>
-            <div className={styles.thesisBody}>
-              <p>
-                收藏解决的是“以后可能有用”，真正的工作发生在另一端：当你要做判断、写方案、参加面试时，能否及时调用自己的知识。
-              </p>
-              <p>
-                PM Knowledge Hub 不替你思考。它把资料、出处与练习放在一条链路上，让每一次提问都成为知识的再次组织。
-              </p>
+        <section className={styles.manifesto} data-reveal>
+          <div className={styles.sectionLabel}>01 — WHY IT EXISTS</div>
+          <div className={styles.manifestoGrid}>
+            <h2>收藏让信息变多。<br /><em>调用</em>才让知识发生。</h2>
+            <div className={styles.manifestoNotes}>
+              <p>真正的工作发生在需要做判断、写方案、参加面试的那一刻。你缺少的不是下一篇文章，而是把已有知识及时调回现场的能力。</p>
+              <p>PM Knowledge Hub 不替你思考。它把原文、结论和练习放回同一张桌面，让每次提问都成为一次重新组织。</p>
             </div>
           </div>
+          <div className={styles.marginScribble} aria-hidden="true">remember → retrieve → reason</div>
         </section>
 
-        <section id="product" className={styles.productStories} aria-labelledby="product-title">
-          <div className={styles.sectionHeading}>
-            <div>
-              <span className={styles.sectionIndex}>02 / PRODUCT</span>
-              <h2 id="product-title">从“我记得看过”，<br />到“我能清楚说明”。</h2>
-            </div>
-            <p>每个功能都服务于同一个结果：更快找到证据，更稳形成判断，更清楚表达出来。</p>
+        <section id="product" className={styles.productTheatre} aria-labelledby="product-title">
+          <div className={styles.theatreIntro} data-reveal>
+            <span className={styles.sectionLabel}>02 — PRODUCT IN MOTION</span>
+            <h2 id="product-title">不是三个功能。<br />是一次连续的思考。</h2>
+            <p>向下滚动，看看同一份知识如何被找到、引用，再变成现场表达。</p>
           </div>
 
-          <article className={styles.storyRow}>
-            <div className={styles.storyCopy}>
-              <span className={styles.storyNumber}>01</span>
-              <h3>先找到正确的上下文。</h3>
-              <p>语义检索理解问题的意思，不要求你记住文件名。按章节与标签收窄范围，直接抵达相关段落。</p>
-              <Link href="/knowledge" className={styles.textLink}>探索知识库 <ArrowIcon /></Link>
+          <div className={styles.theatreGrid}>
+            <div className={styles.sceneCopyRail}>
+              <article data-scene-trigger="0" data-active={activeScene === 0} onMouseEnter={() => setActiveScene(0)}>
+                <span>01 / SEARCH</span><h3>先找到正确的上下文。</h3>
+                <p>语义检索理解问题的意思，不要求你记住文件名。关键词只是入口，真正命中的是相关段落。</p>
+                <JourneyLink href="/knowledge" className={styles.sceneLink} onJourney={startJourney}>探索知识库 <ArrowIcon /></JourneyLink>
+              </article>
+              <article data-scene-trigger="1" data-active={activeScene === 1} onMouseEnter={() => setActiveScene(1)}>
+                <span>02 / EVIDENCE</span><h3>让答案带着“收据”。</h3>
+                <p>结论与来源同时出现。引用编号连接原始笔记，不把语言流畅误认为事实可靠。</p>
+                <JourneyLink href="/assistant" className={styles.sceneLink} onJourney={startJourney}>开始一次问答 <ArrowIcon /></JourneyLink>
+              </article>
+              <article data-scene-trigger="2" data-active={activeScene === 2} onMouseEnter={() => setActiveScene(2)}>
+                <span>03 / PRACTICE</span><h3>把知识练成现场表达。</h3>
+                <p>真实 AI 面试官基于知识库出题，用 STAR 四维反馈暴露知识和表达的缺口。</p>
+                <JourneyLink href="/interview" className={styles.sceneLink} onJourney={startJourney}>开始模拟面试 <ArrowIcon /></JourneyLink>
+              </article>
             </div>
-            <div className={`${styles.storyVisual} ${styles.searchVisual}`}>
-              <div className={styles.searchCommand}>
-                <svg aria-hidden="true" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg>
-                <span>如何给 AI 功能做需求优先级？</span><kbd>↵</kbd>
-              </div>
-              <div className={styles.searchFilters}><span>全部章节</span><span>AI 产品</span><span>需求分析</span></div>
-              <div className={styles.searchResult}>
-                <div><b>4.3 需求优先级</b><em>0.91</em></div>
-                <p>优先级不是功能价值的单点评分，而是用户价值、业务价值、实现成本与风险的共同约束……</p>
-              </div>
-              <div className={`${styles.searchResult} ${styles.searchResultMuted}`}>
-                <div><b>7.4 AI 产品评估</b><em>0.87</em></div>
-                <p>AI 功能还需要增加数据可得性、模型不确定性与评测成本三个维度……</p>
-              </div>
-            </div>
-          </article>
 
-          <article className={`${styles.storyRow} ${styles.storyRowReverse}`}>
-            <div className={styles.storyCopy}>
-              <span className={styles.storyNumber}>02</span>
-              <h3>答案要有“收据”。</h3>
-              <p>AI 回答与来源片段并排呈现。结论上的引用编号可以直接跳到证据，不把“听起来合理”当成事实。</p>
-              <Link href="/assistant" className={styles.textLink}>开始一次问答 <ArrowIcon /></Link>
-            </div>
-            <div className={`${styles.storyVisual} ${styles.citationVisual}`}>
-              <div className={styles.citationQuote}>
-                好的北极星指标应同时反映<strong>用户核心价值</strong>与<strong>长期增长方向</strong>。
-                <sup>[1]</sup>
+            <div className={styles.stickyStage} data-scene={activeScene} aria-live="polite" aria-label={`当前产品场景：${sceneLabels[activeScene]}`}>
+              <div className={`${styles.scenePanel} ${styles.searchScene}`} data-active={activeScene === 0}>
+                <div className={styles.sceneChrome}><span>知识检索</span><i>⌘ K</i></div>
+                <div className={styles.bigSearch}><span>如何给 AI 功能做需求优先级？</span><b>↵</b></div>
+                <div className={styles.filterRail}><span>全部章节</span><span>AI 产品</span><span>需求分析</span></div>
+                <div className={styles.resultStack}>
+                  <article><div><b>4.3 需求优先级</b><em>91%</em></div><p>用户价值、业务价值、实现成本与风险共同约束……</p></article>
+                  <article><div><b>7.4 AI 产品评估</b><em>87%</em></div><p>增加数据可得性、模型不确定性与评测成本……</p></article>
+                </div>
+                <div className={styles.scanLine} aria-hidden="true" />
               </div>
-              <div className={styles.citationPath}><span>回答</span><i /><span>引用 [1]</span><i /><span>原始笔记</span></div>
-              <div className={styles.sourceReceipt}>
-                <div><b>[1] 北极星指标.md</b><span>05-数据指标</span></div>
-                <p>“团队需要围绕一个能代表用户获得核心价值的指标持续迭代……”</p>
-                <small>Obsidian · 本地文件</small>
-              </div>
-            </div>
-          </article>
 
-          <article className={styles.storyRow}>
-            <div className={styles.storyCopy}>
-              <span className={styles.storyNumber}>03</span>
-              <h3>把知识练成现场表达。</h3>
-              <p>真实 AI 面试官基于知识库出题，用 STAR 四维反馈拆解回答，并给出下一轮追问与参考思路。</p>
-              <Link href="/interview" className={styles.textLink}>开始模拟面试 <ArrowIcon /></Link>
-            </div>
-            <div className={`${styles.storyVisual} ${styles.interviewVisual}`}>
-              <div className={styles.scoreRing}><strong>82</strong><span>/ 100</span></div>
-              <div className={styles.starRows}>
-                <div><b>S</b><span>场景交代清楚，但约束条件不足</span><em>78</em></div>
-                <div><b>T</b><span>目标明确，指标需要进一步量化</span><em>84</em></div>
-                <div><b>A</b><span>方案分层完整，优先级逻辑清晰</span><em>88</em></div>
-                <div><b>R</b><span>补充验证周期与成功阈值</span><em>76</em></div>
+              <div className={`${styles.scenePanel} ${styles.evidenceScene}`} data-active={activeScene === 1}>
+                <div className={styles.answerCard}>
+                  <small>ANSWER / 01</small>
+                  <p>好的北极星指标应同时反映<strong>用户核心价值</strong>与<strong>长期增长方向</strong>。<sup>[1]</sup></p>
+                </div>
+                <svg className={styles.evidenceThread} aria-hidden="true" viewBox="0 0 300 110" preserveAspectRatio="none">
+                  <path d="M8 10 C130 10 120 96 292 96" pathLength="1" />
+                </svg>
+                <div className={styles.receiptCard}>
+                  <span>ORIGINAL NOTE · [1]</span><b>北极星指标.md</b>
+                  <p>团队需要围绕一个能代表用户获得核心价值的指标持续迭代……</p>
+                  <small>Obsidian / 05-数据指标</small>
+                </div>
               </div>
-              <div className={styles.nextQuestion}>下一问：如果关键指标两周没有改善，你会先验证哪一个假设？</div>
+
+              <div className={`${styles.scenePanel} ${styles.practiceScene}`} data-active={activeScene === 2}>
+                <div className={styles.scoreDial}><strong>82</strong><span>/100</span><i /></div>
+                <div className={styles.starFeedback}>
+                  <div><b>S</b><span>场景交代</span><i style={{ "--score": ".78" } as React.CSSProperties} /><em>78</em></div>
+                  <div><b>T</b><span>目标量化</span><i style={{ "--score": ".84" } as React.CSSProperties} /><em>84</em></div>
+                  <div><b>A</b><span>行动逻辑</span><i style={{ "--score": ".88" } as React.CSSProperties} /><em>88</em></div>
+                  <div><b>R</b><span>结果验证</span><i style={{ "--score": ".76" } as React.CSSProperties} /><em>76</em></div>
+                </div>
+                <div className={styles.followupBubble}>下一问：如果指标两周没有改善，你会先验证哪一个假设？</div>
+              </div>
+
+              <div className={styles.sceneCounter}><span>0{activeScene + 1}</span><i /><span>03</span></div>
             </div>
-          </article>
+          </div>
         </section>
 
         <section id="workflow" className={styles.workflow} aria-labelledby="workflow-title">
-          <div className={styles.workflowHeader}>
-            <span className={styles.sectionIndex}>03 / WORKFLOW</span>
-            <h2 id="workflow-title">一条不断变强的知识闭环。</h2>
+          <div className={styles.workflowTitle} data-reveal>
+            <span className={styles.sectionLabel}>03 — THE LOOP</span>
+            <h2 id="workflow-title">知识不是库存，<br />它应该循环起来。</h2>
           </div>
-          <div className={styles.workflowTrack}>
-            <div className={styles.workflowLine} />
-            <article><span>01</span><h3>接入</h3><p>读取本地 Markdown 与 Obsidian 元数据。</p></article>
-            <article><span>02</span><h3>检索</h3><p>把问题映射到最相关的知识片段。</p></article>
-            <article><span>03</span><h3>回答</h3><p>生成带引用、可回到原文核验的答案。</p></article>
-            <article><span>04</span><h3>演练</h3><p>用 STAR 反馈暴露知识与表达的缺口。</p></article>
+          <div className={styles.loopTrack} data-reveal>
+            <svg aria-hidden="true" viewBox="0 0 1200 240" preserveAspectRatio="none">
+              <path d="M30 120 C170 10 310 230 450 120 S730 10 870 120 S1050 230 1170 120" pathLength="1" />
+            </svg>
+            <article><span>01</span><h3>接入</h3><p>Markdown 与 Obsidian 元数据</p></article>
+            <article><span>02</span><h3>检索</h3><p>问题命中相关知识片段</p></article>
+            <article><span>03</span><h3>回答</h3><p>生成带引用的可核验答案</p></article>
+            <article><span>04</span><h3>演练</h3><p>STAR 反馈暴露真实缺口</p></article>
           </div>
         </section>
 
-        <section id="privacy" className={styles.privacy} aria-labelledby="privacy-title">
-          <div className={styles.privacyVisual} aria-hidden="true">
-            <div className={styles.vaultCore}><BrandMark /><span>LOCAL</span></div>
-            <span className={`${styles.orbit} ${styles.orbitOne}`} />
-            <span className={`${styles.orbit} ${styles.orbitTwo}`} />
-            <span className={styles.vaultNode}>MD</span>
-            <span className={styles.vaultNode}>DB</span>
-            <span className={styles.vaultNode}>KEY</span>
+        <section id="privacy" className={styles.controlRoom} aria-labelledby="privacy-title">
+          <div className={styles.controlMosaic} data-reveal aria-hidden="true">
+            <div className={styles.localFolder}><BrandMark /><b>LOCAL</b><span>你的工作区</span></div>
+            <div className={styles.fileTile}><span>204</span><b>Markdown</b><small>notes</small></div>
+            <div className={styles.indexTile}><span>2,579</span><b>Vector index</b><small>chunks</small></div>
+            <div className={styles.keyTile}><span>••••••••</span><b>API KEY</b><small>.env.local</small></div>
+            <div className={styles.movingStamp}>YOU CONTROL IT</div>
           </div>
-          <div className={styles.privacyCopy}>
-            <span className={styles.sectionIndex}>04 / CONTROL</span>
-            <h2 id="privacy-title">你的知识，<br />先属于你。</h2>
-            <p>知识库、向量索引和会话记录都由你的本机工作区掌控。只有在发起 AI 请求时，相关片段才会发送给你主动配置的模型供应商。</p>
+          <div className={styles.controlCopy} data-reveal>
+            <span className={styles.sectionLabel}>04 — LOCAL CONTROL</span>
+            <h2 id="privacy-title">先属于你，<br />再服务于你。</h2>
+            <p>知识库、向量索引和会话记录由你的本机工作区掌控。只有发起 AI 请求时，相关片段才会发送给你主动配置的模型供应商。</p>
             <ul>
-              <li><span>01</span>API 密钥保存在本地环境文件</li>
-              <li><span>02</span>无密钥时自动进入本地演示模式</li>
-              <li><span>03</span>可随时追溯答案对应的原始笔记</li>
+              <li><span>01</span><b>密钥</b><em>保存在本地环境文件</em></li>
+              <li><span>02</span><b>离线</b><em>无密钥时进入本地演示</em></li>
+              <li><span>03</span><b>溯源</b><em>随时回到对应原始笔记</em></li>
             </ul>
           </div>
         </section>
 
-        <section className={styles.finalCta}>
-          <div className={styles.finalSignal}><span /><span /><span /></div>
-          <p>你的笔记已经够多了。</p>
-          <h2>现在，让它们开始工作。</h2>
-          <div className={styles.finalActions}>
-            <Link href="/assistant" className={styles.primaryCta}>进入 PM Knowledge Hub <ArrowIcon /></Link>
-            <Link href="/interview" className={styles.secondaryCta}>直接开始一场面试</Link>
+        <section className={styles.finalCta} data-reveal>
+          <div className={styles.finalTicker} aria-hidden="true"><span>YOUR NOTES, NOW AT WORK — YOUR NOTES, NOW AT WORK —</span></div>
+          <div className={styles.finalInner}>
+            <p>你的笔记已经够多了。</p>
+            <h2>现在，让它们<br /><em>开始工作。</em></h2>
+            <div className={styles.finalActions}>
+              <JourneyLink href="/assistant" className={styles.finalPrimary} onJourney={startJourney}>进入 PM Knowledge Hub <ArrowIcon /></JourneyLink>
+              <JourneyLink href="/interview" className={styles.finalSecondary} onJourney={startJourney}>直接开始一场面试</JourneyLink>
+            </div>
           </div>
+          <div className={styles.finalShape} aria-hidden="true"><BrandMark /></div>
         </section>
       </div>
 
       <footer className={styles.siteFooter}>
         <div className={styles.footerBrand}><BrandMark /><span>PM Knowledge Hub</span></div>
         <p>为产品经理构建的本地知识与面试工作台。</p>
-        <nav aria-label="页脚导航">
-          <a href="#privacy">隐私说明</a>
-          <Link href="/about">项目说明</Link>
-          <Link href="/knowledge">知识库</Link>
-        </nav>
+        <nav aria-label="页脚导航"><a href="#privacy">隐私说明</a><Link href="/about">项目说明</Link><Link href="/knowledge">知识库</Link></nav>
       </footer>
+
+      <div className={styles.pageCurtain} data-active={Boolean(journeyTarget)} aria-hidden="true">
+        <span /><span /><span />
+        <div><BrandMark /><b>把知识带到现场</b></div>
+      </div>
     </div>
   );
 }

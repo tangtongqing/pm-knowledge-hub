@@ -20,8 +20,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </a>
         {!isLandingPage && <Navigation />}
         <main
+          key={pathname}
           id="main-content"
-          className={`${styles.main} ${isLandingPage ? styles.landingMain : ""}`}
+          className={`${styles.main} ${isLandingPage ? styles.landingMain : styles.applicationMain}`}
         >
           {children}
         </main>
