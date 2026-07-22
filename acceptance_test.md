@@ -3,7 +3,7 @@
 This document contains structured test cases for verifying the frontend layout, backend APIs, integration, and RAG features of the PM Knowledge Hub.
 
 > **验收执行**：Phase 1–8 于 2026-07-11 完成；Phase 9 于 2026-07-16 针对 v1.6.0-rc.1 发布门禁执行。
-> **结论摘要**：Phase 1–8 的 23 个历史案例保持归档；Phase 9 新增 4 个案例全部通过。v1.6.0-rc.1 是已通过门禁的本地候选版，尚未提交、tag 或远端发布。
+> **结论摘要**：Phase 1–8 的 23 个历史案例保持归档；Phase 9 新增 4 个案例全部通过。v1.6.0-rc.1 候选代码已提交并推送至远程 `main`，尚未创建正式 tag/Release。
 
 ---
 
@@ -266,7 +266,7 @@ This document contains structured test cases for verifying the frontend layout, 
 | **Phase 8** | 功能扩展 (v1.3.0) | 8.1 / 8.2 / 8.3 | ✅ 全过 | localStorage 双模块持久化；Canvas 位图多页中文字体 PDF 完美导出；ReactMarkdown 深度高亮包裹 |
 | **Phase 9** | 产品设计 P1 发布门禁 (v1.6 RC) | 9.1 / 9.2 / 9.3 / 9.4 | ✅ 全过 | 双视口 0 溢出；引用与图片闭环；失败降级与撤销；lint/build/47 pytest |
 
-**整体结论**：Phase 1–8 的 23 个历史案例已归档；Phase 9 的 4 个 v1.6 RC 发布门禁案例全部通过。当前代码达到本地候选版标准，但正式发布仍需独立完成 Git 提交、远端 tag 与 release。
+**整体结论**：Phase 1–8 的 23 个历史案例已归档；Phase 9 的 4 个 v1.6 RC 发布门禁案例全部通过。候选代码已完成 Git 提交并同步远程 `main`；正式发布仍需独立创建 `v1.6.0` tag 与 GitHub Release。
 
 **最近验收时间**：2026-07-16
 **验收人**：Codex（Phase 9）；ZCode（Phase 1–8 历史验收）

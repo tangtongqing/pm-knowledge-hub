@@ -3,16 +3,16 @@
 > 基于 RAG 技术的 AI 产品经理垂直知识库，集语义知识检索、AI 问答助手、模拟面试、知识图谱于一体的智能知识管理系统。
 
 [![Version](https://img.shields.io/badge/version-v1.6.0--rc.1-blue)]()
-[![Status](https://img.shields.io/badge/status-local%20release%20candidate-orange)]()
+[![Status](https://img.shields.io/badge/status-remote%20release%20candidate-orange)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ---
 
 ## 📌 项目概述
 
-当前工作树是 `v1.6.0-rc.1` 本地发布候选版；远端稳定版本仍为 `v1.4.0`。候选版完成产品设计 P1 收口并通过复验后，才会进入提交、打 tag 与发布流程。
+当前 `main` 对应 `v1.6.0-rc.1` 发布候选版，候选代码已提交并推送至远程 `main`；最新正式稳定标签为 `v1.5.0`。由于尚未创建 `v1.6.0` tag 与 GitHub Release，本版本仍不标记为正式发布。
 
-本项目为产品经理（PM）提供了一套本地化的智能学习与复习工作台。系统读取并向量化解析了 **204 篇 AI 产品经理学习笔记**（共计 739 个核心切片），通过多模态与语义检索，将碎片化的知识有机融合：
+本项目为产品经理（PM）提供了一套本地化的智能学习与复习工作台。系统读取并向量化解析了 **204 篇 AI 产品经理学习笔记**（当前索引 **2579 个知识分片**），通过多模态与语义检索，将碎片化的知识有机融合：
 
 1. 📚 **语义知识检索**：支持对本地知识库进行语义向量和精确关键词双轨召回，解决笔记查找困难的问题。
 2. 🤖 **RAG 问答助手**：基于私有知识库实时生成回答，精确展示引用证据链并支持一键回跳 Obsidian。
