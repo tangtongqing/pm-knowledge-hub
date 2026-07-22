@@ -1,6 +1,6 @@
 # 🏁 项目总结与交付终期报告 (FINAL REPORT) — PM Knowledge Hub
 
-PM Knowledge Hub (产品经理知识库引擎) 是一个面向产品经理的高性能、无障碍、多终端联动的 RAG (检索增强生成) 与 Obsidian 笔记集成系统。经过多次迭代，系统已达到极高品质并完美交付终态版本 `v1.5.0`。
+PM Knowledge Hub（产品经理知识库引擎）是一个面向产品经理的高性能、无障碍、多终端联动的 RAG（检索增强生成）与 Obsidian 笔记集成系统。当前本地完整版进入 `v1.6.0-rc.1` 发布候选阶段，并已同步推出不含后端、真实 AI 与密钥的 [Codex Sites 公开演示版](https://pm-knowledge-hub-demo.tongqtang.chatgpt.site)。最新正式稳定标签仍为 `v1.5.0`。
 
 ---
 
@@ -12,14 +12,17 @@ PM Knowledge Hub (产品经理知识库引擎) 是一个面向产品经理的高
    * **FastAPI 后端** (`/backend`)：含多路混合 RAG 算法、ChromaDB 向量检索、Gemini 接口、双链图谱拓扑构建 API 及完整的 `pytest` 自动化测试用例集。
    * **Next.js 前端** (`/frontend`)：基于 React 19 + TypeScript + Next.js 16 (Turbopack) 运行的无 Tailwind 纯 CSS 模块化响应式系统。
 2. **文档与设计资产**：
-   * **PRD 与架构文档**：[PRODUCT.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/PRODUCT.md) / [DESIGN.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/DESIGN.md) / [README.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/README.md)。
-   * **无障碍与性能分析**：[BACKLOG.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/design/BACKLOG.md)。
-   * **版本更迭日志**：[CHANGELOG.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/versions/CHANGELOG.md)。
+   * **PRD 与架构文档**：[PRODUCT.md](../PRODUCT.md) / [DESIGN.md](../DESIGN.md) / [README.md](../README.md)。
+   * **无障碍与性能分析**：[BACKLOG.md](design/BACKLOG.md)。
+   * **版本更迭日志**：[CHANGELOG.md](versions/CHANGELOG.md)。
 3. **演示与面试准备**：
-   * **演示配音脚本**：[DEMO_SCRIPT.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/demo/DEMO_SCRIPT.md)（含 1 分钟分镜与旁白设计）。
-   * **简历亮点与 QA**：[RESUME_BULLET.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/demo/RESUME_BULLET.md)（含多段简历文案及 ChromaDB 选型等高频面试问答）。
+   * **演示配音脚本**：[DEMO_SCRIPT.md](demo/DEMO_SCRIPT.md)（含 1 分钟分镜与旁白设计）。
+   * **简历亮点与 QA**：[RESUME_BULLET.md](demo/RESUME_BULLET.md)（含多段简历文案及 ChromaDB 选型等高频面试问答）。
 4. **质量验证档案**：
-   * **全量验收文档**：[acceptance_test.md](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/acceptance_test.md)（包含 Phase 1–8 共计 23 个系统验收用例，实测通过率 100%）。
+   * **全量验收文档**：[acceptance_test.md](../acceptance_test.md)（包含 Phase 1–8 共计 23 个系统验收用例，实测通过率 100%）。
+5. **公开产品体验**：
+   * **Codex Sites 演示版**：[立即访问](https://pm-knowledge-hub-demo.tongqtang.chatgpt.site)，覆盖营销页、设计页和五个核心产品页面。
+   * **能力边界**：使用浏览器内置脱敏数据，不部署 FastAPI、ChromaDB、本地笔记或真实模型服务；站点无环境变量、无 API 密钥、无付费调用。
 
 ---
 
@@ -53,6 +56,7 @@ timeline
     v1.3.0 : 核心功能扩展 : 本地会话历史持久化(LocalStorage) : 中文字体 PDF 导出引擎 : 正则安全搜索高亮
     v1.4.0 : 收尾补漏与体验调优 : 修复 PDF 提问绑定 : 指标卡防溢出 : 预览字号提升 : 分数 bounce 微动效
     v1.5.0 : 性能最终版交付 : React 19 列表虚拟滚动 : 长消息 Memo 降噪 : Force 仿真停止释放 CPU : 引导浮层
+    v1.6.0-rc.1 : 移动端与证据闭环 : 引用原文与图片恢复 : 删除撤销与错误重试 : Codex Sites 公开演示
 ```
 
 ---
@@ -77,5 +81,6 @@ timeline
 
 ## 🔮 5. 遗留问题说明
 
-* **遗留问题**：**无**
-* `v1.5.0` 完成性能里程碑；2026-07-15 产品设计复核重新打开移动、发布事实与证据闭环问题，并已由 `v1.6.0-rc.1` 候选版关闭。候选代码已提交并推送至远程 `main`，但尚未创建 `v1.6.0` tag 与 GitHub Release，因此不标记为正式发布。
+* **产品功能阻塞**：无。
+* **发布待办**：`v1.6.0-rc.1` 候选代码、验收证据和公开演示均已完成，但尚未创建 `v1.6.0` tag 与 GitHub Release，因此不标记为正式发布。
+* **线上能力边界**：当前公开站点用于作品展示与流程体验；真实知识库、RAG 和模型调用仅保留在本地完整版中。

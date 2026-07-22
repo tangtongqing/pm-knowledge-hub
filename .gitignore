@@ -55,3 +55,6 @@ logs/
 
 # Playwright MCP Snapshots
 .playwright-mcp/
+
+# Codex Sites 独立部署工作区（拥有单独 Git 仓库）
+sites-demo/
