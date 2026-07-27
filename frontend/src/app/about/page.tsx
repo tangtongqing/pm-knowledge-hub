@@ -7,17 +7,23 @@ export default function AboutPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>关于 PM Knowledge Hub</h1>
-        <p className={styles.subtitle}>基于 RAG 的个人知识库智能体</p>
+        <p className={styles.subtitle}>公开演示版 · 无真实 AI 调用</p>
       </div>
 
       <div className={styles.content}>
         <div className={styles.section}>
-          <h2>系统架构 (Phase C)</h2>
+          <h2>线上演示与本地完整版</h2>
           <p>
             PM Knowledge Hub 是一个用于产品经理面试准备与知识管理的 RAG 智能体系统。
-            当前版本 (Phase C) 实现了完整的前后端闭环。
+            你正在访问的是公开演示版：功能由浏览器内的脱敏演示数据驱动，不连接 FastAPI、
+            ChromaDB 或真实 AI 模型，也不会产生模型调用费用。
+          </p>
+          <p>
+            本地完整版可启用后端 API、向量检索、带引用的 RAG 问答与面试评估。
+            下方展示的是本地完整版架构，不代表公开演示站的运行方式。
           </p>
 
+          <h3>本地完整版架构</h3>
           <div className={styles.architectureDiagram}>
             <div className={styles.archBox}>
               <div className={styles.archTitle}>Frontend (Next.js)</div>
@@ -67,16 +73,16 @@ export default function AboutPage() {
           <h2>核心能力</h2>
           <ul className={styles.featureList}>
             <li>
-              <strong>语义检索：</strong> 
-              抛弃传统的关键词匹配，支持自然语言提问，精确匹配 Obsidian 笔记中相关的段落和分片。
+              <strong>知识浏览与检索：</strong>
+              公开演示版提供脱敏样例内容、分类浏览和关键词搜索；本地完整版可进一步接入向量语义检索。
             </li>
             <li>
-              <strong>带溯源的 RAG 问答：</strong>
-              AI 回答不仅提供结论，还会提供带有 `[1]` 标记的引用来源，支持一键跳回源笔记验证，杜绝幻觉。
+              <strong>带引用的问答体验：</strong>
+              公开演示版使用预设回答和引用展示完整交互；本地完整版可接入真实 RAG 流程，并通过来源引用辅助核验。
             </li>
             <li>
-              <strong>STAR 智能面试演练：</strong>
-              多轮追问对话，能够基于 S (情景) / T (任务) / A (行动) / R (结果) 四个维度独立评分，并提供改进建议和标准参考。
+              <strong>STAR 面试演练：</strong>
+              公开演示版提供预设题目、评分和报告导出；本地完整版可启用后端评估流程，按 S / T / A / R 四个维度给出反馈。
             </li>
           </ul>
         </div>
