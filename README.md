@@ -210,6 +210,7 @@ Codex Sites 的部署源在本地 `sites-demo/` 独立 Git 工作区中维护，
 * **任务历史**：[TASKS.md](docs/TASKS.md)
 * **发布历史**：[CHANGELOG.md](docs/versions/CHANGELOG.md)
 * **系统验收报告**：[acceptance_test.md](acceptance_test.md)
+* **求职材料**：[简历与面试总手册](docs/demo/PM_KNOWLEDGE_HUB_RESUME_MASTER.md)
 * **产品管理文档体系**：
   * [BRD.md — 商业需求](docs/pm/BRD.md) | [MRD.md — 竞品与市场](docs/pm/MRD.md) | [PRD.md — 核心功能需求说明](docs/pm/PRD.md)
   * [ARCHITECTURE.md — 拓扑图与数据流设计](docs/pm/ARCHITECTURE.md) | [METRICS.md — 指标监控](docs/pm/METRICS.md) | [ROADMAP.md — 路线图规划](docs/pm/ROADMAP.md)
