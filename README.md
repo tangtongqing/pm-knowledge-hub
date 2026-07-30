@@ -156,10 +156,27 @@ graph TB
    GEMINI_MODEL="gemini-2.5-flash"
    ```
 4. 启动后端服务：
-   ```bash
-   python -m uvicorn api.main:app --port 8000
+   ```powershell
+   python -m uvicorn api.main:app --reload --port 8000
    ```
+   出现 `Application startup complete` 后即表示启动成功。可通过以下地址确认服务状态：
+
+   * API 文档：`http://127.0.0.1:8000/docs`
+   * 健康检查：`http://127.0.0.1:8000/api/v1/health`
+
    > ⚠️ **注意**：首次启动或运行单元测试时，系统将通过联网下载 `paraphrase-multilingual-MiniLM-L12-v2` 嵌入模型（大小约 120MB）。此后将完全在本地离线调用。
+
+5. 关闭后端服务：
+
+   在运行后端的终端中按 `Ctrl + C`，等待 Uvicorn 完成正常关闭。
+
+   如果原终端已经关闭或丢失，可在 PowerShell 中先确认占用 8000 端口的进程，再将其停止：
+
+   ```powershell
+   $backendPid = (Get-NetTCPConnection -LocalPort 8000 -State Listen).OwningProcess
+   Get-Process -Id $backendPid
+   Stop-Process -Id $backendPid
+   ```
 
 ### 3. 前端部署 (Next.js)
 1. 进入前端目录，安装相关依赖：
@@ -210,6 +227,7 @@ Codex Sites 的部署源在本地 `sites-demo/` 独立 Git 工作区中维护，
 * **任务历史**：[TASKS.md](docs/TASKS.md)
 * **发布历史**：[CHANGELOG.md](docs/versions/CHANGELOG.md)
 * **系统验收报告**：[acceptance_test.md](acceptance_test.md)
+* **求职材料**：[简历与面试总手册](docs/demo/PM_KNOWLEDGE_HUB_RESUME_MASTER.md)
 * **产品管理文档体系**：
   * [BRD.md — 商业需求](docs/pm/BRD.md) | [MRD.md — 竞品与市场](docs/pm/MRD.md) | [PRD.md — 核心功能需求说明](docs/pm/PRD.md)
   * [ARCHITECTURE.md — 拓扑图与数据流设计](docs/pm/ARCHITECTURE.md) | [METRICS.md — 指标监控](docs/pm/METRICS.md) | [ROADMAP.md — 路线图规划](docs/pm/ROADMAP.md)

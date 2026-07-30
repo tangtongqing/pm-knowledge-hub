@@ -58,3 +58,9 @@ logs/
 
 # Codex Sites 独立部署工作区（拥有单独 Git 仓库）
 sites-demo/
+
+# Local CodeGraph analysis index
+.codegraph/
+
+# Local processing dependencies and temporary outputs
+tmp/

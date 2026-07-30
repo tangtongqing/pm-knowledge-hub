@@ -17,7 +17,7 @@ PM Knowledge Hub（产品经理知识库引擎）是一个面向产品经理的�
    * **版本更迭日志**：[CHANGELOG.md](versions/CHANGELOG.md)。
 3. **演示与面试准备**：
    * **演示配音脚本**：[DEMO_SCRIPT.md](demo/DEMO_SCRIPT.md)（含 1 分钟分镜与旁白设计）。
-   * **简历亮点与 QA**：[RESUME_BULLET.md](demo/RESUME_BULLET.md)（含多段简历文案及 ChromaDB 选型等高频面试问答）。
+   * **简历与面试总手册**：[PM_KNOWLEDGE_HUB_RESUME_MASTER.md](demo/PM_KNOWLEDGE_HUB_RESUME_MASTER.md)（包含分岗位项目经历、产品全流程、技术实现与面试题库）。
 4. **质量验证档案**：
    * **全量验收文档**：[acceptance_test.md](../acceptance_test.md)（包含 Phase 1–8 共计 23 个系统验收用例，实测通过率 100%）。
 5. **公开产品体验**：
