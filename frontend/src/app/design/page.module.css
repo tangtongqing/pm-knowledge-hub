@@ -2,11 +2,12 @@
   --case-ink: #17181b;
   --case-paper: #f3f0e8;
   --case-paper-strong: #ebe6da;
-  --case-line: rgba(23, 24, 27, 0.16);
-  --case-muted: #5e625f;
+  --case-line: rgba(23, 24, 27, 0.22);
+  --case-muted: #4f5551;
   --case-accent: #455ed8;
-  --case-accent-dark: #2f47bd;
+  --case-accent-dark: #2d46b8;
   --case-signal: #bdd432;
+  isolation: isolate;
   min-height: 100dvh;
   background:
     linear-gradient(90deg, rgba(23, 24, 27, 0.035) 1px, transparent 1px),
@@ -14,6 +15,7 @@
     var(--case-paper);
   background-size: 32px 32px;
   color: var(--case-ink);
+  color-scheme: light;
   font-family: "Inter", "PingFang SC", "Microsoft YaHei UI", system-ui, sans-serif;
 }
 
@@ -1771,93 +1773,4 @@
   .primaryAction {
     transition: none;
   }
-}
-
-@media (prefers-color-scheme: dark) {
-  .caseStudy {
-    --case-ink: #edede9;
-    --case-paper: #151619;
-    --case-paper-strong: #202125;
-    --case-line: rgba(237, 237, 233, 0.17);
-    --case-muted: #aaa9a2;
-    --case-accent: #6f89ff;
-    --case-accent-dark: #9aabff;
-    --case-signal: #bdd432;
-  }
-
-  .topbar {
-    background: color-mix(in srgb, var(--case-paper) 94%, transparent);
-  }
-
-  .wordmarkMark {
-    background: var(--case-ink);
-    color: var(--case-paper);
-  }
-
-  .heroRegister {
-    box-shadow: 14px 14px 0 rgba(0, 0, 0, 0.24);
-  }
-
-  .reframeBefore {
-    background: rgba(255, 255, 255, 0.025);
-  }
-
-  .reframeBefore > div {
-    color: rgba(255, 255, 255, 0.05);
-  }
-
-  .reframeAfter,
-  .roleSecondary,
-  .mobileEvidence {
-    background: #ece9df;
-    color: #18191c;
-  }
-
-  .reframeAfter p,
-  .roleSecondary > p,
-  .mobileEvidence > div > p:not(.eyebrow) {
-    color: rgba(24, 25, 28, 0.7);
-  }
-
-  .reframeAfter li,
-  .roleSecondary li {
-    border-color: rgba(24, 25, 28, 0.18);
-  }
-
-  .tintedSection::before {
-    background: var(--case-paper-strong);
-  }
-
-  .alternativeMap .altCurrent {
-    color: #fff;
-  }
-
-  .objectFlow article,
-  .proofGrid article {
-    background: var(--case-paper);
-  }
-
-  .validationSection::before {
-    background: #20253a;
-  }
-}
-
-[data-theme="light"] .caseStudy {
-  --case-ink: #17181b;
-  --case-paper: #f3f0e8;
-  --case-paper-strong: #ebe6da;
-  --case-line: rgba(23, 24, 27, 0.16);
-  --case-muted: #5e625f;
-  --case-accent: #455ed8;
-  --case-accent-dark: #2f47bd;
-}
-
-[data-theme="dark"] .caseStudy {
-  --case-ink: #edede9;
-  --case-paper: #151619;
-  --case-paper-strong: #202125;
-  --case-line: rgba(237, 237, 233, 0.17);
-  --case-muted: #aaa9a2;
-  --case-accent: #6f89ff;
-  --case-accent-dark: #9aabff;
 }
