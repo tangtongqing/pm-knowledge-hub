@@ -359,7 +359,7 @@ export default function CustomerLanding() {
         </div>
         <div className={styles.footerLinks}>
           <nav aria-label="产品页脚导航"><b>产品</b><a href="#product">产品能力</a><a href="#use-cases">使用场景</a><a href="#pricing">定价</a><a href="#security">数据安全</a></nav>
-          <nav aria-label="资源页脚导航"><b>资源</b><a href={`${REPO_URL}#readme`} target="_blank" rel="noreferrer">使用文档</a><Link href="/about">版本说明</Link><a href={`${REPO_URL}/blob/main/docs/versions/CHANGELOG.md`} target="_blank" rel="noreferrer">更新记录</a><Link href="/design">产品设计案例</Link></nav>
+          <nav aria-label="资源页脚导航"><b>资源</b><a href={`${REPO_URL}#readme`} target="_blank" rel="noreferrer">使用文档</a><Link href="/about">版本说明</Link><a href={`${REPO_URL}/blob/main/docs/delivery/CHANGELOG.md`} target="_blank" rel="noreferrer">更新记录</a><Link href="/design">产品设计案例</Link></nav>
           <nav aria-label="支持页脚导航"><b>支持</b><a href="#services">部署服务</a><a href={CONTACT_URL} target="_blank" rel="noreferrer">联系我们</a><a href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer">问题反馈</a><a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a></nav>
           <nav aria-label="法律页脚导航"><b>开放与条款</b><a href="#security">隐私说明</a><a href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noreferrer">MIT License</a><a href={`${REPO_URL}/security`} target="_blank" rel="noreferrer">安全策略</a></nav>
         </div>

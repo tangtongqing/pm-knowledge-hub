@@ -45,7 +45,7 @@ export default function AboutPage() {
             <div className={styles.archBox}>
               <div className={styles.archTitle}>Backend (FastAPI)</div>
               <ul className={styles.archList}>
-                <li>Python 3.12 + LangChain</li>
+                <li>Python 3.12 + FastAPI / Pydantic</li>
                 <li>RAG Pipeline (Top-K, Rerank)</li>
                 <li>STAR Interview Evaluator</li>
               </ul>

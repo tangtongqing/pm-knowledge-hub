@@ -8,11 +8,13 @@
 
 ---
 
+> **查文档**：[文档中心](docs/README.md) · [MRD](docs/product/MRD.md) · [PRD](docs/product/PRD.md) · [系统架构](docs/architecture/README.md) · [当前状态](docs/delivery/STATUS.md)
+
 ## 📌 项目概述
 
 当前 `main` 对应 `v1.6.0-rc.1` 发布候选版，候选代码已提交并推送至远程 `main`；最新正式稳定标签为 `v1.5.0`。由于尚未创建 `v1.6.0` tag 与 GitHub Release，本版本仍不标记为正式发布。
 
-本项目为产品经理（PM）提供了一套本地化的智能学习与复习工作台。系统读取并向量化解析了 **204 篇 AI 产品经理学习笔记**（当前索引 **2579 个知识分片**），通过多模态与语义检索，将碎片化的知识有机融合：
+本项目为产品经理（PM）提供了一套本地化的智能学习与复习工作台。系统读取并向量化解析了 **204 篇 AI 产品经理学习笔记**（当前索引 **2579 个知识分片**），通过语义与关键词检索，将碎片化的知识有机融合：
 
 1. 📚 **语义知识检索**：支持对本地知识库进行语义向量和精确关键词双轨召回，解决笔记查找困难的问题。
 2. 🤖 **RAG 问答助手**：基于私有知识库实时生成回答，精确展示引用证据链并支持一键回跳 Obsidian。
@@ -44,7 +46,7 @@
 | 📚 语义知识检索 | 🤖 RAG 问答助手 |
 | :---: | :---: |
 | ![Knowledge Search](docs/screenshots/knowledge-search.png) | ![Workspace](docs/screenshots/workspace.png) |
-| *多模态检索结果，直观展示相关度评分* | *带有证据源标注的私有问答控制台* |
+| *语义检索结果，直观展示相关度评分* | *带有证据源标注的私有问答控制台* |
 
 | 🎤 STAR 面试模拟 | 🗺️ 知识图谱可视化 |
 | :---: | :---: |
@@ -55,65 +57,53 @@
 
 ## ⚙️ 系统架构
 
-本系统由**前端展示层**、**后端服务与智能体编排层**、**本地知识存储层**三个核心层次组成：
+本系统由**前端展示层**、**FastAPI 服务与 Agent 层**、**本地知识存储层**三个核心层次组成：
 
 ```mermaid
-graph TB
-    subgraph Frontend [前端展示层 - Next.js]
-        WebUI[Clarity Console UI]
-        GraphView[react-force-graph-2d 知识图谱]
-        ChatView[AI 问答工作台]
+flowchart LR
+    Browser["浏览器"]
+
+    subgraph Frontend["Next.js 16 / React 19"]
+        Pages["知识库 / 问答 / 面试 / 地图"]
+        Client["API Client"]
+        Local["LocalStorage / PDF / 主题"]
     end
 
-    subgraph Backend [后端服务与智能体编排层 - FastAPI + LangChain]
-        API[FastAPI Web 路由]
-        Router{智能体路由分发}
-        
-        subgraph Agents [Agent Core]
-            QA[问答 Agent]
-            Interview[面试 Agent]
-        end
-        
-        subgraph RAG_Engine [RAG 检索引擎]
-            Retriever[混合检索器 Retriever]
-            Parser[Markdown 解析器]
-            Splitter[标题 & 滑动窗口切片]
-        end
+    subgraph Backend["FastAPI /api/v1"]
+        Search["语义搜索 / 关键词搜索"]
+        Agents["QA Agent / Interview Agent"]
+        Services["图谱 / 资源 / 指标"]
     end
 
-    subgraph Storage [知识存储层]
-        VectorDB[(ChromaDB 本地向量库)]
-        RawDocs[(204篇 Obsidian 笔记)]
+    subgraph Ingest["离线入库"]
+        Parser["Obsidian Parser"]
+        Chunker["标题 + 滑动窗口切片"]
+        Embedding["Sentence Transformer"]
     end
 
-    subgraph External [外部大模型层]
-        LLM[硅基流动 / Gemini]
-    end
+    Notes[("本地 Obsidian Markdown")]
+    Chroma[("本地 ChromaDB")]
+    LLM["SiliconFlow / Gemini（可选）"]
 
-    %% 数据流与调用关系
-    WebUI -->|HTTP / JSON| API
-    API --> Router
-    Router --> QA
-    Router --> Interview
-    
-    QA -->|调用| Retriever
-    Retriever -->|语义检索| VectorDB
-    Retriever -->|关键词检索| RawDocs
-    
-    QA -->|召回切片| LLM
-    Interview -->|生成与评估| LLM
-    
-    %% 初始化与写入流程
-    Parser -->|读取| RawDocs
-    Parser --> Splitter
-    Splitter -->|向量化并写入| VectorDB
+    Browser --> Pages --> Client
+    Pages --> Local
+    Client -->|"HTTP JSON"| Search
+    Client --> Agents
+    Client --> Services
+    Search --> Chroma
+    Search --> Notes
+    Agents --> Chroma
+    Agents --> LLM
+    Notes --> Parser --> Chunker --> Embedding --> Chroma
 ```
+
+完整组件职责、接口和数据流见[系统架构文档](docs/architecture/README.md)。
 
 ---
 
 ## 🛠️ 技术栈
 
-* **后端**：Python 3.10+ · FastAPI · LangChain · ChromaDB · Sentence-Transformers (MiniLM) · SiliconFlow / Gemini
+* **后端**：Python 3.10+ · FastAPI · Pydantic · ChromaDB · Sentence-Transformers (MiniLM) · SiliconFlow / Gemini
 * **前端**：Next.js 16 (App Router) · React 19 · TypeScript · Vanilla CSS · react-force-graph-2d
 * **测试与校验**：pytest · ESLint
 
@@ -196,11 +186,14 @@ graph TB
 
 ```text
 pm-knowledge-hub/
-├── docs/                  # 📋 项目设计与管理文档
-│   ├── pm/                # AI产品管理文档（BRD/MRD/PRD）
-│   ├── plans/             # 迭代阶段计划
-│   ├── versions/          # 版本发布记录 (CHANGELOG)
-│   ├── acceptance/        # 各阶段验收报告
+├── docs/                  # 📚 文档中心
+│   ├── README.md          # 按问题快速定位全部文档
+│   ├── product/           # BRD / MRD / PRD / 旅程 / 指标 / Roadmap
+│   ├── architecture/      # 当前技术架构与数据流
+│   ├── design/            # 设计系统、综合评审与 Backlog
+│   ├── delivery/          # 当前状态、CHANGELOG 与实施历史
+│   ├── quality/           # 验收标准、结果与线上测试证据
+│   ├── demo/              # 演示与求职材料
 │   └── screenshots/       # 系统运行核心截图
 ├── backend/               # 🐍 Python 后端服务
 │   ├── api/               # FastAPI 路由逻辑 (含图谱 API)
@@ -214,7 +207,8 @@ pm-knowledge-hub/
 │   │   └── lib/           # API 通信与客户端接口
 │   ├── package.json       # 前端依赖配置
 │   └── README.md          # 前端说明文档
-└── acceptance_test.md     # 📌 系统验收 checklist（v1.6 RC 发布门禁已通过）
+├── VERSION                # 版本单一事实来源
+└── README.md              # 项目入口与运行说明
 ```
 
 Codex Sites 的部署源在本地 `sites-demo/` 独立 Git 工作区中维护，并由主仓库 `.gitignore` 排除，避免将部署仓库误提交为 Git 子模块。线上版本只保留可公开展示的前端与脱敏演示数据。
@@ -223,14 +217,12 @@ Codex Sites 的部署源在本地 `sites-demo/` 独立 Git 工作区中维护，
 
 ## 🔗 相关文档索引
 
-* **项目看板**：[PROGRESS.md](docs/PROGRESS.md)
-* **任务历史**：[TASKS.md](docs/TASKS.md)
-* **发布历史**：[CHANGELOG.md](docs/versions/CHANGELOG.md)
-* **系统验收报告**：[acceptance_test.md](acceptance_test.md)
+* **全部文档入口**：[文档中心](docs/README.md)
+* **产品核心文档**：[BRD](docs/product/BRD.md) · [MRD](docs/product/MRD.md) · [PRD](docs/product/PRD.md)
+* **技术架构**：[系统架构](docs/architecture/README.md)
+* **交付与版本**：[当前状态](docs/delivery/STATUS.md) · [CHANGELOG](docs/delivery/CHANGELOG.md)
+* **质量证据**：[系统验收](docs/quality/ACCEPTANCE.md) · [线上黑盒测试](docs/quality/web-test-2026-07-24/TEST_REPORT.md)
 * **求职材料**：[简历与面试总手册](docs/demo/PM_KNOWLEDGE_HUB_RESUME_MASTER.md)
-* **产品管理文档体系**：
-  * [BRD.md — 商业需求](docs/pm/BRD.md) | [MRD.md — 竞品与市场](docs/pm/MRD.md) | [PRD.md — 核心功能需求说明](docs/pm/PRD.md)
-  * [ARCHITECTURE.md — 拓扑图与数据流设计](docs/pm/ARCHITECTURE.md) | [METRICS.md — 指标监控](docs/pm/METRICS.md) | [ROADMAP.md — 路线图规划](docs/pm/ROADMAP.md)
 
 ---
 

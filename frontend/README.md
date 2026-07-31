@@ -72,4 +72,4 @@ npm run build
 
 ## 🖼️ 截图展示
 系统运行相关高保真截图请参阅项目主文档目录：
-[docs/screenshots/](file:///C:/Users/tangtongqing/Desktop/学习/pm-knowledge-hub/docs/screenshots/)
+[docs/screenshots/](../docs/screenshots/)
