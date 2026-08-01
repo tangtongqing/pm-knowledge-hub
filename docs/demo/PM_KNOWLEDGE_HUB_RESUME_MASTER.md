@@ -1646,23 +1646,50 @@ GTM 回答产品如何进入市场：目标客户、核心信息、渠道、销�
     *   **架构选型**：采用 **MySQL (关系型) + ChromaDB (向量型)** 的异构存储架构。
     *   **规范设计**：关系型数据库严格遵循**第三范式 (3NF)**，通过主外键级联（`ON DELETE CASCADE`）和索引优化，杜绝数据冗余与脏数据；ChromaDB 专门负责 K 近邻向量相似度计算。
 
-*   **3. 具体落地实现细节 (Implementation Details)**：
-    *   **文档主表 `documents`**：`id` (UUID 主键), `filename`, `file_hash` (使用 SHA-256 算法，在上传时校验 Hash 实现“文件秒传与去重”), `file_size`, `status` (ENUM: `pending` | `processing` | `completed` | `failed`)。
-    *   **切片从表 `document_chunks`**：`id`, `doc_id` (外键关联主表), `chunk_index`, `content`, `token_count`, `start_char`, `end_char` (字符偏移量，用于前端点击时高亮定位)。
-    *   **ChromaDB 向量集**：集合名称 `pm_knowledge_base`，向量维度 384，Metadata 绑定 `{ "doc_id": "...", "chunk_id": "..." }`。
-    *   **SQL 查询脚本编写**：编写存储过程与统计分析 SQL，监控文档解析质量：
-        ```sql
-        -- 查询特定已完成文档的切片分布与 Token 统计，用于检索质量审计
-        SELECT 
-            d.id AS doc_id,
-            d.filename,
-            COUNT(c.id) AS total_chunks,
-            SUM(c.token_count) AS total_tokens
-        FROM documents d
-        INNER JOIN document_chunks c ON d.id = c.doc_id
-        WHERE d.status = 'completed' AND d.id = :target_doc_id
-        GROUP BY d.id, d.filename;
-        ```
+*   **3. 具体落地实现细节与字段全字典 (Implementation & Data Dictionary)**：
+
+    **① 文档主表 `documents`（记录上传文件的全局属性）**：
+    | 字段名 (Field) | 数据类型 (Type) | 业务含义与作用 | SA 设计考量 / 约束 |
+    | :--- | :--- | :--- | :--- |
+    | `id` | `VARCHAR(36)` | **文档唯一主键 (UUID)** | 避免自增数字 ID 在分布式迁移时冲突，且防止外部按顺序遍历泄漏文件总量 |
+    | `filename` | `VARCHAR(255)` | **原始文件名称** | 用于前端展示列表及按文件名关键字搜索 |
+    | `file_hash` | `VARCHAR(64)` | **文件指纹 (SHA-256)** | 用于**文件去重与秒传**：再次上传相同文件时，比对 Hash 可直接跳过向量化计算 |
+    | `file_size` | `INT` | **文件字节大小 (Byte)** | 用于前端体积展示及上传上限校验（如单文件限制 <= 20MB） |
+    | `status` | `ENUM` | **文档解析状态** | 状态机流转控制：`pending`(排队中) ➔ `processing`(解析向量化中) ➔ `completed`(已完成) ➔ `failed`(失败，可触发重试) |
+    | `created_at` | `TIMESTAMP` | **创建/上传时间** | 记录入库时间，支持“最新上传”排序及审计记录 |
+
+    **② 切片从表 `document_chunks`（记录文章切碎后的几百字段落）**：
+    | 字段名 (Field) | 数据类型 (Type) | 业务含义与作用 | SA 设计考量 / 约束 |
+    | :--- | :--- | :--- | :--- |
+    | `id` | `VARCHAR(36)` | **切片唯一主键 (UUID)** | 给每一个小段落赋予全球唯一的 ID |
+    | `doc_id` | `VARCHAR(36)` | **关联主文档 ID (外键)** | 外键设置 `ON DELETE CASCADE` 级联删除：主表删除文档时，自动清空下属所有切片，防孤儿脏数据 |
+    | `chunk_index` | `INT` | **切片在原文中的序号** | 记录段落顺序（0, 1, 2...）。当用户需要看上下文时，可通过 `index ± 1` 快速拉取相邻段落 |
+    | `content` | `TEXT` | **切片的具体文本内容** | 真实切碎的文字段落（300~500字），检索命中后填入 Prompt 作为大模型回答依据 |
+    | `token_count` | `INT` | **切片 Token 数量** | 用来精准控制送给大模型的 Context 长度上限（防超出 LLM 窗口），并精确计算 Token 成本 |
+    | `start_char` | `INT` | **段落在原文起始字符位置** | **前端精准高亮与锚点定位的核心**！记录切片在原始 Markdown 中的起始字符偏移量 |
+    | `end_char` | `INT` | **段落在原文结束字符位置** | 结合 `start_char`，当用户点击问答引用的 `[1]` 时，前端能瞬间定位并高亮高精度的原文区间 |
+
+    **③ ChromaDB 向量集与 Metadata 结构**：
+    | 属性/字段 | 内容/类型 | 业务含义与作用 |
+    | :--- | :--- | :--- |
+    | **Collection** | `pm_knowledge_base` | 向量数据库集名称，隔离不同业务线的知识库 |
+    | **Vector** | `List[float]` (384维) | 将切片文本经 Embedding 模型计算出的高维密集向量 |
+    | **Metadata** | `{"doc_id": "...", "chunk_id": "..."}` | 向量结果的元数据钩子。检索命中 Vector 后，通过 `chunk_id` 瞬间去 MySQL 反查 `content` 和 `start_char` |
+
+    **④ 检索质量审计 SQL 脚本示例**：
+    ```sql
+    -- 编写统计分析 SQL 脚本，监控指定文档的切片分布与 Token 消耗，用于 RAG 检索审计
+    SELECT 
+        d.id AS doc_id,
+        d.filename,
+        COUNT(c.id) AS total_chunks,
+        SUM(c.token_count) AS total_tokens,
+        AVG(c.token_count) AS avg_chunk_tokens
+    FROM documents d
+    INNER JOIN document_chunks c ON d.id = c.doc_id
+    WHERE d.status = 'completed' AND d.id = :target_doc_id
+    GROUP BY d.id, d.filename;
+    ```
 
 *   **4. 业务价值 (Value)**：
     既保证了业务数据查询的毫秒级响应，又支撑了向量语义检索，数据库整体查询延迟控制在 10ms 以内，满足高并发完整性约束。
