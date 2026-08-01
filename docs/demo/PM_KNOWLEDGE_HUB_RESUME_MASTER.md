@@ -1678,17 +1678,22 @@ GTM 回答产品如何进入市场：目标客户、核心信息、渠道、销�
 
     **④ 检索质量审计 SQL 脚本示例**：
     ```sql
-    -- 编写统计分析 SQL 脚本，监控指定文档的切片分布与 Token 消耗，用于 RAG 检索审计
+    -- 目的：编写统计分析 SQL 脚本，监控指定文档的切片分布与 Token 消耗，用于 RAG 检索质量审计与成本分析
     SELECT 
-        d.id AS doc_id,
-        d.filename,
-        COUNT(c.id) AS total_chunks,
-        SUM(c.token_count) AS total_tokens,
-        AVG(c.token_count) AS avg_chunk_tokens
-    FROM documents d
-    INNER JOIN document_chunks c ON d.id = c.doc_id
-    WHERE d.status = 'completed' AND d.id = :target_doc_id
-    GROUP BY d.id, d.filename;
+        d.id AS doc_id,                         -- 1. 提取文档主表唯一的 UUID，重命名为 doc_id 方便识别
+        d.filename,                             -- 2. 提取文档的原始文件名称（如：产品经理面试手册.md）
+        COUNT(c.id) AS total_chunks,            -- 3. 统计函数：计算该文档被拆分出来的切片总数量（评估切片密度）
+        SUM(c.token_count) AS total_tokens,     -- 4. 聚合函数：累加所有切片的 Token 数，计算文档总 Token 成本
+        AVG(c.token_count) AS avg_chunk_tokens  -- 5. 统计函数：计算平均每个切片的 Token 数（评估 Chunk 切片均匀度）
+    FROM 
+        documents d                             -- 6. 主表：指定以文档元数据表 (documents) 为基础主表，别名为 d
+    INNER JOIN 
+        document_chunks c ON d.id = c.doc_id    -- 7. 内连接：通过主外键关联切片表 (c.doc_id = d.id)，筛选有效关联切片
+    WHERE 
+        d.status = 'completed'                  -- 8. 过滤条件：仅统计解析状态为“已完成 (completed)”的正常文档
+        AND d.id = :target_doc_id               -- 9. 参数绑定：限定只查询当前待审计的目标文档 ID
+    GROUP BY 
+        d.id, d.filename;                       -- 10. 分组统计：按照文档 ID 和文件名进行聚合分组
     ```
 
 *   **4. 业务价值 (Value)**：
