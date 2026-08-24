@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PM Knowledge Hub · PRD v4 高保真原型</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prototype.css">
+</head>
+<body data-screen="setup-ready">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <nav class="rail" aria-label="原型页面">
+    <a class="brand" href="?screen=setup-ready" aria-label="PM Knowledge Hub 首页">
+      <span class="brand-mark">N</span>
+      <span class="brand-orbit" aria-hidden="true"></span>
+    </a>
+    <div class="rail-links">
+      <a href="?screen=setup-ready" data-nav="setup-ready" aria-label="资料接入">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h16M7 3v4.5m10-4.5v4.5M5.5 12h5m-5 4h8M5 21h14a2 2 0 0 0 2-2V7.5H3V19a2 2 0 0 0 2 2Z"/></svg>
+      </a>
+      <a href="?screen=privacy" data-nav="privacy" aria-label="隐私确认">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8 7 10 4.2-2 7-5.4 7-10V6l-7-3Z"/><path d="m9.3 12 1.8 1.8 3.9-4"/></svg>
+      </a>
+      <a href="?screen=setup-error" data-nav="setup-error" aria-label="异常恢复">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 4.9 2.8 18a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 4.9a2 2 0 0 0-3.4 0Z"/></svg>
+      </a>
+      <a href="?screen=validation" data-nav="validation" aria-label="验证记录">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg>
+      </a>
+    </div>
+    <button class="theme-dot" type="button" aria-label="切换明暗主题" data-theme-toggle>◐</button>
+  </nav>
+
+  <main id="main" class="app-shell">
+    <section class="screen" data-panel="setup-ready" aria-labelledby="setup-title">
+      <header class="topbar">
+        <div>
+          <p class="kicker">首次使用 · 1 / 3</p>
+          <h1 id="setup-title">接入你的知识库</h1>
+        </div>
+        <span class="status-pill"><i></i> 本地模式</span>
+      </header>
+
+      <div class="setup-grid">
+        <section class="primary-card path-card" aria-labelledby="path-heading">
+          <div class="section-number">01</div>
+          <p class="eyebrow">知识来源</p>
+          <h2 id="path-heading">选择 Markdown / Obsidian 目录</h2>
+          <p class="supporting">系统只读取你选择的目录。原始笔记和索引默认保存在本机。</p>
+
+          <label class="field-label" for="notes-path">笔记目录</label>
+          <div class="path-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5h7l2 2h9v9.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.5Z"/></svg>
+            <input id="notes-path" value="D:\PM-Learning\Obsidian" aria-describedby="path-hint">
+            <button type="button" data-browse>浏览</button>
+          </div>
+          <p id="path-hint" class="field-hint success-text">✓ 已发现 204 篇 Markdown 笔记，13 个目录</p>
+
+          <div class="storage-summary">
+            <div>
+              <span>索引位置</span>
+              <strong>D:\PM-Hub\data\trial-01</strong>
+            </div>
+            <span class="isolation-badge">独立空间</span>
+          </div>
+
+          <div class="checklist" role="list" aria-label="接入检查结果">
+            <div role="listitem"><span class="check">✓</span><p><strong>目录可读</strong><small>未修改任何源文件</small></p></div>
+            <div role="listitem"><span class="check">✓</span><p><strong>索引隔离</strong><small>不会读取其他试用者数据</small></p></div>
+            <div role="listitem"><span class="check pending">2</span><p><strong>下一步确认数据边界</strong><small>选择是否启用外部 AI</small></p></div>
+          </div>
+
+          <div class="action-row">
+            <button class="button ghost" type="button">稍后设置</button>
+            <a class="button primary" href="?screen=privacy">继续：确认数据边界 <span>→</span></a>
+          </div>
+        </section>
+
+        <aside class="boundary-card" aria-labelledby="boundary-title">
+          <div class="boundary-stripe"><span>LOCAL</span><span>CONTROLLED</span></div>
+          <div class="boundary-content">
+            <p class="eyebrow">DATA BOUNDARY</p>
+            <h2 id="boundary-title">你的资料在哪里</h2>
+            <div class="boundary-map" aria-label="数据边界示意：原始笔记与索引留在本地，只有主动调用时才发送问题和检索片段到外部模型">
+              <div class="local-zone">
+                <p>你的设备</p>
+                <div class="data-node active"><b>01</b><span>原始笔记<small>始终留在本地</small></span></div>
+                <div class="connector"></div>
+                <div class="data-node active"><b>02</b><span>独立索引<small>每名试用者隔离</small></span></div>
+              </div>
+              <div class="boundary-line"><span>仅在你主动调用时跨越</span></div>
+              <div class="cloud-zone">
+                <div class="data-node muted"><b>03</b><span>外部 AI<small>问题 + 必要检索片段</small></span></div>
+              </div>
+            </div>
+            <div class="boundary-note"><span>!</span><p>公开演示版不连接你的本地目录，也不会调用真实模型。</p></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" data-panel="privacy" aria-labelledby="privacy-title" hidden>
+      <header class="topbar">
+        <div>
+          <p class="kicker">首次使用 · 2 / 3</p>
+          <h1 id="privacy-title">确认数据边界</h1>
+        </div>
+        <span class="status-pill"><i></i> 尚未发送数据</span>
+      </header>
+
+      <div class="privacy-layout">
+        <section class="primary-card privacy-main">
+          <div class="section-number">02</div>
+          <p class="eyebrow">知情选择</p>
+          <h2>选择适合你的运行方式</h2>
+          <p class="supporting">你可以先使用完全本地的浏览与搜索，之后再启用外部 AI。</p>
+
+          <div class="mode-options" role="radiogroup" aria-label="运行模式">
+            <label class="mode-option selected">
+              <input type="radio" name="mode" value="local" checked>
+              <span class="radio-mark"></span>
+              <span><b>仅本地浏览与搜索</b><small>不配置密钥，不向外部服务发送内容</small></span>
+              <em>推荐起步</em>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="mode" value="live">
+              <span class="radio-mark"></span>
+              <span><b>启用真实 AI 问答与面试</b><small>主动调用时发送问题与必要检索片段</small></span>
+              <em>可稍后开启</em>
+            </label>
+          </div>
+
+          <div class="data-table" role="table" aria-label="数据用途说明">
+            <div class="data-row table-head" role="row"><span role="columnheader">数据</span><span role="columnheader">保存位置</span><span role="columnheader">外发条件</span></div>
+            <div class="data-row" role="row"><span role="cell">原始 Markdown</span><span role="cell">你的设备</span><span role="cell">从不发送全文</span></div>
+            <div class="data-row" role="row"><span role="cell">向量索引</span><span role="cell">独立本地目录</span><span role="cell">不外发</span></div>
+            <div class="data-row" role="row"><span role="cell">问题与检索片段</span><span role="cell">模型请求期间</span><span role="cell">仅主动调用</span></div>
+            <div class="data-row" role="row"><span role="cell">会话历史</span><span role="cell">当前浏览器</span><span role="cell">不外发</span></div>
+          </div>
+
+          <label class="consent-check">
+            <input type="checkbox" checked>
+            <span>我已了解本地保存、外部模型调用和清理方式。</span>
+          </label>
+
+          <div class="action-row">
+            <a class="button ghost" href="?screen=setup-ready">← 返回</a>
+            <button class="button primary" type="button" data-finish>建立本地索引 <span>→</span></button>
+          </div>
+        </section>
+
+        <aside class="privacy-proof">
+          <p class="eyebrow">BEFORE YOU CONTINUE</p>
+          <h2>你始终保留控制权</h2>
+          <ol>
+            <li><b>01</b><span>不启用外部 AI，也能完成浏览和搜索。</span></li>
+            <li><b>02</b><span>切换模型前，页面会再次显示数据范围。</span></li>
+            <li><b>03</b><span>删除索引和本地历史后，不影响原始笔记。</span></li>
+          </ol>
+          <a href="../../../product/PRD.md#55-数据安全与隐私">查看完整隐私说明 ↗</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" data-panel="setup-error" aria-labelledby="error-title" hidden>
+      <header class="topbar">
+        <div>
+          <p class="kicker">首次使用 · 恢复</p>
+          <h1 id="error-title">索引未能完成</h1>
+        </div>
+        <span class="status-pill danger"><i></i> 需要处理</span>
+      </header>
+
+      <div class="recovery-layout">
+        <section class="primary-card recovery-card">
+          <div class="error-symbol" aria-hidden="true">!</div>
+          <p class="eyebrow danger-text">INDEX BUILD FAILED</p>
+          <h2>无法读取所选目录</h2>
+          <p class="supporting">路径仍然保留。修正权限或改选目录后可以直接重试，不需要重新填写其他设置。</p>
+          <div class="error-detail">
+            <span>原因</span>
+            <strong>系统没有 D:\PM-Learning\Obsidian 的读取权限</strong>
+            <code>PERMISSION_DENIED · NOTES_DIR</code>
+          </div>
+          <div class="recovery-steps">
+            <h3>建议按顺序处理</h3>
+            <ol>
+              <li><span>1</span><p><b>检查目录是否存在</b><small>确认移动硬盘或同步盘已经连接。</small></p></li>
+              <li><span>2</span><p><b>允许当前账户读取</b><small>系统只需要读取 Markdown 与目录内图片。</small></p></li>
+              <li><span>3</span><p><b>仍然失败时改选目录</b><small>旧索引不会与新目录混用。</small></p></li>
+            </ol>
+          </div>
+          <div class="action-row">
+            <button class="button ghost" type="button" data-change-path>改选目录</button>
+            <button class="button primary" type="button" data-retry>已处理，重新检查 <span>↻</span></button>
+          </div>
+          <p class="retry-success" role="status" hidden>✓ 目录检查已通过，可继续建立索引。</p>
+        </section>
+
+        <aside class="diagnostic-panel">
+          <p class="eyebrow">DIAGNOSTICS</p>
+          <h2>诊断摘要</h2>
+          <dl>
+            <div><dt>源文件改动</dt><dd class="ok">0</dd></div>
+            <div><dt>已写入分片</dt><dd>0</dd></div>
+            <div><dt>旧索引状态</dt><dd class="ok">未改动</dd></div>
+            <div><dt>其他用户数据</dt><dd class="ok">未发现</dd></div>
+          </dl>
+          <div class="safe-box"><span>✓</span><p><b>数据安全</b><small>失败发生在读取前，没有内容被发送到外部服务。</small></p></div>
+          <button class="text-button" type="button">复制诊断信息</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" data-panel="validation" aria-labelledby="validation-title" hidden>
+      <header class="topbar validation-topbar">
+        <div>
+          <p class="kicker">4 周业务价值验证</p>
+          <h1 id="validation-title">验证记录</h1>
+        </div>
+        <div class="top-actions"><button class="button ghost" type="button">导出 CSV</button><button class="button primary" type="button">+ 新建记录</button></div>
+      </header>
+
+      <div class="validation-body">
+        <section class="metric-strip" aria-label="验证指标概览">
+          <article><span>参与者</span><strong>3 <small>/ 10</small></strong><i style="--progress:30%"></i></article>
+          <article><span>自助完成</span><strong>2 <small>/ 3</small></strong><i style="--progress:67%"></i></article>
+          <article><span>中位定位用时</span><strong>54 <small>秒</small></strong><i style="--progress:76%"></i></article>
+          <article><span>引用追溯通过</span><strong>96 <small>%</small></strong><i style="--progress:96%"></i></article>
+        </section>
+
+        <div class="validation-grid">
+          <section class="records-card">
+            <div class="card-header"><div><p class="eyebrow">PARTICIPANT LOG</p><h2>试用记录</h2></div><div class="filters"><button class="active">全部</button><button>需跟进</button></div></div>
+            <div class="records-table" role="table" aria-label="外部用户试用记录">
+              <div class="record-row record-head" role="row"><span>参与者</span><span>资料接入</span><span>首次闭环</span><span>人工介入</span><span>模式</span><span>状态</span></div>
+              <div class="record-row" role="row"><span><b>P-001</b><small>2026-08-01</small></span><span><i class="dot ok"></i> 通过</span><span>48 秒</span><span>0 次</span><span><em class="chip local">本地</em></span><span><em class="chip done">完成</em></span></div>
+              <div class="record-row" role="row"><span><b>P-002</b><small>2026-08-02</small></span><span><i class="dot ok"></i> 通过</span><span>61 秒</span><span>1 次</span><span><em class="chip live">真实 AI</em></span><span><em class="chip follow">跟进</em></span></div>
+              <div class="record-row" role="row"><span><b>P-003</b><small>2026-08-03</small></span><span><i class="dot warn"></i> 恢复后通过</span><span>54 秒</span><span>0 次</span><span><em class="chip demo">降级</em></span><span><em class="chip done">完成</em></span></div>
+            </div>
+            <p class="privacy-caption">只记录任务结果、耗时与阻塞原因；不记录笔记正文、回答全文或模型密钥。</p>
+          </section>
+
+          <aside class="gate-card">
+            <div class="gate-score"><span>发布门禁</span><strong>4<small>/7</small></strong></div>
+            <h2>仍需补齐 3 项</h2>
+            <ul>
+              <li class="done"><span>✓</span>知识定位中位时间 ≤ 60 秒</li>
+              <li class="done"><span>✓</span>引用追溯通过率 ≥ 95%</li>
+              <li><span>3</span>完成 10 名真实资料试用者</li>
+              <li><span>4</span>完成 4 周连续使用观察</li>
+              <li><span>5</span>形成 GO / PIVOT / STOP 建议</li>
+            </ul>
+            <button class="button dark" type="button">查看发布门禁 →</button>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="prototype.js"></script>
+</body>
+</html>
