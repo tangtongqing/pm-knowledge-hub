@@ -6,6 +6,8 @@
 >
 > 本文只描述当前代码已实现的能力；未来能力以 [PRD](../product/PRD.md) 和 [Roadmap](../product/ROADMAP.md) 为准。
 
+> **v2 目标设计入口：**[目标架构草案](TARGET_ARCHITECTURE.md) · [数据模型草案](DATA_MODEL.md) · [迁移计划草案](MIGRATION_PLAN.md) · [ADR 索引](adr/README.md)。这些文件均为 `Proposed`，不代表当前代码已经实现。
+
 ## 1. 架构总览
 
 ```mermaid

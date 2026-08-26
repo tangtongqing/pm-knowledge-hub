@@ -1,8 +1,21 @@
-# 设计系统
+# 设计系统与原型索引
 
-> 返回[文档中心](../README.md)。产品范围见 [PRD](../product/PRD.md)。
+> 返回[文档中心](../README.md)。现行 v1.x 产品范围见 [PRD v4](../product/PRD.md)；v2 目标范围见 [PRD v5 草案](../product/PRD-v5-DRAFT.md)。
 
-## Visual Direction
+## v2 目标设计（已验收基线）
+
+v2 采用“知识空间优先”的信息架构，不再以 PM 功能或固定目录作为全局导航。当前设计事实源为：
+
+- [v2 信息架构](V2_INFORMATION_ARCHITECTURE.md)：全局栏、空间上下文、页面层级、图谱三视图、Agent 审批与移动范围；
+- [v2 可运行原型说明](V2_PROTOTYPE_SPEC.md)：`V5-P01`～`V5-P14` 的入口、交互和验收项；
+- [打开 v2 可运行原型](prototypes/prd-v5/index.html)：单一静态入口，通过 `?screen=` 切换页面，不连接真实数据；
+- [PRD v5 需求与证据矩阵](../product/PRD_EVIDENCE_MATRIX-v5-DRAFT.md)：原型与产品需求、架构责任和实现状态的追踪关系。
+
+v2 原型采用 **Knowledge Fieldwork（知识现场）** 视觉方向：克制的 Zinc 中性色、单一靛蓝强调色、持续可见的空间/范围/来源状态。PM 面试仅作为可选任务模板示例。
+
+以下 Visual Direction、Color System、Layout Architecture 和历史高保真索引仍描述 v1.x 现行实现，不能直接视为 v2 已交付设计。
+
+## v1.x 现行视觉基线
 
 Committed: a professional, restrained "Product Register" aesthetic for PM RAG knowledge search and STAR interview training. Designed for deep work and high readability during long review sessions. It abandons "AI cyberpunk" and glassmorphism in favor of a clean, Zinc-based OKLCH dual-theme (Light/Dark) system.
 
