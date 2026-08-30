@@ -1,6 +1,6 @@
 # 个人知识工作台 PRD v5 需求与证据矩阵（草案）
 
-> 对应需求：[PRD v5 草案](PRD-v5-DRAFT.md) · [v2 信息架构](../design/V2_INFORMATION_ARCHITECTURE.md) · [可运行原型说明](../design/V2_PROTOTYPE_SPEC.md) · 盘点日期：2026-08-26 · 文档版本：`v5.0-draft.5` · 状态：设计基线已验收；v2 实现未开始
+> 对应需求：[PRD v5 草案](PRD-v5-DRAFT.md) · [v2 信息架构](../design/V2_INFORMATION_ARCHITECTURE.md) · [可运行原型说明](../design/V2_PROTOTYPE_SPEC.md) · [v2 测试策略](../quality/TEST_STRATEGY_V2.md) · 盘点日期：2026-08-26 · 文档版本：`v5.0-draft.6` · 状态：设计基线已验收；质量合同待验收；v2 实现未开始
 
 > **文档边界：**本文追踪 v2 需求从何而来、由什么设计和架构承接、用什么指标验收。它不把计划能力写成已实现，也不替代代码、测试、原型或历史证据。v1.x 当前事实仍以 [PRD v4](PRD.md)和 [v1.6 归档基线](../archive/baselines/2026-08-24-v1.6.0-rc.1/BASELINE.md)为准。
 
@@ -25,6 +25,7 @@
 | `DECIDED` | 产品方向已由项目所有者确认 |
 | `HYPOTHESIS` | 外部频率、价值、留存或付费仍待验证 |
 | `DESIGN-PENDING` | 需要架构/原型决策，尚不能进入实现 |
+| `QUALITY-DRAFT` | v2 质量合同已形成草案，等待验收和自动化实现 |
 | `NOT-STARTED` | v2 实现未开始 |
 | `FUTURE` | 非 v2 验收，不进入近期实现 |
 
@@ -50,7 +51,7 @@
 | F-08 受控知识 Agent | MR-20 | D Agent 操作 | AGT-01～08；未确认/越权=0；撤销=100% | V5-P10、P13 | Tool Registry、Agent Run、Action、Approval、Audit、Undo | `V1-E2`：面试/问答 Agent 只提供有限对话，不构成安全工具层；`DECIDED/HYPOTHESIS` | 无工具权限、计划执行分离、风险级、幂等、撤销和审计 | 冻结 R0～R3、首批工具和确认策略；完成威胁建模与状态机 |
 | F-09 可选场景模板 | MR-03、MR-21 | F 场景模板 | KR-09 ≥80%；至少两类任务；PM 样本不过半 | V5-P11 | Template、Agent Policy、Evaluation、Outcome；复用核心对象 | `V1-E2`：单轮 PM 面试与历史；`HYPOTHESIS`：多轮/通用模板 | 现有流程垂直、缺少多轮上下文、个人证据与行动反链 | 先定义通用模板契约，再选择 PM 与一个非 PM 验证任务 |
 | F-10 隐私/模式/数据控制 | MR-04、MR-13 | 全旅程，尤其认知、导入和 D | 隐私/范围事件 0 | V5-P02、P10、P12、P13 | Source Authorization、Space Policy、Model Policy、Deletion/Audit | `V1-E2`：本地/live/fallback/demo 边界和部分披露 | 空间级外发规则、诊断导出、索引/副本/原文件删除区分不足 | 建立数据流图和威胁模型；在原型中逐时点展示数据边界 |
-| F-11 质量/可观察/恢复 | MR-06、MR-18、MR-19、MR-20 | A/E 和所有失败状态 | ING/RET/GRA/AGT；任务丢失 0 | V5-P03、P05、P09、P10、P13 | 持久任务、Evaluation Dataset、Metric Event、Error Taxonomy | `V1-E2`：现有测试和部分错误恢复；`DESIGN-PENDING` | 指标多为内存或分散记录；无跨格式/图谱/Agent 冻结样本 | 编写 v2 测试策略；版本化样本、错误分类和恢复验收 |
+| F-11 质量/可观察/恢复 | MR-06、MR-18、MR-19、MR-20 | A/E 和所有失败状态 | ING/RET/GRA/AGT；任务丢失 0 | V5-P03、P05、P09、P10、P13 | 持久任务、Evaluation Dataset、Metric Event、Error Taxonomy | `V1-E2`：现有测试和部分错误恢复；`QUALITY-DRAFT`：策略/场景/夹具合同已新增 | 尚无 v2 自动化、冻结数据和真实运行结果 | 验收质量合同；M1 实现同步建立对象、空间、格式、锚点、任务和迁移测试骨架 |
 | F-12 团队预留 | MR-22 | 不进入当前用户旅程 | 团队功能不进入 v2；研究需 E1 | 无当前页面；未来 TBD | 稳定 owner ID、服务边界、权限扩展点 | `DECIDED/FUTURE` | 尚无团队 JTBD、权限、身份、云端和付费主体证据 | 仅在架构检查可迁移性；不得创建成员/权限 UI 或实现任务 |
 
 ## 3. 市场需求覆盖矩阵
@@ -104,7 +105,9 @@
 | [ADR-0004：稳定锚点](../architecture/adr/ADR-0004-stable-ids-and-anchors.md) | 各格式 ID、版本、指纹和重定位策略 | F-03、F-04、F-07 | Proposed |
 | [ADR-0005：图谱语义](../architecture/adr/ADR-0005-typed-relation-graph.md) | Entity、Relation、事实、建议、冲突和证据模型；Neo4j 作为候选投影 | F-04、F-06 | Accepted；2026-08-25 |
 | [ADR-0006：Agent 安全](../architecture/adr/ADR-0006-controlled-agent-runtime.md) | 工具登记、R0～R3、确认、幂等、撤销和审计 | F-08、F-10、F-11 | Proposed |
-| `docs/quality/TEST_STRATEGY_V2.md` | 格式、检索、引用、图谱、Agent、迁移和可访问性测试 | F-02～F-11 | 待新增 |
+| [v2 测试策略](../quality/TEST_STRATEGY_V2.md) | 分层测试、发布否决、环境、格式、检索、图谱、Agent、迁移和可访问性 | F-01～F-11 | 草案已新增；待验收 |
+| [核心测试场景](../quality/TEST_SCENARIOS_V2.md) | 正常、边界、失败恢复、安全、性能和外部任务 | F-01～F-11 | 草案已新增；待自动化 |
+| [冻结夹具规范](../quality/fixtures/v2/README.md) | 合成数据、锚点、qrels、关系、Agent、迁移和规模生成契约 | F-01～F-11 | 结构草案；数据未创建 |
 
 ## 6. v1.x 基线如何承接
 
@@ -166,8 +169,8 @@
 - `MR-14`～`MR-22` 均有 PRD 承接和外部证据缺口；
 - v1.x 类似能力均标为 `V1-E2`，未被误写成 v2 已交付；
 - PM 面试只出现在 `F-09` 可选模板及 v1.x 历史证据中，不定义通用用户旅程；
-- 目标架构、数据模型、迁移计划和 ADR 已形成草案；V5-P01～P14 设计基线已验收；v2 测试策略仍待新增，尚未接受的架构决策不能据此开始编码。
+- 目标架构、数据模型、迁移计划和 ADR 已形成草案；V5-P01～P14 设计基线已验收；v2 测试策略、核心场景和夹具合同已形成待验收草案；尚未接受的架构决策不能据此开始编码。
 
 ---
 
-*v5.0-draft.5：2026-08-26 验收“知识空间优先”信息架构和 V5-P01～P14 交互原型，确认为设计基线；v2 正式实现仍未开始。*
+*v5.0-draft.6：接入 v2 测试策略、核心场景和冻结夹具合同；质量合同待验收，自动化与 v2 正式实现仍未开始。*

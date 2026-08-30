@@ -4,7 +4,7 @@
 
 | 文档属性 | 内容 |
 |---|---|
-| 文档版本 | `v5.0-draft.7` |
+| 文档版本 | `v5.0-draft.8` |
 | 目标产品版本 | `v2.0` |
 | 当前运行基线 | `v1.6.0-rc.1` |
 | 状态 | 产品定义草案；评审通过前不替代现行 PRD v4 |
@@ -856,7 +856,7 @@ v2 不实现：成员邀请、角色权限、共享空间、评论、通知、�
 8. [`docs/product/METRICS-v2-DRAFT.md`](METRICS-v2-DRAFT.md)；
 9. [`docs/product/ROADMAP-v2-DRAFT.md`](ROADMAP-v2-DRAFT.md)；
 10. [`docs/product/PRD_EVIDENCE_MATRIX-v5-DRAFT.md`](PRD_EVIDENCE_MATRIX-v5-DRAFT.md)；
-11. `docs/quality/TEST_STRATEGY_V2.md`。
+11. [`docs/quality/TEST_STRATEGY_V2.md`](../quality/TEST_STRATEGY_V2.md)、[核心测试场景](../quality/TEST_SCENARIOS_V2.md)与[冻结夹具规范](../quality/fixtures/v2/README.md)。
 
 ### 8.7 草案验收清单
 
@@ -883,7 +883,8 @@ v2 不实现：成员邀请、角色权限、共享空间、评论、通知、�
 | v5.0-draft.5 | 2026-08-25 | 确认图谱存储决策：SQLite typed edges 为当前事实模型，Neo4j 保留为未来候选投影 |
 | v5.0-draft.6 | 2026-08-25 | 确认“知识空间优先”信息架构，接入覆盖 V5-P01～P14 的可运行交互原型草案；正式前端实现仍未开始 |
 | v5.0-draft.7 | 2026-08-26 | 项目所有者验收 v2 信息架构和 V5-P01～P14 交互原型，将其确认为后续实现的设计基线 |
+| v5.0-draft.8 | 2026-08-26 | 接入 v2 测试策略、核心测试场景和冻结夹具规范草案；质量合同待验收，测试实现未开始 |
 
 ---
 
-*PRD v5.0-draft.7 — 本地优先的个人知识工作台；不限职业，评审通过前不替代现行 PRD v4。*
+*PRD v5.0-draft.8 — 本地优先的个人知识工作台；不限职业，评审通过前不替代现行 PRD v4。*

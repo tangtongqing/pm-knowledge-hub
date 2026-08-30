@@ -19,6 +19,7 @@
 | 版本发生过什么变化 | [CHANGELOG](delivery/CHANGELOG.md) | 按版本记录已交付变化 |
 | 历次迭代如何推进 | [实施历史](delivery/IMPLEMENTATION_HISTORY.md) | 已完成计划的合并摘要 |
 | 如何证明质量 | [系统验收](quality/ACCEPTANCE.md) | 发布门禁与实测结论 |
+| v2 如何测试 | [v2 测试策略](quality/TEST_STRATEGY_V2.md) / [核心场景](quality/TEST_SCENARIOS_V2.md) | 多空间、多格式、锚点、检索、图谱、Agent 与迁移门禁 |
 | 阶段验收标准是什么 | [Phase A](quality/criteria/phase-a.md) / [Phase B](quality/criteria/phase-b.md) / [Phase C](quality/criteria/phase-c.md) | 产品、后端、前端阶段标准 |
 | 线上黑盒测试结果 | [2026-07-24 Web 测试](quality/web-test-2026-07-24/TEST_REPORT.md) | 公开演示版缺陷与复测 |
 | 如何演示或写进简历 | [演示脚本](demo/DEMO_SCRIPT.md) / [简历与面试总手册](demo/PM_KNOWLEDGE_HUB_RESUME_MASTER.md) | 作品集材料 |
